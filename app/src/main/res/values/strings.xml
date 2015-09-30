@@ -2,7 +2,7 @@
     <string name="app_name">ShareMyScreen</string>
     <string name="action_settings">Settings</string>
 
-    <string name="signin_email">Username</string>
+    <string name="signin_username">Username</string>
     <string name="signin_password">Password</string>
 
     <!--button-->
@@ -10,9 +10,8 @@
     <string name="signin_signup">Inscription</string>
 
     <!--msg error-->
-    <string name="signin_emailEmpty">Veuillez saisir une adresse email</string>
-    <string name="signin_emailNotValid">Votre adresse email n\'est pas valide !</string>
-    <string name="signin_ErrorEmail">Votre email n\'est pas correct !</string>
+    <string name="signin_usernameEmpty">Veuillez saisir un username</string>
+    <string name="signin_passwordEmpty">Veuillez saisir un password</string>
 
 
     <string name="signup_name">Nom</string>

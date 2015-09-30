@@ -70,7 +70,6 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
 
-
         this.dataParams = result.toString();
     }
 
@@ -140,7 +139,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                 urlString += this.currentResquest;
                 if (this.dataParams != null && this.currentMethode == "GET")
                 {
-                    urlString += this.dataParams;
+                    urlString += "?" + this.dataParams;
                 }
                 URL url = new URL(urlString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -169,7 +168,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                     urlConnection.setDoOutput(false);
                 }
 
-                System.out.println(urlConnection.getResponseCode());
+//                System.out.println(urlConnection.getResponseCode());
 
                 in = new BufferedInputStream(urlConnection.getInputStream());
 
@@ -178,7 +177,6 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
         } catch (Exception e ) {
             System.out.println(e.getMessage());
-//            return e.getMessage();
         }
         return "";
     }
@@ -193,17 +191,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         }
         br.close();
         this.resultJSON = new JSONObject(sb.toString());
-        Log.i("info", this.resultJSON.toString());
     }
-
-//    protected void onPostExecute(String result) {
-//        try {
-//            Log.i("info", this.resultJSON.getString("toot"));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     protected abstract void onPostExecute(String str);
 }
-

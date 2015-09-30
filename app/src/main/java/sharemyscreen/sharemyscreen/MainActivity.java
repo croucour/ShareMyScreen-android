@@ -16,24 +16,31 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
     private MyError myError = new MyError(this);
 
+    EditText signin_username = null;
+    EditText signin_password = null;
+
+    Button signin_submitLogin = null;
+    Button signin_signup = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        Button signin_submitLogin = (Button) findViewById(R.id.signin_submitLogin);
-        Button signin_signup = (Button) findViewById(R.id.signin_signup);
-        EditText signin_password = (EditText) findViewById(R.id.signin_password);
+        this.signin_submitLogin = (Button) findViewById(R.id.signin_submitLogin);
+        this.signin_signup = (Button) findViewById(R.id.signin_signup);
+
+        this.signin_password = (EditText) findViewById(R.id.signin_password);
 
 
-        EditText signin_email = (EditText) findViewById(R.id.signin_email);
-        signin_email.setText("toto@toto.fr");
-        signin_password.setText("toto");
+        this.signin_username = (EditText) findViewById(R.id.signin_username);
+        this.signin_username.setText("toto@toto.fr");
+        this.signin_password.setText("toto");
 
-        signin_submitLogin.setOnClickListener(this);
-        signin_signup.setOnClickListener(this);
-        signin_password.setOnEditorActionListener(this);
+        this.signin_submitLogin.setOnClickListener(this);
+        this.signin_signup.setOnClickListener(this);
+        this.signin_password.setOnEditorActionListener(this);
 
 //        Intent intent = new Intent(MainActivity.this, SignupActivity.class);
 //        startActivity(intent);
@@ -71,14 +78,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
             HashMap<String, String> params = new HashMap<>();
 
-            params.put("username", "cleemec66nt");
-            params.put("password", "tata");
-            params.put("email", "665656111clementcaca@tutu.fr");
-            params.put("phone", "0625212121");
-
+            params.put("username", this.signin_username.getText().toString());
+            params.put("password", this.signin_password.getText().toString());
 
             myApi.setdataParams(params);
-            myApi.setCurrentResquest("/users");
+            myApi.setCurrentResquest("/users/login");
             myApi.execute();
             return true;
         }
@@ -87,12 +91,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
     protected boolean setErrorSubmitSignin()
     {
-        EditText email = (EditText) findViewById(R.id.signin_email);
+        String StringUsername = this.signin_username.getText().toString();
+        String StringPassword = this.signin_password.getText().toString();
 
-        MyString MyStringEmail = new MyString(email.getText().toString());
-
-        String msg_error = (email.length() == 0 ? getString(R.string.signin_emailEmpty) : null);
-        msg_error = (msg_error == null && !MyStringEmail.isEmailValid() ? getString(R.string.signin_emailNotValid) : msg_error);
+        String msg_error = (StringUsername.isEmpty() ? getString(R.string.signin_usernameEmpty) : null);
+        msg_error = (msg_error == null && StringPassword.isEmpty() ? getString(R.string.signin_passwordEmpty) : msg_error);
 
         this.myError.msg_error = msg_error;
 
