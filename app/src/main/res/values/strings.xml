@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">ShareMyScreen</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="signin_email">Username</string>
+    <string name="signin_password">Password</string>
+
+    <!--button-->
+    <string name="signin_submitLogin">Connexion</string>
+    <string name="signin_signup">Inscription</string>
+
+    <!--msg error-->
+    <string name="signin_emailEmpty">Veuillez saisir une adresse email</string>
+    <string name="signin_emailNotValid">Votre adresse email n\'est pas valide !</string>
+    <string name="signin_ErrorEmail">Votre email n\'est pas correct !</string>
+
+
+    <string name="signup_name">Nom</string>
+    <string name="signup_username">Username</string>
+    <string name="signup_email">Email</string>
+    <string name="signup_confirmPassword">Confirmer votre password</string>
+    <string name="signup_password">Password</string>
+
+    <!--button-->
+    <string name="signup_submit">S\'inscrire</string>
+    <string name="signup_cancel">Annuler</string>
+
+    <!--msg error-->
+    <string name="signup_usernameEmpty">Veuillez saisir un username</string>
+    <string name="signup_emailEmpty">Veuillez saissir une adresse email</string>
+    <string name="signup_emailNotValid">Votre adresse email n\'est pas valide !</string>
+    <string name="signup_passwordEmpty">Veuillez saissir un mot de passe</string>
+    <string name="signup_confirmPasswordEmpty">Veuillez confirmer votre mot de passe</string>
+    <string name="signup_confirmPasswordNotMatch">La confirmation de votre mot de passe ne correspond pas</string>
+</resources>
