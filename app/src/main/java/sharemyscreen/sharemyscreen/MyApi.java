@@ -1,7 +1,10 @@
 package sharemyscreen.sharemyscreen;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -21,6 +24,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 /**
  * Created by cleme_000 on 27/09/2015.
@@ -33,30 +37,52 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     protected short currentServer = SERVER_API;
 
     protected String dataParams = null;
+    protected String usernamePasswordEncoded = null;
 
     protected String currentResquest = null;
     protected String currentMethode = "GET";
+
+    protected Context contextApplication = null;
+
     private boolean resquestExist = false;
 
-    public final static String apiURL = "http://192.168.0.11:4000/api/v1";
+    protected String access_token = null;
+
+    public static String apiURL = "http://192.168.0.13:42/v1";
     public final static String streamURL = "http://ip.jsontest.com/";
+    public final static String TOKENFILE = "token";
 
 
     private final String[][] API_REQUEST = {
             {"/users", "POST"},
-            {"/users/login", "GET"},
-            {"/users/logout", "GET"},
+            {"/user/login", "POST"},
+            {"/user/logout", "GET"},
     };
 
     private final String[][] STREAM_REQUEST = {};
 
     protected JSONObject resultJSON;
 
+    public MyApi(Context contextApplication) {
+        this.contextApplication = contextApplication;
+
+        SharedPreferences settingsFile = this.contextApplication.getSharedPreferences("settings", android.content.Context.MODE_PRIVATE);
+
+        String ip = settingsFile.getString("ip", null);
+        String port = settingsFile.getString("port", null);
+
+        if (ip != null && port != null)
+        {
+            apiURL = "http://"+ip+":"+port+"/v1";
+        }
+
+    }
+
     public String getCurrentResquest() {
         return currentResquest;
     }
 
-    public void setdataParams(HashMap<String, String> params) throws UnsupportedEncodingException{
+    public void setdataParams(HashMap<String, String> params) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for(Map.Entry<String, String> entry : params.entrySet()){
@@ -65,9 +91,13 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             else
                 result.append("&");
 
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            try {
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
         this.dataParams = result.toString();
@@ -121,10 +151,13 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         this.currentServer = currentServer;
     }
 
-
     protected void onPreExecute()
     {
+        Log.i("info", apiURL);
 
+        SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
+
+        this.access_token = tokenFile.getString("access_token", null);
     }
 
     @Override
@@ -144,21 +177,26 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                 URL url = new URL(urlString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
+                if (this.usernamePasswordEncoded != null && this.access_token == null) {
+                    urlConnection.setRequestProperty("Authorization", "Basic " + this.usernamePasswordEncoded);
+                }
+                else if (this.access_token != null) {
+                    urlConnection.setRequestProperty("Authorization", "Bearer " + this.access_token);
+                }
+
                 urlConnection.setReadTimeout(15000);
                 urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod(this.currentMethode);
 
                 urlConnection.setDoInput(true);
 
-
                 if (this.currentMethode == "POST") {
                     urlConnection.setDoOutput(true);
 
                     OutputStream os = urlConnection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(this.dataParams);
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
 
+                    writer.write(this.dataParams);
                     writer.flush();
                     writer.close();
                     os.close();
@@ -168,11 +206,13 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                     urlConnection.setDoOutput(false);
                 }
 
-//                System.out.println(urlConnection.getResponseCode());
+                System.out.println(urlConnection.getResponseCode());
 
                 in = new BufferedInputStream(urlConnection.getInputStream());
 
                 this.parseJSON((BufferedInputStream) in);
+
+                urlConnection.disconnect();
             }
 
         } catch (Exception e ) {
@@ -191,6 +231,15 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         }
         br.close();
         this.resultJSON = new JSONObject(sb.toString());
+    }
+
+    public void encodeUsernamePassword64(String username, String password)
+    {
+        try {
+            this.usernamePasswordEncoded = Base64.encodeToString((username + ":" + password).getBytes("UTF-8"), Base64.NO_WRAP);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     protected abstract void onPostExecute(String str);

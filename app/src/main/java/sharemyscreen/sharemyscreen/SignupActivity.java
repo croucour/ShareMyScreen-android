@@ -1,6 +1,8 @@
 package sharemyscreen.sharemyscreen;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -8,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONException;
 
 import java.util.HashMap;
 
@@ -106,10 +110,22 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
 
         if (this.myError.displayError())
         {
-            MyApi myApi = new MyApi() {
+            MyApi myApi = new MyApi(this.getApplicationContext()) {
                 @Override
                 protected void onPostExecute(String str) {
-                    Log.i("info", this.currentResquest);
+
+                    this.access_token = "c'est un acces_token";
+
+                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor edit = tokenFile.edit();
+                    edit.clear();
+
+                    if (this.access_token != null) {
+                        edit.putString("access_token", this.access_token);
+                    }
+
+                    edit.apply();
                 }
             };
 
@@ -119,10 +135,22 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
             params.put("password", this.EditPassword.getText().toString());
             params.put("email", this.EditEmail.getText().toString());
 
+//            params.put("username", "tata");
+//            params.put("password", "toto");
+//            params.put("email", "toto@toto.fr");
             myApi.setdataParams(params);
             myApi.setCurrentResquest("/users");
             myApi.execute();
-            return true;
+
+            MainActivity signinActivity = new MainActivity();
+            boolean resLogin = signinActivity.login();
+
+            if (resLogin)
+            {
+                this.finish();
+            }
+
+            return resLogin;
         }
         return false;
     }

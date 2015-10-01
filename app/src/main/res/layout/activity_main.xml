@@ -56,6 +56,15 @@
                 android:layout_alignTop="@+id/signin_submitLogin"
                 android:layout_toEndOf="@+id/signin_submitLogin" />
 
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/signin_settings"
+                android:hint="@string/signin_settings"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+
         </RelativeLayout>
 
     </RelativeLayout>

@@ -8,6 +8,7 @@
     <!--button-->
     <string name="signin_submitLogin">Connexion</string>
     <string name="signin_signup">Inscription</string>
+    <string name="signin_settings">Settings</string>
 
     <!--msg error-->
     <string name="signin_usernameEmpty">Veuillez saisir un username</string>
@@ -31,4 +32,16 @@
     <string name="signup_passwordEmpty">Veuillez saissir un mot de passe</string>
     <string name="signup_confirmPasswordEmpty">Veuillez confirmer votre mot de passe</string>
     <string name="signup_confirmPasswordNotMatch">La confirmation de votre mot de passe ne correspond pas</string>
+
+
+    <string name="logout_submit">Disconnect</string>
+
+    <string name="settings_ip">Adresse ip</string>
+    <string name="settings_port">Port</string>
+    <string name="settings_submit">Save</string>
+    <string name="settings_cancel">Cancel</string>
+
+    <string name="settings_ipEmpty">Veuillez saissir une adresse ip</string>
+    <string name="settings_portEmpty">Veuillez saissir un port</string>
+
 </resources>
