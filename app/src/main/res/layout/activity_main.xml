@@ -20,7 +20,8 @@
             android:layout_marginTop="86dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:hint="@string/signin_username"/>
+            android:hint="@string/signin_username"
+            />
 
         <EditText
             android:layout_width="wrap_content"

@@ -1,6 +1,7 @@
 package sharemyscreen.sharemyscreen;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     Button signin_signup = null;
     Button signin_settings = null;
 
+    Context applicationContext = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,13 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
 //        Intent intent = new Intent(MainActivity.this, LogoutActivity.class);
 //        startActivity(intent);
+        SharedPreferences tokenFile = this.getApplicationContext().getSharedPreferences(MyApi.TOKENFILE, android.content.Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor edit = tokenFile.edit();
+        edit.clear();
+        edit.apply();
+
+
     }
 
 
@@ -78,6 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     }
 
     protected boolean login() {
+        Log.i("info", "login");
         MyApi myApi = new MyApi(this.getApplicationContext()) {
             @Override
             protected void onPostExecute(String str) {
@@ -110,16 +120,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
         params.put("username", this.signin_username.getText().toString());
         params.put("password", this.signin_password.getText().toString());
-
-        params.put("password", this.signin_password.getText().toString());
         params.put("grant_type", "password");
         params.put("scope", "offline_access");
 
         myApi.setdataParams(params);
         myApi.setCurrentResquest("/user/login");
-        myApi.encodeUsernamePassword64("test", "test");
-
-//        myApi.encodeUsernamePassword64("5gIw88WXLKFQd4AJ", "5o7fAYf5Amqa2IYvuAMz0ZT4a4NlNgEP");
+        myApi.encodeUsernamePassword64("5gIw88WXLKFQd4AJ", "5o7fAYf5Amqa2IYvuAMz0ZT4a4NlNgEP");
         myApi.execute();
         return true;
     }

@@ -184,6 +184,8 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                     urlConnection.setRequestProperty("Authorization", "Bearer " + this.access_token);
                 }
 
+                Log.i("info", String.valueOf(urlConnection.getRequestProperties()));
+
                 urlConnection.setReadTimeout(15000);
                 urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod(this.currentMethode);

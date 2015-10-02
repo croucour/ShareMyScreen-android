@@ -2,6 +2,7 @@ package sharemyscreen.sharemyscreen;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,18 +115,6 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
                 @Override
                 protected void onPostExecute(String str) {
 
-                    this.access_token = "c'est un acces_token";
-
-                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
-
-                    SharedPreferences.Editor edit = tokenFile.edit();
-                    edit.clear();
-
-                    if (this.access_token != null) {
-                        edit.putString("access_token", this.access_token);
-                    }
-
-                    edit.apply();
                 }
             };
 
@@ -142,16 +131,55 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
             myApi.setCurrentResquest("/users");
             myApi.execute();
 
-            MainActivity signinActivity = new MainActivity();
-            boolean resLogin = signinActivity.login();
+            SharedPreferences tokenFile = this.getApplicationContext().getSharedPreferences(MyApi.TOKENFILE, android.content.Context.MODE_PRIVATE);
 
-            if (resLogin)
-            {
-                this.finish();
-            }
+            SharedPreferences.Editor edit = tokenFile.edit();
+            edit.clear();
+            edit.apply();
 
-            return resLogin;
-        }
+//             signinActivity = new MainActivity();
+            myApi = new MyApi(this.getApplicationContext()) {
+                @Override
+                protected void onPostExecute(String str) {
+
+                    try {
+                        this.access_token = this.resultJSON.getString("access_token");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor edit = tokenFile.edit();
+                    edit.clear();
+
+                    if (this.access_token != null) {
+                        edit.putString("access_token", this.access_token);
+                    }
+
+                    edit.apply();
+                    Log.i("info", "access_token :" + this.access_token);
+                    Log.i("info", "vous etes connecté");
+
+                }
+            };
+
+            params = new HashMap<>();
+
+            params.put("username", this.EditUsername.getText().toString());
+            params.put("password", this.EditPassword.getText().toString());
+            params.put("grant_type", "password");
+            params.put("scope", "offline_access");
+
+            myApi.setdataParams(params);
+            myApi.setCurrentResquest("/user/login");
+            myApi.encodeUsernamePassword64("5gIw88WXLKFQd4AJ", "5o7fAYf5Amqa2IYvuAMz0ZT4a4NlNgEP");
+            myApi.execute();
+            this.finish();
+
+        Intent intent = new Intent(SignupActivity.this, LogoutActivity.class);
+        startActivity(intent);
+       }
         return false;
     }
 }
