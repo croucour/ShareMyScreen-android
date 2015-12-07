@@ -2,7 +2,6 @@ package sharemyscreen.sharemyscreen;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -21,10 +20,10 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.prefs.Preferences;
+
+import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Model.SignInModel;
 
 /**
  * Created by cleme_000 on 27/09/2015.
@@ -48,14 +47,16 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
     protected String access_token = null;
 
-    public static String apiURL = "http://192.168.0.13:42/v1";
+    private String apiURL = "http://192.168.192.47:4000/v1";
     public final static String streamURL = "http://ip.jsontest.com/";
-    public final static String TOKENFILE = "token";
+
+
+    protected SettingsManager settingsManager;
 
 
     private final String[][] API_REQUEST = {
             {"/users", "POST"},
-            {"/user/login", "POST"},
+            {"/oauth2/token/", "POST"},
             {"/user/logout", "GET"},
     };
 
@@ -63,19 +64,8 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
     protected JSONObject resultJSON;
 
-    public MyApi(Context contextApplication) {
-        this.contextApplication = contextApplication;
-
-        SharedPreferences settingsFile = this.contextApplication.getSharedPreferences("settings", android.content.Context.MODE_PRIVATE);
-
-        String ip = settingsFile.getString("ip", null);
-        String port = settingsFile.getString("port", null);
-
-        if (ip != null && port != null)
-        {
-            apiURL = "http://"+ip+":"+port+"/v1";
-        }
-
+    public MyApi(SettingsManager settingsManager) {
+        this.settingsManager = settingsManager;
     }
 
     public String getCurrentResquest() {
@@ -83,24 +73,30 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     }
 
     public void setdataParams(HashMap<String, String> params) {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            if (first)
-                first = false;
-            else
-                result.append("&");
 
-            try {
-                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+        if (params.size() != 0) {
+            JSONObject jsonObject = new JSONObject(params);
+            this.dataParams = jsonObject.toString();
         }
 
-        this.dataParams = result.toString();
+
+//        boolean first = true;
+//        for(Map.Entry<String, String> entry : params.entrySet()){
+//            if (first)
+//                first = false;
+//            else
+//                result.append("&");
+//
+//            try {
+//                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+//                result.append("=");
+//                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        this.dataParams = result.toString();
     }
 
     public void setCurrentResquest(String currentResquest) {
@@ -153,11 +149,17 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
     protected void onPreExecute()
     {
-        Log.i("info", apiURL);
+        String ip = this.settingsManager.select("ip");
+        String port = this.settingsManager.select("port");
 
-        SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
+        if (ip != null && port != null)
+        {
+            apiURL = "http://"+ip+":"+port+"/v1";
+        }
 
-        this.access_token = tokenFile.getString("access_token", null);
+        Log.i("onPreExecute url", apiURL);
+
+        this.access_token = this.settingsManager.select("access_token");
     }
 
     @Override
@@ -232,7 +234,13 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             sb.append(line + "\n");
         }
         br.close();
-        this.resultJSON = new JSONObject(sb.toString());
+        if (sb.toString().isEmpty()) {
+            this.resultJSON = null;
+        }
+        else {
+            this.resultJSON = new JSONObject(sb.toString());
+        }
+
     }
 
     public void encodeUsernamePassword64(String username, String password)
@@ -245,4 +253,5 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     }
 
     protected abstract void onPostExecute(String str);
+
 }

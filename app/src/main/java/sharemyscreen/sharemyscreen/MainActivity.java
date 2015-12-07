@@ -3,19 +3,21 @@ package sharemyscreen.sharemyscreen;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import java.util.HashMap;
 
+import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Model.SignInModel;
+
+/**
+ * Created by roucou-c on 07/12/15.
+ */
 public class MainActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
 
     private MyError myError = new MyError(this);
@@ -29,9 +31,14 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
     Context applicationContext = null;
 
+    private SignInModel signInModel;
+    private SettingsManager settingsManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.activity_main);
 
@@ -52,14 +59,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
         this.signin_password.setOnEditorActionListener(this);
 
-//        Intent intent = new Intent(MainActivity.this, LogoutActivity.class);
-//        startActivity(intent);
-        SharedPreferences tokenFile = this.getApplicationContext().getSharedPreferences(MyApi.TOKENFILE, android.content.Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor edit = tokenFile.edit();
-        edit.clear();
-        edit.apply();
-
+        this.signInModel = new SignInModel(this);
 
     }
 
@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         }
         else if (v.getId() == R.id.signin_signup)
         {
-            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
             startActivity(intent);
         }
         else if (v.getId() == R.id.signin_settings)
@@ -87,46 +87,14 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     }
 
     protected boolean login() {
-        Log.i("info", "login");
-        MyApi myApi = new MyApi(this.getApplicationContext()) {
-            @Override
-            protected void onPostExecute(String str) {
-
-                try {
-                    this.access_token = this.resultJSON.getString("access_token");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
-
-                SharedPreferences.Editor edit = tokenFile.edit();
-                edit.clear();
-
-                if (this.access_token != null) {
-                    edit.putString("access_token", this.access_token);
-                }
-
-                edit.apply();
-                Log.i("info", "access_token :" + this.access_token);
-                Log.i("info", "vous etes connecté");
-
-                Intent intent = new Intent(MainActivity.this, LogoutActivity.class);
-                startActivity(intent);
-            }
-        };
 
         HashMap<String, String> params = new HashMap<>();
 
         params.put("username", this.signin_username.getText().toString());
         params.put("password", this.signin_password.getText().toString());
-        params.put("grant_type", "password");
-        params.put("scope", "offline_access");
 
-        myApi.setdataParams(params);
-        myApi.setCurrentResquest("/user/login");
-        myApi.encodeUsernamePassword64("5gIw88WXLKFQd4AJ", "5o7fAYf5Amqa2IYvuAMz0ZT4a4NlNgEP");
-        myApi.execute();
+        this.signInModel.signIn(params);
+
         return true;
     }
 

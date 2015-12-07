@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+
 /**
  * Created by roucou-c on 01/10/15.
  */
@@ -24,8 +26,12 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
 
     private MyError myError = new MyError(this);
 
+    private SettingsManager settingsManager;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.settingsManager = new SettingsManager(this);
 
         setContentView(R.layout.settings);
 
@@ -46,10 +52,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
 
     protected void populate()
     {
-        SharedPreferences settingsFile = this.getApplicationContext().getSharedPreferences("settings", android.content.Context.MODE_PRIVATE);
-
-        String ip = settingsFile.getString("ip", null);
-        String port = settingsFile.getString("port", null);
+        String ip = this.settingsManager.select("ip");
+        String port = this.settingsManager.select("port");
 
         if (ip != null && port != null)
         {
@@ -79,14 +83,9 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
 
     protected boolean saveSettings()
     {
-        SharedPreferences settingsFile = this.getApplicationContext().getSharedPreferences("settings", android.content.Context.MODE_PRIVATE);
 
-        SharedPreferences.Editor edit = settingsFile.edit();
-        edit.clear();
-
-        edit.putString("ip", this.settings_ip.getText().toString());
-        edit.putString("port", this.settings_port.getText().toString());
-        edit.apply();
+        this.settingsManager.addSettings("ip", this.settings_ip.getText().toString());
+        this.settingsManager.addSettings("port", this.settings_port.getText().toString());
 
         this.finish();
         Log.i("info", "settings sauvegardé !");

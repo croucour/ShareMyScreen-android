@@ -1,27 +1,30 @@
 package sharemyscreen.sharemyscreen;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import java.util.HashMap;
+
+import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Model.SignInModel;
+import sharemyscreen.sharemyscreen.Model.SignUpModel;
 
 /**
  * Created by cleme_000 on 23/09/2015.
  */
-public class SignupActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class SignUpActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
 
     private MyError myError = new MyError(this);
+
+    private SignUpModel signUpModel;
+    private SignInModel signInModel;
+
 
     EditText EditUsername = null;
     EditText EditEmail = null;
@@ -30,6 +33,8 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
 
     Button signup_submit = null;
     Button signup_cancel = null;
+
+    private SettingsManager settingsManager = new SettingsManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,11 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
         this.signup_submit.setOnClickListener(this);
         this.signup_cancel.setOnClickListener(this);
         this.EditConfirPassword.setOnEditorActionListener(this);
+
+        this.signUpModel = new SignUpModel(this);
+        this.signInModel = new SignInModel(this);
+
+
     }
 
     @Override
@@ -56,11 +66,7 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
         switch (v.getId())
         {
             case R.id.signup_submit :
-                try {
-                    this.onSubmit();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                this.onSubmit();
                 break;
             case R.id.signup_cancel :
                 this.finish();
@@ -106,80 +112,36 @@ public class SignupActivity extends Activity implements View.OnClickListener, Te
         return msg_error == null;
     }
 
-    protected boolean onSubmit() throws Exception {
+    protected boolean onSubmit() {
         this.setErrorSubmitSignUp();
 
         if (this.myError.displayError())
         {
-            MyApi myApi = new MyApi(this.getApplicationContext()) {
-                @Override
-                protected void onPostExecute(String str) {
-
-                }
-            };
 
             HashMap<String, String> params = new HashMap<>();
 
-            params.put("username", this.EditUsername.getText().toString());
-            params.put("password", this.EditPassword.getText().toString());
-            params.put("email", this.EditEmail.getText().toString());
+            //            params.put("username", this.EditUsername.getText().toString());
+            //            params.put("password", this.EditPassword.getText().toString());
+            //            params.put("email", this.EditEmail.getText().toString());
 
-//            params.put("username", "tata");
-//            params.put("password", "toto");
-//            params.put("email", "toto@toto.fr");
-            myApi.setdataParams(params);
-            myApi.setCurrentResquest("/users");
-            myApi.execute();
+            params.put("username", "tata");
+            params.put("password", "toto");
+            params.put("email", "toto@toto.fr");
 
-            SharedPreferences tokenFile = this.getApplicationContext().getSharedPreferences(MyApi.TOKENFILE, android.content.Context.MODE_PRIVATE);
-
-            SharedPreferences.Editor edit = tokenFile.edit();
-            edit.clear();
-            edit.apply();
-
-//             signinActivity = new MainActivity();
-            myApi = new MyApi(this.getApplicationContext()) {
-                @Override
-                protected void onPostExecute(String str) {
-
-                    try {
-                        this.access_token = this.resultJSON.getString("access_token");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
-
-                    SharedPreferences.Editor edit = tokenFile.edit();
-                    edit.clear();
-
-                    if (this.access_token != null) {
-                        edit.putString("access_token", this.access_token);
-                    }
-
-                    edit.apply();
-                    Log.i("info", "access_token :" + this.access_token);
-                    Log.i("info", "vous etes connecté");
-
-                }
-            };
+            this.signUpModel.createUser(params);
 
             params = new HashMap<>();
 
-            params.put("username", this.EditUsername.getText().toString());
-            params.put("password", this.EditPassword.getText().toString());
-            params.put("grant_type", "password");
-            params.put("scope", "offline_access");
+            params.put("username", "tata");
+            params.put("password", "toto");
 
-            myApi.setdataParams(params);
-            myApi.setCurrentResquest("/user/login");
-            myApi.encodeUsernamePassword64("5gIw88WXLKFQd4AJ", "5o7fAYf5Amqa2IYvuAMz0ZT4a4NlNgEP");
-            myApi.execute();
+            this.signInModel.signIn(params);
+
             this.finish();
 
-        Intent intent = new Intent(SignupActivity.this, LogoutActivity.class);
-        startActivity(intent);
-       }
+            Intent intent = new Intent(SignUpActivity.this, LogoutActivity.class);
+            startActivity(intent);
+        }
         return false;
     }
 }

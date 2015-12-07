@@ -29,21 +29,21 @@ public class LogoutActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.logout_submit) {
-            MyApi myApi = new MyApi(this.getApplicationContext()) {
-                @Override
-                protected void onPostExecute(String str) {
-
-                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
-
-                    SharedPreferences.Editor edit = tokenFile.edit();
-                    edit.clear();
-                    edit.apply();
-                    Log.i("info", "vous etes déconnecté");
-                }
-            };
-
-            myApi.setCurrentResquest("/user/logout");
-            myApi.execute();
+//            MyApi myApi = new MyApi(this.getApplicationContext()) {
+//                @Override
+//                protected void onPostExecute(String str) {
+//
+//                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
+//
+//                    SharedPreferences.Editor edit = tokenFile.edit();
+//                    edit.clear();
+//                    edit.apply();
+//                    Log.i("info", "vous etes déconnecté");
+//                }
+//            };
+//
+//            myApi.setCurrentResquest("/user/logout");
+//            myApi.execute();
             this.finish();
         }
     }
