@@ -31,4 +31,8 @@ public class SettingsManager {
     public void restartSettings() {
         this.settingsDAO.restartDatabase();
     }
+
+    public void delete(String key) {
+        this.settingsDAO.delete(key);
+    }
 }

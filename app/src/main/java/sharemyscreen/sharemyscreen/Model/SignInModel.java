@@ -1,15 +1,18 @@
 package sharemyscreen.sharemyscreen.Model;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import org.json.JSONException;
 
+import java.util.Date;
 import java.util.HashMap;
 
-import sharemyscreen.sharemyscreen.DAO.SettingsDAO;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
 import sharemyscreen.sharemyscreen.MyApi;
+import sharemyscreen.sharemyscreen.RoomActivity;
 
 /**
  * Created by roucou-c on 07/12/15.
@@ -23,7 +26,7 @@ public class SignInModel {
         this.settingsManager = new SettingsManager(contextApplication);
     }
 
-    public void signIn(HashMap<String, String> userParams) {
+    public void signIn(HashMap<String, String> userParams, final Activity activity) {
 
         this.myApi = new MyApi(this.settingsManager) {
             @Override
@@ -39,15 +42,42 @@ public class SignInModel {
                         e.printStackTrace();
                     }
                 }
+
+                login(activity);
+
+                //TODO set une erreur
             }
         };
 
         userParams.put("grant_type", "password");
         userParams.put("scope", "offline_access");
 
+        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W");
         this.myApi.setdataParams(userParams);
-        this.myApi.setCurrentResquest("/oauth2/token/");
-        this.myApi.encodeUsernamePassword64(userParams.get("username"), userParams.get("password"));
+        this.myApi.setCurrentResquest("/oauth2/token/", "POST");
         this.myApi.execute();
+    }
+
+    private void login(Activity activity){
+        activity.finish();
+
+        Intent intent = new Intent(activity, RoomActivity.class);
+        activity.startActivity(intent);
+    }
+
+    public boolean isLogin(final Activity activity) {
+        String expireToken = this.settingsManager.select("expireToken");
+
+        if (expireToken == null) {
+            return false;
+        }
+
+        Date date = new Date();
+        if (date.getTime() < Long.parseLong(expireToken)) {
+            login(activity);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -15,11 +15,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        db.execSQL(RoomsDAO.TABLE_CREATE);
+        db.execSQL(ProfileDAO.TABLE_CREATE);
         db.execSQL(SettingsDAO.TABLE_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(RoomsDAO.TABLE_DROP);
+        db.execSQL(ProfileDAO.TABLE_DROP);
         db.execSQL(SettingsDAO.TABLE_DROP);
         onCreate(db);
     }

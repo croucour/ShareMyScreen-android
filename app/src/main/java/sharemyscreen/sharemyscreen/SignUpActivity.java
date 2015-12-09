@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -34,18 +35,19 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     Button signup_submit = null;
     Button signup_cancel = null;
 
-    private SettingsManager settingsManager = new SettingsManager(this);
+    private SettingsManager settingsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.settingsManager = new SettingsManager(this);
         setContentView(R.layout.signup);
 
-        this.EditUsername = (EditText) findViewById(R.id.signup_username);
-        this.EditEmail = (EditText) findViewById(R.id.signup_email);
-        this.EditPassword = (EditText) findViewById(R.id.signup_password);
-        this.EditConfirPassword = (EditText) findViewById(R.id.signup_confirmPassword);
+        this.EditUsername = (EditText) findViewById(R.id.signup_username_editText);
+        this.EditEmail = (EditText) findViewById(R.id.signup_email_editText);
+        this.EditPassword = (EditText) findViewById(R.id.signup_password_editText);
+        this.EditConfirPassword = (EditText) findViewById(R.id.signup_confirmPassword_editText);
 
         this.signup_submit = (Button) findViewById(R.id.signup_submit);
         this.signup_cancel = (Button) findViewById(R.id.signup_cancel);
@@ -80,68 +82,91 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (v.getId() == R.id.signup_confirmPassword)
+        if (v.getId() == R.id.signup_confirmPassword_editText)
         {
-            try {
-                return this.onSubmit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return this.onSubmit();
         }
         return false;
     }
 
-    protected boolean setErrorSubmitSignUp()
-    {
+    protected boolean onSubmit() {
+        if (setErrorBeforeSubmit()) {
+            submit();
+        }
+        return true;
+    }
+
+    private void submit() {
+        signup();
+    }
+
+    private void signup() {
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put("username", this.EditUsername.getText().toString());
+        params.put("password", this.EditPassword.getText().toString());
+        params.put("email", this.EditEmail.getText().toString());
+
+//        params.put("username", "tata");
+//        params.put("password", "toto");
+//        params.put("email", "toto@toto.fr");
+
+        this.signUpModel.createUser(params);
+
+        params = new HashMap<>();
+
+        params.put("username", this.EditUsername.getText().toString());
+        params.put("password", this.EditPassword.getText().toString());
+
+//        params.put("username", "tata");
+//        params.put("password", "toto");
+
+        this.signInModel.signIn(params, this);
+    }
+
+    private boolean setErrorBeforeSubmit() {
+        boolean submit = true;
         String StringUsername = this.EditUsername.getText().toString();
         String StringEmail = this.EditEmail.getText().toString();
         MyString MyStringEmail = new MyString(StringEmail);
         String StringPassword = this.EditPassword.getText().toString();
         String StringConfirmPassword = this.EditConfirPassword.getText().toString();
 
-        // test sur la validité des champs
-        String msg_error = (StringUsername.isEmpty() ? getString(R.string.signup_usernameEmpty) : null);
-        msg_error = (msg_error == null && StringEmail.isEmpty() ? getString(R.string.signup_emailEmpty) : msg_error);
-        msg_error = (msg_error == null && !MyStringEmail.isEmailValid() ? getString(R.string.signup_emailNotValid) : msg_error);
-        msg_error = (msg_error == null && StringPassword.isEmpty() ? getString(R.string.signup_passwordEmpty) : msg_error);
-        msg_error = (msg_error == null && StringConfirmPassword.isEmpty() ? getString(R.string.signup_confirmPasswordEmpty) : msg_error);
-        msg_error = (msg_error == null && !StringPassword.equals(StringConfirmPassword) ? getString(R.string.signup_confirmPasswordNotMatch) : msg_error);
+        TextInputLayout signup_username_inputLayout = (TextInputLayout) findViewById(R.id.signup_username_inputLayout);
+        TextInputLayout signup_email_inputLayout = (TextInputLayout) findViewById(R.id.signup_email_inputLayout);
+        TextInputLayout signup_password_inputLayout = (TextInputLayout) findViewById(R.id.signup_password_inputLayout);
+        TextInputLayout signup_confirmPassword_inputLayout = (TextInputLayout) findViewById(R.id.signup_confirmPassword_inputLayout);
 
-        this.myError.msg_error = msg_error;
+        signup_username_inputLayout.setError(null);
+        signup_email_inputLayout.setError(null);
+        signup_password_inputLayout.setError(null);
+        signup_confirmPassword_inputLayout.setError(null);
 
-        return msg_error == null;
-    }
-
-    protected boolean onSubmit() {
-        this.setErrorSubmitSignUp();
-
-        if (this.myError.displayError())
-        {
-
-            HashMap<String, String> params = new HashMap<>();
-
-            //            params.put("username", this.EditUsername.getText().toString());
-            //            params.put("password", this.EditPassword.getText().toString());
-            //            params.put("email", this.EditEmail.getText().toString());
-
-            params.put("username", "tata");
-            params.put("password", "toto");
-            params.put("email", "toto@toto.fr");
-
-            this.signUpModel.createUser(params);
-
-            params = new HashMap<>();
-
-            params.put("username", "tata");
-            params.put("password", "toto");
-
-            this.signInModel.signIn(params);
-
-            this.finish();
-
-            Intent intent = new Intent(SignUpActivity.this, LogoutActivity.class);
-            startActivity(intent);
+        if (StringUsername.isEmpty()) {
+            signup_username_inputLayout.setError(getString(R.string.signup_usernameEmpty));
+            submit = false;
         }
-        return false;
+        if (StringEmail.isEmpty()) {
+            signup_email_inputLayout.setError(getString(R.string.signup_emailEmpty));
+            submit = false;
+        }
+        else if (!MyStringEmail.isEmailValid()) {
+            signup_email_inputLayout.setError(getString(R.string.signup_emailNotValid));
+            submit = false;
+        }
+        if (StringPassword.isEmpty()) {
+            signup_password_inputLayout.setError(getString(R.string.signup_passwordEmpty));
+            submit = false;
+        }
+        if (StringConfirmPassword.isEmpty()) {
+            signup_confirmPassword_inputLayout.setError(getString(R.string.signup_confirmPasswordEmpty));
+            submit = false;
+        }
+        else if (!StringPassword.equals(StringConfirmPassword)) {
+            signup_confirmPassword_inputLayout.setError(getString(R.string.signup_confirmPasswordNotMatch));
+            submit = false;
+        }
+
+        return submit;
     }
 }

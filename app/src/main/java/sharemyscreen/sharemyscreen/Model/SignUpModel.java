@@ -23,9 +23,16 @@ public class SignUpModel{
     public void createUser(HashMap<String, String> userParams)
     {
         //TODO vider le token
+        this.myApi = new MyApi(this.settingsManager) {
+
+            @Override
+            protected void onPostExecute(String str) {
+
+            }
+        };
 
         this.myApi.setdataParams(userParams);
-        this.myApi.setCurrentResquest("/users");
+        this.myApi.setCurrentResquest("/users", "POST");
         this.myApi.execute();
     }
 }

@@ -4,21 +4,28 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.HashMap;
+import java.util.List;
 
+import sharemyscreen.sharemyscreen.DAO.RoomsManager;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Entities.Room;
 import sharemyscreen.sharemyscreen.Model.SignInModel;
 
 /**
  * Created by roucou-c on 07/12/15.
  */
-public class MainActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
 
     private MyError myError = new MyError(this);
 
@@ -38,18 +45,31 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        RoomsManager roomsManager = new RoomsManager(this);
 
+        List<Room> listRooms = roomsManager.selectAll(null);
 
-        setContentView(R.layout.activity_main);
+        if (listRooms.size() == 0) {
+            roomsManager.addRoom("Room 1");
+            roomsManager.addRoom("Room 2");
+            roomsManager.addRoom("Room 3");
+            roomsManager.addRoom("Room 4");
+        }
+
+        this.signInModel = new SignInModel(this);
+
+        this.signInModel.isLogin(this);
+
+        setContentView(R.layout.signin);
 
         this.signin_submitLogin = (Button) findViewById(R.id.signin_submitLogin);
         this.signin_signup = (Button) findViewById(R.id.signin_signup);
         this.signin_settings = (Button) findViewById(R.id.signin_settings);
 
-        this.signin_password = (EditText) findViewById(R.id.signin_password);
+        this.signin_password = (EditText) findViewById(R.id.signin_password_editText);
 
 
-        this.signin_username = (EditText) findViewById(R.id.signin_username);
+        this.signin_username = (EditText) findViewById(R.id.signin_username_editText);
         this.signin_username.setText("test");
         this.signin_password.setText("test");
 
@@ -59,20 +79,14 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
 
         this.signin_password.setOnEditorActionListener(this);
 
-        this.signInModel = new SignInModel(this);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
-
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.signin_submitLogin) {
-
-            try {
-                this.onSubmit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.onSubmit();
         }
         else if (v.getId() == R.id.signin_signup)
         {
@@ -93,37 +107,50 @@ public class MainActivity extends Activity implements View.OnClickListener, Text
         params.put("username", this.signin_username.getText().toString());
         params.put("password", this.signin_password.getText().toString());
 
-        this.signInModel.signIn(params);
+        this.signInModel.signIn(params, this);
 
         return true;
     }
 
     protected boolean onSubmit() {
-        this.setErrorSubmitSignin();
-
-        if (this.myError.displayError())
-        {
-            return this.login();
+        if (setErrorBeforeSubmit()) {
+            submit();
         }
-        return false;
+        return true;
     }
 
-    protected boolean setErrorSubmitSignin()
-    {
+    private void submit() {
+        login();
+    }
+
+    private boolean setErrorBeforeSubmit() {
+        boolean submit = true;
+
         String StringUsername = this.signin_username.getText().toString();
         String StringPassword = this.signin_password.getText().toString();
 
-        String msg_error = (StringUsername.isEmpty() ? getString(R.string.signin_usernameEmpty) : null);
-        msg_error = (msg_error == null && StringPassword.isEmpty() ? getString(R.string.signin_passwordEmpty) : msg_error);
+        TextInputLayout signin_username_inputLayout = (TextInputLayout) findViewById(R.id.signin_username_inputLayout);
+        TextInputLayout signin_password_inputLayout = (TextInputLayout) findViewById(R.id.signin_password_inputLayout);
 
-        this.myError.msg_error = msg_error;
+        signin_username_inputLayout.setError(null);
+        signin_password_inputLayout.setError(null);
 
-        return msg_error == null;
+        if (StringUsername.isEmpty()) {
+            signin_username_inputLayout.setError(getString(R.string.signin_usernameEmpty));
+            submit = false;
+        }
+        if (StringPassword.isEmpty()) {
+
+            signin_password_inputLayout.setError(getString(R.string.signin_passwordEmpty));
+            submit = false;
+        }
+
+        return submit;
     }
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (v.getId() == R.id.signin_password)
+        if (v.getId() == R.id.signin_password_editText)
         {
             return this.onSubmit();
         }

@@ -5,78 +5,105 @@
     android:id="@+id/signup"
     android:screenOrientation="portrait" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/signup_username"
-            android:hint="@string/signup_username"
-            android:layout_centerHorizontal="true"
-            android:singleLine="true" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/signup_email"
-            android:hint="@string/signup_email"
-            android:layout_below="@+id/signup_username"
-            android:layout_centerHorizontal="true"
-            android:singleLine="true"
-            android:inputType="textEmailAddress" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/signup_password"
-            android:hint="@string/signup_password"
-            android:layout_below="@+id/signup_email"
-            android:layout_alignParentStart="true"
-            android:singleLine="true" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/signup_confirmPassword"
-            android:hint="@string/signup_confirmPassword"
-            android:layout_below="@+id/signup_password"
-            android:layout_centerHorizontal="true"
-            android:singleLine="true" />
-
-        <RelativeLayout
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/signup_username_inputLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/signup_username_editText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/signup_submit"
-                android:text="@string/signup_submit"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="54dp"
-                android:layout_marginBottom="145dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
+                android:hint="@string/signup_username_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
 
-            <Button
-                android:layout_width="wrap_content"
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/signup_email_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/signup_email_editText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/signup_cancel"
-                android:id="@+id/signup_cancel"
-                android:layout_gravity="center_vertical"
-                android:layout_alignTop="@+id/signup_submit"
-                android:layout_toEndOf="@+id/signup_submit" />
-        </RelativeLayout>
+                android:hint="@string/signup_email_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/signup_password_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/signup_password_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/signup_password_inputLayout_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/signup_confirmPassword_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/signup_confirmPassword_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/signup_confirmPassword_inputLayout_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signup_submit"
+            android:text="@string/signup_submit"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="54dp"
+            android:layout_marginBottom="145dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signup_cancel"
+            android:id="@+id/signup_cancel"
+            android:layout_gravity="center_vertical"
+            android:layout_alignTop="@+id/signup_submit"
+            android:layout_toEndOf="@+id/signup_submit" />
     </RelativeLayout>
+
 
 </RelativeLayout>

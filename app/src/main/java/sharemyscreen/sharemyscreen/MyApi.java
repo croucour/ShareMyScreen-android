@@ -20,10 +20,12 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
-import sharemyscreen.sharemyscreen.Model.SignInModel;
 
 /**
  * Created by cleme_000 on 27/09/2015.
@@ -36,7 +38,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     protected short currentServer = SERVER_API;
 
     protected String dataParams = null;
-    protected String usernamePasswordEncoded = null;
+    protected String keySecretEncoded = null;
 
     protected String currentResquest = null;
     protected String currentMethode = "GET";
@@ -47,7 +49,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
     protected String access_token = null;
 
-    private String apiURL = "http://192.168.192.47:4000/v1";
+    private String apiURL = null;
     public final static String streamURL = "http://ip.jsontest.com/";
 
 
@@ -57,12 +59,15 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     private final String[][] API_REQUEST = {
             {"/users", "POST"},
             {"/oauth2/token/", "POST"},
-            {"/user/logout", "GET"},
+            {"/logout", "GET"},
+            {"/profile", "GET"},
+            {"/profile", "PUT"}
     };
 
     private final String[][] STREAM_REQUEST = {};
 
     protected JSONObject resultJSON;
+    private int _responseCode;
 
     public MyApi(SettingsManager settingsManager) {
         this.settingsManager = settingsManager;
@@ -73,42 +78,23 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     }
 
     public void setdataParams(HashMap<String, String> params) {
-
         if (params.size() != 0) {
             JSONObject jsonObject = new JSONObject(params);
             this.dataParams = jsonObject.toString();
         }
-
-
-//        boolean first = true;
-//        for(Map.Entry<String, String> entry : params.entrySet()){
-//            if (first)
-//                first = false;
-//            else
-//                result.append("&");
-//
-//            try {
-//                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-//                result.append("=");
-//                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        this.dataParams = result.toString();
     }
 
-    public void setCurrentResquest(String currentResquest) {
+    public void setCurrentResquest(String currentResquest, String requestCommand) {
 
-        this.resquestExist = findIfRequestAccepted(currentResquest);
+        this.resquestExist = findIfRequestAccepted(currentResquest, requestCommand);
+
 
         if (this.resquestExist) {
             this.currentResquest = currentResquest;
         }
     }
 
-    protected boolean findIfRequestAccepted(String Request)
+    protected boolean findIfRequestAccepted(String Request, String requestCommand)
     {
         boolean isFind = false;
 
@@ -117,9 +103,11 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             for(String[] subarray : API_REQUEST) {
                 for (String aSubarray : subarray) {
                     if (aSubarray.equals(Request)) {
-                        this.currentMethode = subarray[1];
-                        isFind = true;
-                        break;
+                        if (requestCommand == subarray[1]) {
+                            this.currentMethode = subarray[1];
+                            isFind = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -156,10 +144,9 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         {
             apiURL = "http://"+ip+":"+port+"/v1";
         }
-
-        Log.i("onPreExecute url", apiURL);
-
-        this.access_token = this.settingsManager.select("access_token");
+        if (!Objects.equals(this.currentResquest, "/oauth2/token/")) {
+            this.access_token = this.settingsManager.select("access_token");
+        }
     }
 
     @Override
@@ -179,22 +166,25 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                 URL url = new URL(urlString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                if (this.usernamePasswordEncoded != null && this.access_token == null) {
-                    urlConnection.setRequestProperty("Authorization", "Basic " + this.usernamePasswordEncoded);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                if (this.keySecretEncoded != null && this.access_token == null) {
+                    urlConnection.setRequestProperty("Authorization", "Basic " + this.keySecretEncoded);
                 }
                 else if (this.access_token != null) {
                     urlConnection.setRequestProperty("Authorization", "Bearer " + this.access_token);
                 }
 
                 Log.i("info", String.valueOf(urlConnection.getRequestProperties()));
-
+                if (this.dataParams != null ) {
+                    Log.i("data", this.dataParams);
+                }
                 urlConnection.setReadTimeout(15000);
                 urlConnection.setConnectTimeout(15000);
                 urlConnection.setRequestMethod(this.currentMethode);
 
                 urlConnection.setDoInput(true);
 
-                if (this.currentMethode == "POST") {
+                if (this.currentMethode == "POST" || this.currentMethode == "PUT") {
                     urlConnection.setDoOutput(true);
 
                     OutputStream os = urlConnection.getOutputStream();
@@ -210,11 +200,16 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                     urlConnection.setDoOutput(false);
                 }
 
-                System.out.println(urlConnection.getResponseCode());
 
                 in = new BufferedInputStream(urlConnection.getInputStream());
 
                 this.parseJSON((BufferedInputStream) in);
+
+                this._responseCode =  urlConnection.getResponseCode();
+
+                Log.i("info", String.valueOf(this._responseCode));
+
+                updateExpireToken();
 
                 urlConnection.disconnect();
             }
@@ -223,6 +218,24 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             System.out.println(e.getMessage());
         }
         return "";
+    }
+
+    private void updateExpireToken() {
+        if (this.currentResquest == "/oauth2/token/") {
+            try {
+                long expires_in = this.resultJSON.getInt("expires_in");
+                this.settingsManager.addSettings("expires_in", String.valueOf(expires_in));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (this._responseCode == 200 || this._responseCode == 201 || this._responseCode == 204 || this._responseCode == 206) {
+            long expires_in = Long.parseLong(this.settingsManager.select("expires_in"));
+            Date date = new Date();
+            long expireToken = date.getTime() + (expires_in * 1000);
+            this.settingsManager.addSettings("expireToken", String.valueOf(expireToken));
+        }
     }
 
     private void parseJSON(BufferedInputStream in) throws IOException, JSONException {
@@ -239,14 +252,15 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         }
         else {
             this.resultJSON = new JSONObject(sb.toString());
+            Log.i("result", this.resultJSON.toString());
         }
 
     }
 
-    public void encodeUsernamePassword64(String username, String password)
+    public void encodeKeySecret64(String key, String secret)
     {
         try {
-            this.usernamePasswordEncoded = Base64.encodeToString((username + ":" + password).getBytes("UTF-8"), Base64.NO_WRAP);
+            this.keySecretEncoded = Base64.encodeToString((key + ":" + secret).getBytes("UTF-8"), Base64.NO_WRAP);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
