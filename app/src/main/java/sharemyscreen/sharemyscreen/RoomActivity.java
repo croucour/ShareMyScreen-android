@@ -1,6 +1,5 @@
 package sharemyscreen.sharemyscreen;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -10,97 +9,33 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
 import sharemyscreen.sharemyscreen.Model.LogoutModel;
-import sharemyscreen.sharemyscreen.Model.ProfileModel;
 import sharemyscreen.sharemyscreen.Model.RoomModel;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
-//public class RoomActivity extends AppCompatActivity implements View.OnClickListener {
-//
-//    private RoomsManager _roomsManager;
-//    private LogoutModel _logoutModel;
-//    private ProfileModel _profileModel;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        this._roomsManager = new RoomsManager(this);
-//        this._logoutModel = new LogoutModel(this);
-//        _profileModel = new ProfileModel(this);
-//
-//        setContentView(R.layout.room);
-//
-//        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.room_recycler_view);
-//        mRecyclerView.setHasFixedSize(true);
-//
-//        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        MyAdapter mAdapter = new MyAdapter(this._roomsManager);
-//        mRecyclerView.setAdapter(mAdapter);
-//
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//    }
-//
-//
-//    @Override
-//    public void onClick(View v) {
-//
-//    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        switch (item.getItemId()) {
-//            case R.id.modify_profil:
-//                Intent intent = new Intent(this, ProfileActivity.class);
-//                startActivity(intent);
-//                break;
-//            case R.id.disconnect:
-//                this._logoutModel.logout(this);
-//                break;
-//        }
-//
-//        return false;
-//    }
-//
-//}
 
-public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshLayout.OnRefreshListener {
+public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RoomsManager _roomsManager;
     private LogoutModel _logoutModel;
@@ -109,6 +44,7 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
     private List<ApplicationInfo> mAppList;
     private MyAdapter mAdapter;
     private SwipeMenuListView mListView;
+    private WaveSwipeRefreshLayout _mWaveSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,21 +52,28 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
         setContentView(R.layout.room);
 
         this._roomsManager = new RoomsManager(this);
-//        this._logoutModel = new LogoutModel(this);
+        this._logoutModel = new LogoutModel(this);
         _roomModel = new RoomModel(this);
 
-        WaveSwipeRefreshLayout mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
-        mWaveSwipeRefreshLayout.setOnRefreshListener(this);
-        mWaveSwipeRefreshLayout.setMaxDropHeight(1500);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mAppList = getPackageManager().getInstalledApplications(0);
+        _mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
+        _mWaveSwipeRefreshLayout.setOnRefreshListener(this);
+        _mWaveSwipeRefreshLayout.setWaveColor(Color.parseColor("#3F51B5"));
 
         mListView = (SwipeMenuListView) findViewById(R.id.room_recycler_view);
+
 
         mAdapter = new MyAdapter(this._roomsManager);
         mListView.setAdapter(mAdapter);
 
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.attachToListView(mListView);
+        fab.setOnClickListener(this);
+
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -189,16 +132,14 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
 
             @Override
             public void onSwipeStart(int position) {
-                WaveSwipeRefreshLayout mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
-                mWaveSwipeRefreshLayout.setEnabled(false);
+                _mWaveSwipeRefreshLayout.setEnabled(false);
                 Log.i("info", "start");
                 // swipe start
             }
 
             @Override
             public void onSwipeEnd(int position) {
-                WaveSwipeRefreshLayout mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
-                mWaveSwipeRefreshLayout.setEnabled(true);
+                _mWaveSwipeRefreshLayout.setEnabled(true);
                 Log.i("info", "end");
                 // swipe end
             }
@@ -275,5 +216,36 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
     @Override
     public void onRefresh() {
         this._roomModel.getRooms(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.modify_profil:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.disconnect:
+                this._logoutModel.logout(this);
+                break;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.fab:
+                break;
+        }
     }
 }

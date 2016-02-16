@@ -41,7 +41,7 @@ public class RoomModel {
                 mWaveSwipeRefreshLayout.setRefreshing(false);
             }
         };
-        this.myApi.setCurrentResquest("/profile", "GET");
+        this.myApi.setCurrentResquest("/rooms", "GET");
         this.myApi.execute();
     }
 }

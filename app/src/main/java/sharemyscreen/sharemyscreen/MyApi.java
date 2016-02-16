@@ -62,7 +62,8 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             {"/oauth2/token/", "POST"},
             {"/logout", "GET"},
             {"/profile", "GET"},
-            {"/profile", "PUT"}
+            {"/profile", "PUT"},
+            {"/rooms", "GET"}
     };
 
     private final String[][] STREAM_REQUEST = {};
@@ -235,7 +236,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             }
         }
 
-        if (this.isErrorRequest()) {
+        if (!this.isErrorRequest()) {
             long expires_in = Long.parseLong(this.settingsManager.select("expires_in"));
             Date date = new Date();
             long expireToken = date.getTime() + (expires_in * 1000);
@@ -256,6 +257,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             this.resultJSON = null;
         }
         else {
+            Log.i("info", sb.toString());
             this.resultJSON = new JSONObject(sb.toString());
             Log.i("result", this.resultJSON.toString());
         }
