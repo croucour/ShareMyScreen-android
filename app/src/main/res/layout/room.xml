@@ -12,9 +12,17 @@
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/room_recycler_view"
-        android:scrollbars="vertical"
+    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:id="@+id/main_swipe"
+        android:layout_below="@id/toolbar">
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/room_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+
 </LinearLayout>

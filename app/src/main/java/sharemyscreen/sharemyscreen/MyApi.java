@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Base64;
 import android.util.Log;
 
@@ -178,8 +179,8 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                 if (this.dataParams != null ) {
                     Log.i("data", this.dataParams);
                 }
-                urlConnection.setReadTimeout(15000);
-                urlConnection.setConnectTimeout(15000);
+                urlConnection.setReadTimeout(2000);
+                urlConnection.setConnectTimeout(2000);
                 urlConnection.setRequestMethod(this.currentMethode);
 
                 urlConnection.setDoInput(true);
@@ -200,16 +201,20 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                     urlConnection.setDoOutput(false);
                 }
 
+                this._responseCode =  urlConnection.getResponseCode();
 
-                in = new BufferedInputStream(urlConnection.getInputStream());
+                if (!this.isErrorRequest()) {
+                    in = new BufferedInputStream(urlConnection.getInputStream());
+                }
+                else {
+                    in = new BufferedInputStream(urlConnection.getErrorStream());
+                }
 
                 this.parseJSON((BufferedInputStream) in);
 
-                this._responseCode =  urlConnection.getResponseCode();
-
-                Log.i("info", String.valueOf(this._responseCode));
-
-                updateExpireToken();
+                if (!this.isErrorRequest()) {
+                    updateExpireToken();
+                }
 
                 urlConnection.disconnect();
             }
@@ -230,7 +235,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             }
         }
 
-        if (this._responseCode == 200 || this._responseCode == 201 || this._responseCode == 204 || this._responseCode == 206) {
+        if (this.isErrorRequest()) {
             long expires_in = Long.parseLong(this.settingsManager.select("expires_in"));
             Date date = new Date();
             long expireToken = date.getTime() + (expires_in * 1000);
@@ -268,4 +273,16 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
     protected abstract void onPostExecute(String str);
 
+    public boolean isErrorRequest() {
+        Log.i("_responseCode", String.valueOf(this._responseCode));
+
+        if (this._responseCode == 200 || this._responseCode == 201 || this._responseCode == 204 || this._responseCode == 206) {
+            return false;
+        }
+        return true;
+    }
+
+    public int get_responseCode() {
+        return _responseCode;
+    }
 }

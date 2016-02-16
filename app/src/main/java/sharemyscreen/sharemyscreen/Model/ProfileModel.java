@@ -38,19 +38,52 @@ public class ProfileModel {
             @Override
             protected void onPostExecute(String str) {
 
+                if (this.isErrorRequest()) {
+                    activity.finish();
+                }
 
                 if (this.resultJSON != null) {
                     try {
+
+                        String firstname = null;
+                        String lastname = null;
+                        String phone = null;
+
+                        if (!this.resultJSON.isNull("firstName")) {
+                            firstname = this.resultJSON.getString("firstName");
+                        }
+                        if (!this.resultJSON.isNull("lastName")) {
+                            lastname = this.resultJSON.getString("lastName");
+                        }
+                        if (!this.resultJSON.isNull("phone")) {
+                            phone = this.resultJSON.getString("phone");
+                        }
+
                         String username = this.resultJSON.getString("username");
                         String email = this.resultJSON.getString("email");
-                        String role = this.resultJSON.getString("role");
+//                        String role = this.resultJSON.getString("role");
 
-                        _profileManager.addProfil(username, email, role);
+//                        _profileManager.addProfil(username, email, role);
 
                         ProfileActivity profileActivity = (ProfileActivity) activity;
 
                         EditText editUsername = (EditText) profileActivity.findViewById(R.id.profile_username_editText);
                         EditText editEmail = (EditText) profileActivity.findViewById(R.id.profile_email_editText);
+
+                        if (firstname != null) {
+                            EditText editFirstname = (EditText) profileActivity.findViewById(R.id.profile_firstname_editText);
+                            editFirstname.setText(firstname);
+                        }
+
+                        if (lastname != null) {
+                            EditText editLastname = (EditText) profileActivity.findViewById(R.id.profile_lastname_editText);
+                            editLastname.setText(lastname);
+                        }
+
+                        if (phone != null) {
+                            EditText editPhone = (EditText) profileActivity.findViewById(R.id.profile_phone_editText);
+                            editPhone.setText(phone);
+                        }
 
                         editUsername.setText(username);
                         editEmail.setText(email);
@@ -61,7 +94,6 @@ public class ProfileModel {
                 }
             }
         };
-
         this.myApi.setCurrentResquest("/profile", "GET");
         this.myApi.execute();
     }
@@ -71,13 +103,6 @@ public class ProfileModel {
             @Override
             protected void onPostExecute(String str) {
 
-//                if (this.resultJSON != null) {
-//                    try {
-//                        _profileManager.addProfil(username, email, role);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 activity.finish();
             }
         };

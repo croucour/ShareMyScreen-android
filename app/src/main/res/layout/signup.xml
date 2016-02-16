@@ -7,12 +7,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/LinearLayout_signup">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/signup_username_inputLayout"
@@ -77,33 +78,31 @@
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp">
+        android:layout_marginRight="30dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/LinearLayout_signup">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
             android:id="@+id/signup_submit"
             android:text="@string/signup_submit"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="54dp"
-            android:layout_marginBottom="145dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
+            android:theme="@style/MyButton"
+            android:layout_weight="1.0"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
             android:text="@string/signup_cancel"
             android:id="@+id/signup_cancel"
-            android:layout_gravity="center_vertical"
-            android:layout_alignTop="@+id/signup_submit"
-            android:layout_toEndOf="@+id/signup_submit" />
-    </RelativeLayout>
+            android:layout_weight="1.0"
+            android:theme="@style/MyButtonCancel"/>
 
+    </LinearLayout>
 
 </RelativeLayout>

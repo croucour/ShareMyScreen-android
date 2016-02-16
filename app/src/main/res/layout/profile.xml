@@ -21,7 +21,40 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/LinearLayout_profile">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_firstname_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/profile_firstname_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_firstname_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_lastname_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/profile_lastname_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_lastname_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/profile_username_inputLayout"
@@ -55,35 +88,51 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_phone_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/profile_phone_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_phone_editText_hint"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:ems="10"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="25dp">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/LinearLayout_profile">
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
             android:id="@+id/profile_submit"
             android:text="@string/profile_submit"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="54dp"
-            android:layout_marginBottom="145dp"
-            android:layout_alignParentStart="true" />
+            android:theme="@style/MyButton"
+            android:layout_weight="1.0"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
             android:text="@string/profile_cancel"
             android:id="@+id/profile_cancel"
-            android:layout_gravity="center_vertical"
-            android:layout_alignTop="@+id/profile_submit"
-            android:layout_toEndOf="@+id/profile_submit" />
-    </RelativeLayout>
+            android:layout_weight="1.0"
+            android:theme="@style/MyButtonCancel"/>
 
+    </LinearLayout>
 
 </LinearLayout>

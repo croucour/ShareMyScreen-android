@@ -51,11 +51,16 @@
     <string name="signup_confirmPassword_inputLayout_hint">Veuillez confirmer votre password</string>
     <string name="modify_profil">Modifier le profil</string>
     <string name="disconnect">Se deconnecter</string>
+
     <string name="profile_username_editText_hint">Votre login</string>
     <string name="profile_email_editText_hint">Votre email</string>
-    <string name="profile_submit">Suvegarder</string>
+    <string name="profile_submit">Sauvegarder</string>
     <string name="profile_cancel">Annuler</string>
     <string name="profile_usernameEmpty">Veuillez saisir un username</string>
     <string name="profile_emailEmpty">Veuillez saissir une adresse email</string>
+    <string name="profile_firstname_editText_hint">Votre prénom</string>
+    <string name="profile_lastname_editText_hint">Votre nom</string>
+    <string name="profile_phone_editText_hint">Votre téléphone</string>
+    <string name="connexionError">Il est impossible de contacter le service, veuillez réesayer plus tard ou veuillez vérifier votre connexion</string>
 
 </resources>

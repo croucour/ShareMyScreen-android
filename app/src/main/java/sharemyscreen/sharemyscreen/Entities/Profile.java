@@ -5,8 +5,11 @@ package sharemyscreen.sharemyscreen.Entities;
  */
 public class Profile {
     private long _id;
+    private String _lastname;
+    private String _firstname;
     private String _username;
     private String _email;
+    private String _phone;
     private String _role;
 
     public Profile(long id, String username, String email, String role) {
@@ -46,5 +49,29 @@ public class Profile {
 
     public void set_role(String _role) {
         this._role = _role;
+    }
+
+    public String get_lastname() {
+        return _lastname;
+    }
+
+    public void set_lastname(String _lastname) {
+        this._lastname = _lastname;
+    }
+
+    public String get_firstname() {
+        return _firstname;
+    }
+
+    public void set_firstname(String _firstname) {
+        this._firstname = _firstname;
+    }
+
+    public String get_phone() {
+        return _phone;
+    }
+
+    public void set_phone(String _phone) {
+        this._phone = _phone;
     }
 }

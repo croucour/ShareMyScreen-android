@@ -28,6 +28,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private LogoutModel _logoutModel;
     private ProfileModel _profileModel;
     private EditText EditUsername;
+    private EditText EditPhone;
+    private EditText EditFirstname;
+    private EditText EditLastname;
     private EditText EditEmail;
     private Button profile_cancel;
     private Button profile_submit;
@@ -43,7 +46,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         this.EditUsername = (EditText) findViewById(R.id.profile_username_editText);
         this.EditEmail = (EditText) findViewById(R.id.profile_email_editText);
-
+        this.EditPhone = (EditText) findViewById(R.id.profile_phone_editText);
+        this.EditFirstname = (EditText) findViewById(R.id.profile_firstname_editText);
+        this.EditLastname = (EditText) findViewById(R.id.profile_lastname_editText);
 
         this.profile_submit = (Button) findViewById(R.id.profile_submit);
         this.profile_cancel = (Button) findViewById(R.id.profile_cancel);
@@ -94,6 +99,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private void submit() {
         HashMap<String, String> userParams = new HashMap<>();
 
+        userParams.put("firstName", this.EditFirstname.getText().toString());
+        userParams.put("lastName", this.EditLastname.getText().toString());
+        userParams.put("phone", this.EditPhone.getText().toString());
         userParams.put("username", this.EditUsername.getText().toString());
         userParams.put("email", this.EditEmail.getText().toString());
 

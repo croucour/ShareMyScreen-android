@@ -69,7 +69,7 @@ public class RoomsDAO extends DAOBase {
             orderBy = " ORDER BY " +orderBy;
         }
 
-        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + orderBy, null);
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + (orderBy == null ? "" : orderBy), null);
 
         while (c.moveToNext()) {
             long id = c.getLong(0);
