@@ -27,6 +27,7 @@ public class LogoutModel {
             protected void onPostExecute(String str) {
                 this.settingsManager.delete("access_token");
                 this.settingsManager.delete("expireToken");
+                this.settingsManager.delete("refresh_token");
 
                 Intent intent = new Intent(activity, MainActivity.class);
                 activity.startActivity(intent);

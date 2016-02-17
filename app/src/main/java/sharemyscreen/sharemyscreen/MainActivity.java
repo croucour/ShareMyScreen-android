@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dd.processbutton.iml.ActionProcessButton;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText signin_username = null;
     EditText signin_password = null;
 
-    Button signin_submitLogin = null;
+    ActionProcessButton signin_submitLogin = null;
     Button signin_signup = null;
     Button signin_settings = null;
 
@@ -62,11 +64,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.signInModel = new SignInModel(this);
 
-        this.signInModel.isLogin(this);
-
         setContentView(R.layout.signin);
 
-        this.signin_submitLogin = (Button) findViewById(R.id.signin_submitLogin);
+        this.signInModel.isLogin(this);
+
+
+        this.signin_submitLogin = (ActionProcessButton) findViewById(R.id.signin_submitLogin);
+        this.signin_submitLogin.setMode(ActionProcessButton.Mode.ENDLESS);
+
         this.signin_signup = (Button) findViewById(R.id.signin_signup);
         this.signin_settings = (Button) findViewById(R.id.signin_settings);
 
@@ -93,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            this.signin_submitLogin.setProgress(1);
             this.onSubmit();
         }
         else if (v.getId() == R.id.signin_signup)

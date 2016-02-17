@@ -8,8 +8,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -26,7 +30,6 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
 
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
 import sharemyscreen.sharemyscreen.Model.LogoutModel;
 import sharemyscreen.sharemyscreen.Model.RoomModel;
@@ -35,7 +38,7 @@ import sharemyscreen.sharemyscreen.Model.RoomModel;
  * Created by roucou-c on 09/12/15.
  */
 
-public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class RoomActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private RoomsManager _roomsManager;
     private LogoutModel _logoutModel;
@@ -44,7 +47,7 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
     private List<ApplicationInfo> mAppList;
     private MyAdapter mAdapter;
     private SwipeMenuListView mListView;
-    private WaveSwipeRefreshLayout _mWaveSwipeRefreshLayout;
+    private SwipeRefreshLayout _swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +61,8 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        _mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
-        _mWaveSwipeRefreshLayout.setOnRefreshListener(this);
-        _mWaveSwipeRefreshLayout.setWaveColor(Color.parseColor("#3F51B5"));
+        _swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        _swipeRefreshLayout.setOnRefreshListener(this);
 
         mListView = (SwipeMenuListView) findViewById(R.id.room_recycler_view);
 
@@ -73,6 +75,8 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.attachToListView(mListView);
         fab.setOnClickListener(this);
+
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.display_snackbar);
 
 
         // step 1. create a MenuCreator
@@ -132,14 +136,14 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
 
             @Override
             public void onSwipeStart(int position) {
-                _mWaveSwipeRefreshLayout.setEnabled(false);
+                _swipeRefreshLayout.setEnabled(false);
                 Log.i("info", "start");
                 // swipe start
             }
 
             @Override
             public void onSwipeEnd(int position) {
-                _mWaveSwipeRefreshLayout.setEnabled(true);
+                _swipeRefreshLayout.setEnabled(true);
                 Log.i("info", "end");
                 // swipe end
             }
@@ -249,3 +253,4 @@ public class RoomActivity extends AppCompatActivity implements WaveSwipeRefreshL
         }
     }
 }
+

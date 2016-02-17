@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
+import com.dd.processbutton.iml.ActionProcessButton;
+
 import org.json.JSONException;
 
 import java.util.Date;
@@ -34,13 +36,15 @@ public class SignInModel {
             @Override
             protected void onPostExecute(String str) {
                 String access_token;
+                String refresh_token;
 
                 if (!this.isErrorRequest()) {
                     if (this.resultJSON != null) {
                         try {
                             access_token = this.resultJSON.getString("access_token");
-                            Log.i("access_token", access_token);
+                            refresh_token = this.resultJSON.getString("refresh_token");
                             this.settingsManager.addSettings("access_token", access_token);
+                            this.settingsManager.addSettings("refresh_token", refresh_token);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -54,14 +58,13 @@ public class SignInModel {
                     snackbar.show();
                 }
                 else if (!this.resultJSON.isNull("error_description")){
-                    Snackbar snackbar = null;
                     try {
-                        snackbar = Snackbar
+                        Snackbar snackbar = Snackbar
                                 .make(activity.findViewById(R.id.display_snackbar), this.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
+                        snackbar.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    snackbar.show();
                 }
 
                 //TODO set une erreur
@@ -80,25 +83,96 @@ public class SignInModel {
     }
 
     private void login(Activity activity){
+        ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
+        actionProcessButton.setProgress(100);
         activity.finish();
 
         Intent intent = new Intent(activity, RoomActivity.class);
         activity.startActivity(intent);
     }
 
-    public boolean isLogin(final Activity activity) {
-        String expireToken = this.settingsManager.select("expireToken");
+    public void isLogin(final Activity activity) {
 
-        if (expireToken == null) {
-            return false;
+        HashMap<String, String> params = new HashMap<>();
+
+
+        String refresh_token = this.settingsManager.select("refresh_token");
+
+        ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
+
+
+        if (refresh_token == null) {
+            actionProcessButton.setProgress(0);
+            return;
         }
+        actionProcessButton.setProgress(1);
 
-        Date date = new Date();
-        if (date.getTime() < Long.parseLong(expireToken)) {
-            login(activity);
-            return true;
-        }
+        params.put("grant_type", "refresh_token");
+        params.put("refresh_token", refresh_token);
 
-        return false;
+        this.refreshToken(params, activity);
+
+//        String expireToken = this.settingsManager.select("expireToken");
+//
+//        if (expireToken == null) {
+//            return false;
+//        }
+//
+//        Date date = new Date();
+//        if (date.getTime() < Long.parseLong(expireToken)) {
+//            login(activity);
+//            return true;
+//        }
+//
+//        return false;
+    }
+
+    public void refreshToken(HashMap<String, String> userParams, final Activity activity) {
+        this.myApi = new MyApi(this.settingsManager) {
+            @Override
+            protected void onPostExecute(String str) {
+
+                ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
+
+                String access_token;
+
+                if (!this.isErrorRequest()) {
+                    if (this.resultJSON != null) {
+                        try {
+                            access_token = this.resultJSON.getString("access_token");
+                            this.settingsManager.addSettings("access_token", access_token);
+                            actionProcessButton.setProgress(100);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    login(activity);
+                }
+                else if (this.get_responseCode() == 0) {
+                    Snackbar snackbar = Snackbar
+                            .make(activity.findViewById(R.id.display_snackbar), R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
+                    snackbar.show();
+                    actionProcessButton.setProgress(0);
+                }
+                else if (!this.resultJSON.isNull("error_description")){ // TODO : supprimer l'affichage de l'erreur ?
+                    try {
+
+                        actionProcessButton.setProgress(0);
+                        Snackbar snackbar = Snackbar
+                                .make(activity.findViewById(R.id.display_snackbar), this.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
+                        snackbar.show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W");
+        this.myApi.setdataParams(userParams);
+        this.myApi.setCurrentResquest("/oauth2/token/", "POST");
+        this.myApi.execute();
     }
 }
