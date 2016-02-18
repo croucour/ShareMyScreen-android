@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dd.processbutton.iml.ActionProcessButton;
+
 import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
@@ -33,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private EditText EditLastname;
     private EditText EditEmail;
     private Button profile_cancel;
-    private Button profile_submit;
+    private ActionProcessButton profile_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         this.EditFirstname = (EditText) findViewById(R.id.profile_firstname_editText);
         this.EditLastname = (EditText) findViewById(R.id.profile_lastname_editText);
 
-        this.profile_submit = (Button) findViewById(R.id.profile_submit);
+        this.profile_submit = (ActionProcessButton) findViewById(R.id.profile_submit);
+        this.profile_submit.setMode(ActionProcessButton.Mode.ENDLESS);
+
         this.profile_cancel = (Button) findViewById(R.id.profile_cancel);
 
 
@@ -97,6 +101,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void submit() {
+        this.profile_submit.setProgress(1);
+
         HashMap<String, String> userParams = new HashMap<>();
 
         userParams.put("firstName", this.EditFirstname.getText().toString());

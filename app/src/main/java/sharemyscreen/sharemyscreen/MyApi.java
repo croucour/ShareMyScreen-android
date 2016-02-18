@@ -180,8 +180,8 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
                 if (this.dataParams != null ) {
                     Log.i("data", this.dataParams);
                 }
-                urlConnection.setReadTimeout(2000);
-                urlConnection.setConnectTimeout(2000);
+                urlConnection.setReadTimeout(5000);
+                urlConnection.setConnectTimeout(5000);
                 urlConnection.setRequestMethod(this.currentMethode);
 
                 urlConnection.setDoInput(true);

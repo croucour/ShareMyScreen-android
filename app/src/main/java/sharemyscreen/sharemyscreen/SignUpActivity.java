@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dd.processbutton.iml.ActionProcessButton;
+
 import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
@@ -32,7 +34,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     EditText EditPassword = null;
     EditText EditConfirPassword = null;
 
-    Button signup_submit = null;
+    ActionProcessButton signup_submit = null;
     Button signup_cancel = null;
 
     private SettingsManager settingsManager;
@@ -49,7 +51,9 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.EditPassword = (EditText) findViewById(R.id.signup_password_editText);
         this.EditConfirPassword = (EditText) findViewById(R.id.signup_confirmPassword_editText);
 
-        this.signup_submit = (Button) findViewById(R.id.signup_submit);
+        this.signup_submit = (ActionProcessButton) findViewById(R.id.signup_submit);
+        this.signup_submit.setMode(ActionProcessButton.Mode.ENDLESS);
+
         this.signup_cancel = (Button) findViewById(R.id.signup_cancel);
 
         this.signup_submit.setOnClickListener(this);
@@ -59,7 +63,10 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.signUpModel = new SignUpModel(this);
         this.signInModel = new SignInModel(this);
 
-
+        this.EditUsername.setText("test2");
+        this.EditEmail.setText("test2@test.fr");
+        this.EditPassword.setText("test2");
+        this.EditConfirPassword.setText("test2");
     }
 
     @Override
@@ -97,6 +104,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     }
 
     private void submit() {
+        this.signup_submit.setProgress(1);
         signup();
     }
 
@@ -107,21 +115,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         params.put("password", this.EditPassword.getText().toString());
         params.put("email", this.EditEmail.getText().toString());
 
-//        params.put("username", "tata");
-//        params.put("password", "toto");
-//        params.put("email", "toto@toto.fr");
-
-        this.signUpModel.createUser(params);
-
-        params = new HashMap<>();
-
-        params.put("username", this.EditUsername.getText().toString());
-        params.put("password", this.EditPassword.getText().toString());
-
-//        params.put("username", "tata");
-//        params.put("password", "toto");
-
-        this.signInModel.signIn(params, this);
+        this.signUpModel.createUser(params, this);
     }
 
     private boolean setErrorBeforeSubmit() {

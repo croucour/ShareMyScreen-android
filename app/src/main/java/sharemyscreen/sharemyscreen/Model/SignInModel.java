@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen.Model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
@@ -15,6 +16,7 @@ import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
 import sharemyscreen.sharemyscreen.MyApi;
+import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.RoomActivity;
 
@@ -38,6 +40,11 @@ public class SignInModel {
                 String access_token;
                 String refresh_token;
 
+                ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
+                if (actionProcessButton == null) {
+                    actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signup_submit);
+                }
+
                 if (!this.isErrorRequest()) {
                     if (this.resultJSON != null) {
                         try {
@@ -50,22 +57,35 @@ public class SignInModel {
                         }
                     }
 
+                    actionProcessButton.setProgress(100);
                     login(activity);
                 }
-                else if (this.get_responseCode() == 0) {
-                    Snackbar snackbar = Snackbar
-                            .make(activity.findViewById(R.id.display_snackbar), R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
-                    snackbar.show();
+                else {
+                    MyError.displayErrorApi(this, (CoordinatorLayout) activity.findViewById(R.id.display_snackbar), actionProcessButton);
                 }
-                else if (!this.resultJSON.isNull("error_description")){
-                    try {
-                        Snackbar snackbar = Snackbar
-                                .make(activity.findViewById(R.id.display_snackbar), this.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
-                        snackbar.show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+
+//                else if (this.get_responseCode() == 0) {
+//                    Snackbar snackbar = Snackbar
+//                            .make(activity.findViewById(R.id.display_snackbar), R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
+//                    snackbar.show();
+//                    actionProcessButton.setProgress(0);
+//                }
+//
+//                else if (this.resultJSON == null || this.resultJSON.isNull("error_description")){
+//                    try {
+//                        if (this.resultJSON == null) {
+//                            Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.display_snackbar), R.string.api_error, Snackbar.LENGTH_INDEFINITE);
+//                            snackbar.show();
+//                        }
+//                        else if (!this.resultJSON.isNull("error_description")) {
+//                            Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.display_snackbar), this.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
+//                            snackbar.show();
+//                        }
+//                        actionProcessButton.setProgress(0);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 
                 //TODO set une erreur
             }
@@ -76,15 +96,15 @@ public class SignInModel {
 
 
 //        this.myApi.encodeKeySecret64("QSfJrDjK2E1IGnu0", "3NGWXYIPr0ioUHdcfHLPCwv1eNSuGkML");
-        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W");
+//        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W"); // local clement
+        this.myApi.encodeKeySecret64("sqE1rRxhjPbmwgWc", "TvfCZag4DRfqLsa8anETSxRNWstscQQK"); // heroku
+
         this.myApi.setdataParams(userParams);
         this.myApi.setCurrentResquest("/oauth2/token/", "POST");
         this.myApi.execute();
     }
 
     private void login(Activity activity){
-        ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
-        actionProcessButton.setProgress(100);
         activity.finish();
 
         Intent intent = new Intent(activity, RoomActivity.class);
@@ -99,7 +119,6 @@ public class SignInModel {
         String refresh_token = this.settingsManager.select("refresh_token");
 
         ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
-
 
         if (refresh_token == null) {
             actionProcessButton.setProgress(0);
@@ -150,27 +169,15 @@ public class SignInModel {
 
                     login(activity);
                 }
-                else if (this.get_responseCode() == 0) {
-                    Snackbar snackbar = Snackbar
-                            .make(activity.findViewById(R.id.display_snackbar), R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
-                    snackbar.show();
-                    actionProcessButton.setProgress(0);
+                else {
+                    MyError.displayErrorApi(this, (CoordinatorLayout) activity.findViewById(R.id.display_snackbar), actionProcessButton);
                 }
-                else if (!this.resultJSON.isNull("error_description")){ // TODO : supprimer l'affichage de l'erreur ?
-                    try {
 
-                        actionProcessButton.setProgress(0);
-                        Snackbar snackbar = Snackbar
-                                .make(activity.findViewById(R.id.display_snackbar), this.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
-                        snackbar.show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         };
 
-        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W");
+//        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W"); // local clement
+        this.myApi.encodeKeySecret64("sqE1rRxhjPbmwgWc", "TvfCZag4DRfqLsa8anETSxRNWstscQQK"); // heroku
         this.myApi.setdataParams(userParams);
         this.myApi.setCurrentResquest("/oauth2/token/", "POST");
         this.myApi.execute();

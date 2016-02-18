@@ -3,8 +3,11 @@ package sharemyscreen.sharemyscreen.Model;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.Log;
 import android.widget.EditText;
+
+import com.dd.processbutton.iml.ActionProcessButton;
 
 import org.json.JSONException;
 
@@ -13,6 +16,7 @@ import java.util.HashMap;
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
 import sharemyscreen.sharemyscreen.MyApi;
+import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.ProfileActivity;
 import sharemyscreen.sharemyscreen.R;
 
@@ -38,11 +42,7 @@ public class ProfileModel {
             @Override
             protected void onPostExecute(String str) {
 
-                if (this.isErrorRequest()) {
-                    activity.finish();
-                }
-
-                if (this.resultJSON != null) {
+                if (!this.isErrorRequest()) {
                     try {
 
                         String firstname = null;
@@ -92,6 +92,9 @@ public class ProfileModel {
                         e.printStackTrace();
                     }
                 }
+                else {
+                    MyError.displayErrorApi(this, (CoordinatorLayout) activity.findViewById(R.id.display_snackbar), null);
+                }
             }
         };
         this.myApi.setCurrentResquest("/profile", "GET");
@@ -102,8 +105,15 @@ public class ProfileModel {
         this.myApi = new MyApi(this.settingsManager) {
             @Override
             protected void onPostExecute(String str) {
+                ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.profile_submit);
 
-                activity.finish();
+                if (!this.isErrorRequest()) {
+                    actionProcessButton.setProgress(100);
+                    activity.finish();
+                }
+                else {
+                    MyError.displayErrorApi(this, (CoordinatorLayout) activity.findViewById(R.id.display_snackbar), actionProcessButton);
+                }
             }
         };
 

@@ -32,6 +32,11 @@
         <item name="colorControlHighlight">@color/button_cancel</item>
         <item name="colorButtonNormal">@color/button_cancel</item>
         <item name="android:textColor">#ffffff</item>
+        <item name="pb_colorComplete">#70d62c</item>
+        <item name="pb_colorNormal">@color/button_cancel</item>
+        <item name="pb_colorPressed">@color/button_cancel</item>
+        <item name="pb_colorProgress">@color/button_cancel</item>
+        <item name="pb_colorError">#ff0004</item>
     </style>
 
 </resources>

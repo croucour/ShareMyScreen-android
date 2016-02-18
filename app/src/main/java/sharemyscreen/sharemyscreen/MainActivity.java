@@ -60,6 +60,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             roomsManager.addRoom("Room 2");
             roomsManager.addRoom("Room 3");
             roomsManager.addRoom("Room 4");
+            roomsManager.addRoom("Room 5");
+            roomsManager.addRoom("Room 6");
+            roomsManager.addRoom("Room 7");
+            roomsManager.addRoom("Room 8");
+            roomsManager.addRoom("Room 9");
+            roomsManager.addRoom("Room 10");
         }
 
         this.signInModel = new SignInModel(this);
@@ -98,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            this.signin_submitLogin.setProgress(1);
             this.onSubmit();
         }
         else if (v.getId() == R.id.signin_signup)
@@ -133,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void submit() {
+        this.signin_submitLogin.setProgress(1);
         login();
     }
 

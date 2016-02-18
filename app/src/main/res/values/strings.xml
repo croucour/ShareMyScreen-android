@@ -62,5 +62,6 @@
     <string name="profile_lastname_editText_hint">Votre nom</string>
     <string name="profile_phone_editText_hint">Votre téléphone</string>
     <string name="connexionError">Il est impossible de contacter le service, veuillez réesayer plus tard ou veuillez vérifier votre connexion</string>
+    <string name="api_error">Une erreure est survenue lors de la communication avec le serveur</string>
 
 </resources>

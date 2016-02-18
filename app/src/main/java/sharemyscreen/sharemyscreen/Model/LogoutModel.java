@@ -14,15 +14,15 @@ import sharemyscreen.sharemyscreen.MyApi;
 public class LogoutModel {
 
     private MyApi myApi;
-    private SettingsManager settingsManager;
+    private SettingsManager _settingsManager;
 
     public LogoutModel(Context contextApplication) {
-        this.settingsManager = new SettingsManager(contextApplication);
+        this._settingsManager = new SettingsManager(contextApplication);
     }
 
     public void logout(final Activity activity) {
 
-        this.myApi = new MyApi(this.settingsManager) {
+        this.myApi = new MyApi(this._settingsManager) {
             @Override
             protected void onPostExecute(String str) {
                 this.settingsManager.delete("access_token");
