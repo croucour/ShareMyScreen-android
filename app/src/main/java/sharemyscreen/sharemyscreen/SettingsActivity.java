@@ -62,8 +62,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         }
         else
         {
-            this.settings_ip.setText("127.0.0.1");
-            this.settings_port.setText("4000");
+            this.settings_ip.setText("sharemyscreen-api.herokuapp.com");
+            this.settings_port.setText("80");
         }
 
     }

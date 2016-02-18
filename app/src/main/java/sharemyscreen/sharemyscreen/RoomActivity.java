@@ -115,21 +115,21 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
         mListView.setMenuCreator(creator);
 
         // step 2. listener item click event
-        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                ApplicationInfo item = mAppList.get(position);
-                switch (index) {
-                    case 0:
-                        break;
-                    case 1:
-                        mAppList.remove(position);
-                        mAdapter.notifyDataSetChanged();
-                        break;
-                }
-                return false;
-            }
-        });
+//        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+//                ApplicationInfo item = mAppList.get(position);
+//                switch (index) {
+//                    case 0:
+//                        break;
+//                    case 1:
+//                        mAppList.remove(position);
+//                        mAdapter.notifyDataSetChanged();
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
 
         // set SwipeListener
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {

@@ -63,10 +63,10 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.signUpModel = new SignUpModel(this);
         this.signInModel = new SignInModel(this);
 
-        this.EditUsername.setText("test2");
-        this.EditEmail.setText("test2@test.fr");
-        this.EditPassword.setText("test2");
-        this.EditConfirPassword.setText("test2");
+//        this.EditUsername.setText("test2");
+//        this.EditEmail.setText("test2@test.fr");
+//        this.EditPassword.setText("test2");
+//        this.EditConfirPassword.setText("test2");
     }
 
     @Override

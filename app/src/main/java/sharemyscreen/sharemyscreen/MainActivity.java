@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         this.signin_username = (EditText) findViewById(R.id.signin_username_editText);
-        this.signin_username.setText("test");
-        this.signin_password.setText("test");
+//        this.signin_username.setText("test");
+//        this.signin_password.setText("test");
 
         this.signin_submitLogin.setOnClickListener(this);
         this.signin_signup.setOnClickListener(this);
