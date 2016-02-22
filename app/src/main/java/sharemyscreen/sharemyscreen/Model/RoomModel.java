@@ -23,17 +23,17 @@ import sharemyscreen.sharemyscreen.R;
  */
 public class RoomModel {
 
-    private Context _contextApplication;
     private MyApi myApi;
     private SettingsManager settingsManager;
+    private Context _pContext = null;
 
-    public RoomModel(Context contextApplication) {
-        this.settingsManager = new SettingsManager(contextApplication);
-        this._contextApplication = contextApplication;
+    public RoomModel(Context pContext) {
+        this.settingsManager = new SettingsManager(pContext);
+        this._pContext = pContext;
     }
 
     public void getRooms(final Activity activity) {
-        this.myApi = new MyApi(this.settingsManager) {
+        this.myApi = new MyApi(null, _pContext) {
             @Override
             protected void onPostExecute(String str) {
 

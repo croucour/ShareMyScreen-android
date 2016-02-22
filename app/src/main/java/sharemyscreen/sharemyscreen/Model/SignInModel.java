@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 
@@ -14,7 +14,9 @@ import org.json.JSONException;
 import java.util.Date;
 import java.util.HashMap;
 
+import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.MyApi;
 import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.R;
@@ -23,18 +25,14 @@ import sharemyscreen.sharemyscreen.RoomActivity;
 /**
  * Created by roucou-c on 07/12/15.
  */
-public class SignInModel {
+public class SignInModel extends MyModel{
 
-    private MyApi myApi;
-    private SettingsManager settingsManager;
-
-    public SignInModel(Context contextApplication) {
-        this.settingsManager = new SettingsManager(contextApplication);
+    public SignInModel(Context pContext) {
+        super(pContext);
     }
 
     public void signIn(HashMap<String, String> userParams, final Activity activity) {
-
-        this.myApi = new MyApi(this.settingsManager) {
+        this._myApi = new MyApi(_pContext) {
             @Override
             protected void onPostExecute(String str) {
                 String access_token;
@@ -50,44 +48,35 @@ public class SignInModel {
                         try {
                             access_token = this.resultJSON.getString("access_token");
                             refresh_token = this.resultJSON.getString("refresh_token");
-                            this.settingsManager.addSettings("access_token", access_token);
-                            this.settingsManager.addSettings("refresh_token", refresh_token);
+
+                            EditText editTextUsername = (EditText) activity.findViewById(R.id.signin_username_editText);
+                            EditText editTextPassword = (EditText) activity.findViewById(R.id.signin_password_editText);
+
+                            String username = editTextUsername.getText().toString();
+                            String password = editTextPassword.getText().toString();
+
+                            ProfileEntity profileEntity = _profileManager.modifyProfil(username, password); // sauvegarde du password en fonction de username
+                            profileEntity.set_access_token(access_token);
+                            profileEntity.set_refresh_token(refresh_token);
+                            profileEntity.set_expireAccess_token(this.getNewExpireToken());
+                            _profileManager.modifyProfil(profileEntity);
+                            _profileManager.get_profileDAO().setProfileIsLogged(profileEntity);
+
+                            SettingsManager settingsManager = new SettingsManager(_pContext);
+                            settingsManager.addSettings("lastSignInProfileId", String.valueOf(profileEntity.get_id()));
+
+                            ProfileModel profileModel = new ProfileModel(_pContext);
+                            profileModel.getProfil(null);
+                            actionProcessButton.setProgress(100);
+                            login(activity);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
-                    actionProcessButton.setProgress(100);
-                    login(activity);
                 }
                 else {
                     MyError.displayErrorApi(this, (CoordinatorLayout) activity.findViewById(R.id.display_snackbar), actionProcessButton);
                 }
-
-//                else if (this.get_responseCode() == 0) {
-//                    Snackbar snackbar = Snackbar
-//                            .make(activity.findViewById(R.id.display_snackbar), R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
-//                    snackbar.show();
-//                    actionProcessButton.setProgress(0);
-//                }
-//
-//                else if (this.resultJSON == null || this.resultJSON.isNull("error_description")){
-//                    try {
-//                        if (this.resultJSON == null) {
-//                            Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.display_snackbar), R.string.api_error, Snackbar.LENGTH_INDEFINITE);
-//                            snackbar.show();
-//                        }
-//                        else if (!this.resultJSON.isNull("error_description")) {
-//                            Snackbar snackbar = Snackbar.make(activity.findViewById(R.id.display_snackbar), this.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
-//                            snackbar.show();
-//                        }
-//                        actionProcessButton.setProgress(0);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
-                //TODO set une erreur
             }
         };
 
@@ -95,13 +84,9 @@ public class SignInModel {
         userParams.put("scope", "offline_access");
 
 
-//        this.myApi.encodeKeySecret64("QSfJrDjK2E1IGnu0", "3NGWXYIPr0ioUHdcfHLPCwv1eNSuGkML");
-//        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W"); // local clement
-        this.myApi.encodeKeySecret64("sqE1rRxhjPbmwgWc", "TvfCZag4DRfqLsa8anETSxRNWstscQQK"); // heroku
-
-        this.myApi.setdataParams(userParams);
-        this.myApi.setCurrentResquest("/oauth2/token/", "POST");
-        this.myApi.execute();
+        this._myApi.setdataParams(userParams);
+        this._myApi.setCurrentResquest("/oauth2/token/", "POST");
+        this._myApi.execute();
     }
 
     private void login(Activity activity){
@@ -112,42 +97,51 @@ public class SignInModel {
     }
 
     public void isLogin(final Activity activity) {
-
-        HashMap<String, String> params = new HashMap<>();
-
-
-        String refresh_token = this.settingsManager.select("refresh_token");
-
         ActionProcessButton actionProcessButton = (ActionProcessButton) activity.findViewById(R.id.signin_submitLogin);
 
-        if (refresh_token == null) {
-            actionProcessButton.setProgress(0);
-            return;
+        SettingsManager settingsManager = new SettingsManager(_pContext);
+
+        String lastSignInProfileId = settingsManager.select("lastSignInProfileId");
+        ProfileEntity profileEntity = null;
+
+        if (lastSignInProfileId != null) {
+            profileEntity = _profileManager.get_profileDAO().selectById(Long.parseLong(lastSignInProfileId));
         }
-        actionProcessButton.setProgress(1);
 
-        params.put("grant_type", "refresh_token");
-        params.put("refresh_token", refresh_token);
+        String refresh_token = null;
+        String expireAccess_token = null;
 
-        this.refreshToken(params, activity);
+        if (profileEntity != null) {
+            refresh_token = profileEntity.get_refresh_token();
+            expireAccess_token = profileEntity.get_expireAccess_token();
+        }
 
-//        String expireToken = this.settingsManager.select("expireToken");
-//
-//        if (expireToken == null) {
-//            return false;
-//        }
-//
-//        Date date = new Date();
-//        if (date.getTime() < Long.parseLong(expireToken)) {
-//            login(activity);
-//            return true;
-//        }
-//
-//        return false;
+        if (expireAccess_token != null && refresh_token != null) {
+
+            Date date = new Date();
+            if (date.getTime() > Long.parseLong(expireAccess_token)) {
+                actionProcessButton.setProgress(1);
+
+                HashMap<String, String> params = new HashMap<>();
+
+                params.put("grant_type", "refresh_token");
+                params.put("refresh_token", refresh_token);
+
+                this.refreshToken(params, activity);
+            }
+            else {
+                login(activity);
+            }
+        }
+        else {
+            Log.d("info login", "pas refresh token ou de access token");
+            actionProcessButton.setProgress(0);
+        }
     }
 
     public void refreshToken(HashMap<String, String> userParams, final Activity activity) {
-        this.myApi = new MyApi(this.settingsManager) {
+
+        this._myApi = new MyApi(_profileLogged, _pContext) {
             @Override
             protected void onPostExecute(String str) {
 
@@ -159,7 +153,11 @@ public class SignInModel {
                     if (this.resultJSON != null) {
                         try {
                             access_token = this.resultJSON.getString("access_token");
-                            this.settingsManager.addSettings("access_token", access_token);
+                            _profileLogged.set_access_token(access_token);
+                            _profileManager.modifyProfil(_profileLogged);
+
+                            _profileManager.get_profileDAO().setProfileIsLogged(_profileLogged);
+
                             actionProcessButton.setProgress(100);
 
                         } catch (JSONException e) {
@@ -176,10 +174,8 @@ public class SignInModel {
             }
         };
 
-//        this.myApi.encodeKeySecret64("CJtYXgR8GlFWZfTr", "YNUnOblELFjjJmUIvyeVzmPIlY3VlH3W"); // local clement
-        this.myApi.encodeKeySecret64("sqE1rRxhjPbmwgWc", "TvfCZag4DRfqLsa8anETSxRNWstscQQK"); // heroku
-        this.myApi.setdataParams(userParams);
-        this.myApi.setCurrentResquest("/oauth2/token/", "POST");
-        this.myApi.execute();
+        this._myApi.setdataParams(userParams);
+        this._myApi.setCurrentResquest("/oauth2/token/", "POST");
+        this._myApi.execute();
     }
 }

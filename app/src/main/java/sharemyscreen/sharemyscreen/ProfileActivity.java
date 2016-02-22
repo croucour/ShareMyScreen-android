@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +19,9 @@ import com.dd.processbutton.iml.ActionProcessButton;
 
 import java.util.HashMap;
 
+import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
+import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Model.LogoutModel;
 import sharemyscreen.sharemyscreen.Model.ProfileModel;
 
@@ -46,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         setContentView(R.layout.profile);
 
-        this.EditUsername = (EditText) findViewById(R.id.profile_username_editText);
+        this.EditUsername = (EditText) findViewById(R.id.profile_username_editText); // TODO : supprimer le username
         this.EditEmail = (EditText) findViewById(R.id.profile_email_editText);
         this.EditPhone = (EditText) findViewById(R.id.profile_phone_editText);
         this.EditFirstname = (EditText) findViewById(R.id.profile_firstname_editText);
@@ -65,9 +68,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        ProfileManager profileManager = new ProfileManager(this);
+        ProfileEntity profile = profileManager.get_profileDAO().selectProfileLogged();
+
+        if (profile != null) {
+            populateProfile(profile);
+        }
+
         _profileModel.getProfil(this);
     }
 
+    public void populateProfile(ProfileEntity profile) {
+        this.EditUsername.setText(profile.get_username());
+        this.EditEmail.setText(profile.get_email());
+        this.EditFirstname.setText(profile.get_firstName());
+        this.EditLastname.setText(profile.get_lastName());
+        this.EditPhone.setText(profile.get_phone());
+    }
 
     @Override
     public void onClick(View v) {

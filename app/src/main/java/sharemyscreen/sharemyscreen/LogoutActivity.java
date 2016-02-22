@@ -33,7 +33,7 @@ public class LogoutActivity extends Activity implements View.OnClickListener {
 //                @Override
 //                protected void onPostExecute(String str) {
 //
-//                    SharedPreferences tokenFile = this.contextApplication.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
+//                    SharedPreferences tokenFile = this._pContext.getSharedPreferences(TOKENFILE, android.content.Context.MODE_PRIVATE);
 //
 //                    SharedPreferences.Editor edit = tokenFile.edit();
 //                    edit.clear();

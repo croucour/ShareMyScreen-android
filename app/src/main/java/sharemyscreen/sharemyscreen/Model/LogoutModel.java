@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.MainActivity;
 import sharemyscreen.sharemyscreen.MyApi;
 
@@ -13,21 +15,27 @@ import sharemyscreen.sharemyscreen.MyApi;
  */
 public class LogoutModel {
 
+    private final ProfileManager _profileManager;
     private MyApi myApi;
-    private SettingsManager _settingsManager;
+    private Context _pContext = null;
 
-    public LogoutModel(Context contextApplication) {
-        this._settingsManager = new SettingsManager(contextApplication);
+    public LogoutModel(Context pContext) {
+        this._profileManager = new ProfileManager(pContext);
+        this._pContext = pContext;
     }
 
     public void logout(final Activity activity) {
+        final ProfileEntity profileEntity = _profileManager.get_profileDAO().selectProfileLogged();
 
-        this.myApi = new MyApi(this._settingsManager) {
+        this.myApi = new MyApi(profileEntity, _pContext) {
             @Override
             protected void onPostExecute(String str) {
-                this.settingsManager.delete("access_token");
-                this.settingsManager.delete("expireToken");
-                this.settingsManager.delete("refresh_token");
+                profileEntity.set_access_token(null);
+                profileEntity.set_expireAccess_token(null);
+                profileEntity.set_refresh_token(null);
+                profileEntity.set_expireRefresh_token(null);
+
+                _profileManager.modifyProfil(profileEntity);
 
                 Intent intent = new Intent(activity, MainActivity.class);
                 activity.startActivity(intent);

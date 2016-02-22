@@ -19,6 +19,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(RoomsDAO.TABLE_CREATE);
         db.execSQL(ProfileDAO.TABLE_CREATE);
         db.execSQL(SettingsDAO.TABLE_CREATE);
+        db.execSQL(RequestOfflineDAO.TABLE_CREATE);
     }
 
     @Override
@@ -26,6 +27,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(RoomsDAO.TABLE_DROP);
         db.execSQL(ProfileDAO.TABLE_DROP);
         db.execSQL(SettingsDAO.TABLE_DROP);
+        db.execSQL(RequestOfflineDAO.TABLE_DROP);
         onCreate(db);
     }
 }

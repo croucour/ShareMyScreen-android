@@ -43,16 +43,30 @@ public class MyError {
     }
 
     static public void displayErrorApi(MyApi myApi, final CoordinatorLayout coordinatorLayout, ActionProcessButton actionProcessButton) {
-        if (myApi.get_responseCode() == 0) {
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
-            snackbar.show();
-            if (actionProcessButton != null) {
-                actionProcessButton.setProgress(0);
+
+        if (myApi.is_internetConnection()) {
+            if (myApi.get_responseCode() == 0) { // impossible de contacter l'api
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
+                if (actionProcessButton != null) {
+                    actionProcessButton.setProgress(0);
+                }
+            } else if (myApi.isErrorRequest()) { // erreur de l'api
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Erreur de l'api", Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
+                if (actionProcessButton != null) {
+                    actionProcessButton.setProgress(0);
+                }
+            }
+            else {
+                if (actionProcessButton != null) {
+                    actionProcessButton.setProgress(100);
+                }
             }
         }
-        else if (myApi.isErrorRequest()) {
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Erreur de l'api", Snackbar.LENGTH_INDEFINITE);
+        else { // pas de connexion internet
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Travail hors connexion", Snackbar.LENGTH_INDEFINITE);
             snackbar.show();
             if (actionProcessButton != null) {
                 actionProcessButton.setProgress(0);
@@ -75,11 +89,6 @@ public class MyError {
 //                actionProcessButton.setProgress(0);
 //            }
 //        }
-        else {
-            if (actionProcessButton != null) {
-                actionProcessButton.setProgress(100);
-            }
-        }
     }
 
 }

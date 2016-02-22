@@ -27,6 +27,7 @@ import sharemyscreen.sharemyscreen.DAO.RoomsManager;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
 import sharemyscreen.sharemyscreen.Entities.Room;
 import sharemyscreen.sharemyscreen.Model.SignInModel;
+import sharemyscreen.sharemyscreen.Services.MyService;
 
 /**
  * Created by roucou-c on 07/12/15.
@@ -85,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         this.signin_username = (EditText) findViewById(R.id.signin_username_editText);
-//        this.signin_username.setText("test");
-//        this.signin_password.setText("test");
+        this.signin_username.setText("test");
+        this.signin_password.setText("test");
 
         this.signin_submitLogin.setOnClickListener(this);
         this.signin_signup.setOnClickListener(this);
@@ -96,6 +97,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent intent = new Intent(this, MyService.class);
+        startService(intent);
+
     }
 
     @Override

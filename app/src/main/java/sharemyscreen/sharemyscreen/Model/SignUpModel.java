@@ -21,19 +21,21 @@ public class SignUpModel{
     private final SignInModel _signInModel;
     private MyApi _myApi;
     private SettingsManager _settingsManager;
+    private Context _pContext = null;
 
-    public SignUpModel(Context contextApplication) {
-        this._settingsManager = new SettingsManager(contextApplication);
-        this._signInModel = new SignInModel(contextApplication);
+    public SignUpModel(Context pContext) {
+        this._settingsManager = new SettingsManager(pContext);
+        this._signInModel = new SignInModel(pContext);
+        this._pContext = pContext;
     }
 
-    public void createUser(final HashMap<String, String> userParams,final Activity activity)
+    public void createUser(final HashMap<String, String> userParams, final Activity activity)
     {
         this._settingsManager.delete("access_token");
         this._settingsManager.delete("expireToken");
         this._settingsManager.delete("refresh_token");
 
-        this._myApi = new MyApi(this._settingsManager) {
+        this._myApi = new MyApi(null, _pContext) {
 
             @Override
             protected void onPostExecute(String str) {
