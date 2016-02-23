@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 
@@ -110,5 +113,20 @@ public class RequestOfflineDAO extends DAOBase{
         contentValues.put(TREATED, "1");
 
         _mDb.update(TABLE_NAME, contentValues, KEY + " = ?", new String[]{String.valueOf(id)});
+    }
+
+    public ArrayList<RequestOfflineEntity> selectAll() {
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " ORDER BY " + KEY  , null);
+
+        ArrayList<RequestOfflineEntity> requestOfflineEntities = new ArrayList<>();
+
+        RequestOfflineEntity tmpRequestOfflineEntity;
+        while (c.moveToNext()) {
+            tmpRequestOfflineEntity = new RequestOfflineEntity(c);
+            requestOfflineEntities.add(tmpRequestOfflineEntity);
+        }
+
+        c.close();
+        return requestOfflineEntities;
     }
 }

@@ -23,6 +23,7 @@
         <activity android:name=".SettingsActivity" android:label="@string/app_name"/>
         <activity android:name=".RoomActivity" android:label="@string/app_name"/>
         <activity android:name=".ProfileActivity" android:label="@string/app_name"/>
+        <activity android:name=".LogOfflineActivity" android:label="@string/app_name"/>
 
         <receiver android:name="sharemyscreen.sharemyscreen.Services.MyBroadcastreceiver">
             <intent-filter>

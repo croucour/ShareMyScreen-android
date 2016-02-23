@@ -8,6 +8,11 @@
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/log_offline"
+        android:title="@string/log_offline"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/disconnect"
         android:title="@string/disconnect"
         android:orderInCategory="100"

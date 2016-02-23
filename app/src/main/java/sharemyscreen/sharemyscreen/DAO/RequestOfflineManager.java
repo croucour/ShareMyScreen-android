@@ -2,6 +2,9 @@ package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 
 /**
@@ -26,5 +29,9 @@ public class RequestOfflineManager {
 
     public void modify(RequestOfflineEntity requestOfflineEntity) {
         this._requestOfflineDAO.modify(requestOfflineEntity);
+    }
+
+    public ArrayList<RequestOfflineEntity> selectAll() {
+        return this._requestOfflineDAO.selectAll();
     }
 }

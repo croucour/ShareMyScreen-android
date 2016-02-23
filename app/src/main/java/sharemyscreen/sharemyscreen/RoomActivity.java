@@ -236,6 +236,10 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, ProfileActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.log_offline:
+                Intent intent2 = new Intent(this, LogOfflineActivity.class);
+                startActivity(intent2);
+                break;
             case R.id.disconnect:
                 this._logoutModel.logout(this);
                 break;
