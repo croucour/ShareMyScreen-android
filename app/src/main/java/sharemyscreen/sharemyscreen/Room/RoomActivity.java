@@ -1,6 +1,7 @@
-package sharemyscreen.sharemyscreen;
+package sharemyscreen.sharemyscreen.Room;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
@@ -8,12 +9,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -31,32 +31,36 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
-import sharemyscreen.sharemyscreen.Model.LogoutModel;
-import sharemyscreen.sharemyscreen.Model.RoomModel;
+import sharemyscreen.sharemyscreen.LogOfflineActivity;
+import sharemyscreen.sharemyscreen.Logout.LogoutPresenter;
+import sharemyscreen.sharemyscreen.Profile.ProfileActivity;
+import sharemyscreen.sharemyscreen.R;
+import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
 
-public class RoomActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class RoomActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IRoomView{
 
     private RoomsManager _roomsManager;
-    private LogoutModel _logoutModel;
-    private RoomModel _roomModel;
+    private LogoutPresenter _logoutPresenter;
+    private RoomPresenter _roomPresenter;
 
-    private List<ApplicationInfo> mAppList;
     private MyAdapter mAdapter;
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout _swipeRefreshLayout;
+    private Context _pContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.room);
 
+        this._pContext = getApplicationContext();
         this._roomsManager = new RoomsManager(this);
-        this._logoutModel = new LogoutModel(this);
-        _roomModel = new RoomModel(this);
+        this._logoutPresenter = new LogoutPresenter(this, _pContext);
+        this._roomPresenter = new RoomPresenter(this, _pContext);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,8 +82,7 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
 
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.display_snackbar);
 
-
-        // step 1. create a MenuCreator
+            // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
             @Override
@@ -219,7 +222,7 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onRefresh() {
-        this._roomModel.getRooms(this);
+        this._roomPresenter.onSwipedForRefreshRooms();
     }
 
     @Override
@@ -233,15 +236,13 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (item.getItemId()) {
             case R.id.modify_profil:
-                Intent intent = new Intent(this, ProfileActivity.class);
-                startActivity(intent);
+                this.profile();
                 break;
             case R.id.log_offline:
-                Intent intent2 = new Intent(this, LogOfflineActivity.class);
-                startActivity(intent2);
+                this.logOffline();
                 break;
             case R.id.disconnect:
-                this._logoutModel.logout(this);
+                this._logoutPresenter.onLogoutCliked();
                 break;
         }
 
@@ -255,6 +256,55 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.fab:
                 break;
         }
+    }
+
+    @Override
+    public void logout() {
+        Intent intent = new Intent(this, SignInActivity.class);
+        this.startActivity(intent);
+        this.finish();
+    }
+
+    @Override
+    public void profile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void logOffline() {
+        Intent intent = new Intent(this, LogOfflineActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public CoordinatorLayout getCoordinatorLayout() {
+        return (CoordinatorLayout) findViewById(R.id.display_snackbar);
+    }
+
+    @Override
+    public void setRefreshing(boolean state) {
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setRefreshing(state);
+    }
+
+    @Override
+    public void setCallbackSnackbar(Snackbar snackbar) {
+        snackbar.setCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab.animate().translationYBy((snackbar.getView().getHeight()));
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+                super.onShown(snackbar);
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab.animate().translationYBy(-(snackbar.getView().getHeight()));
+            }
+        });
     }
 }
 

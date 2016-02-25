@@ -30,58 +30,50 @@ public class LogOfflineActivity extends AppCompatActivity {
 
         TableLayout table = (TableLayout) findViewById(R.id.table_log);
 
-//        ableRow row; // création d'un élément : ligne
-//        TextView tv1,tv2; // création des cellules
-
         List<RequestOfflineEntity> requestOfflineEntities =  _requestOfflineManager.selectAll();
 
-        TableRow row = null;
-        TextView tv1 = null;
-// pour chaque ligne
+        TableRow row;
+        TextView tv1;
+
         for(int i=0;i<requestOfflineEntities.size();i++) {
             RequestOfflineEntity requestOfflineEntity = requestOfflineEntities.get(i);
-            row = new TableRow(this); // création d'une nouvelle ligne
+            row = new TableRow(this);
 
-            tv1 = new TextView(this); // création cellule
-            tv1.setText(String.valueOf(requestOfflineEntity.get_id())); // ajout du texte
-            tv1.setGravity(Gravity.LEFT); // centrage dans la cellule
-            // adaptation de la largeur de colonne à l'écran :
+            tv1 = new TextView(this);
+            tv1.setText(String.valueOf(requestOfflineEntity.get_id()));
+            tv1.setGravity(Gravity.LEFT);
+
             tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.addView(tv1);
 
-            // ajout de la ligne au tableau
-            tv1 = new TextView(this); // création cellule
-            tv1.setText(requestOfflineEntity.get_dataParams()); // ajout du texte
-            tv1.setGravity(Gravity.LEFT); // centrage dans la cellule
-            // adaptation de la largeur de colonne à l'écran :
+            tv1 = new TextView(this);
+            tv1.setText(requestOfflineEntity.get_dataParams());
+            tv1.setGravity(Gravity.LEFT);
+
             tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.addView(tv1);
 
-            tv1 = new TextView(this); // création cellule
-            tv1.setText(requestOfflineEntity.get_request()); // ajout du texte
-            tv1.setGravity(Gravity.LEFT); // centrage dans la cellule
-            // adaptation de la largeur de colonne à l'écran :
+            tv1 = new TextView(this);
+            tv1.setText(requestOfflineEntity.get_request());
+            tv1.setGravity(Gravity.LEFT);
+
             tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.addView(tv1);
 
-            tv1 = new TextView(this); // création cellule
-            tv1.setText(String.valueOf(requestOfflineEntity.get_responseCode())); // ajout du texte
-            tv1.setGravity(Gravity.LEFT); // centrage dans la cellule
-            // adaptation de la largeur de colonne à l'écran :
+            tv1 = new TextView(this);
+            tv1.setText(String.valueOf(requestOfflineEntity.get_responseCode()));
+            tv1.setGravity(Gravity.LEFT);
+
             tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.addView(tv1);
 
-            tv1 = new TextView(this); // création cellule
-            tv1.setText(String.valueOf(requestOfflineEntity.is_treated())); // ajout du texte
-            tv1.setGravity(Gravity.LEFT); // centrage dans la cellule
-            // adaptation de la largeur de colonne à l'écran :
+            tv1 = new TextView(this);
+            tv1.setText(String.valueOf(requestOfflineEntity.is_treated()));
+            tv1.setGravity(Gravity.LEFT);
+
             tv1.setLayoutParams(new TableRow.LayoutParams(0, android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
             row.addView(tv1);
 
-
-
-
-            // ajout de la ligne au tableau
             table.addView(row);
         }
     }

@@ -64,5 +64,11 @@
     <string name="connexionError">Il est impossible de contacter le service, veuillez réesayer plus tard ou veuillez vérifier votre connexion</string>
     <string name="api_error">Une erreure est survenue lors de la communication avec le serveur</string>
     <string name="log_offline">Log Offline</string>
+    <string name="offline">Travail hors connexion</string>
+    <string name="profile_lasttNameEmpty">error</string>
+    <string name="profile_lastNameEmpty">error</string>
+    <string name="profile_EmailEmpty">error</string>
+    <string name="notEmail">error</string>
+    <string name="profile_PhoneEmpty">error</string>
 
 </resources>

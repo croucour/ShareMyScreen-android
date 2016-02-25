@@ -3,7 +3,7 @@ package sharemyscreen.sharemyscreen;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyString {
+public class MyString{
 
     protected String str;
 
@@ -12,7 +12,7 @@ public class MyString {
         this.str = str;
     }
 
-    protected boolean isEmailValid()
+    public boolean isEmailValid()
     {
         String regExpn =
                 "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"

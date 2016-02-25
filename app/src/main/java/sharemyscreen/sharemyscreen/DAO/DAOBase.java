@@ -16,6 +16,7 @@ public abstract class DAOBase {
 
     public DAOBase(Context pContext) {
         this._mHandler = new DatabaseHandler(pContext, NOM, null, VERSION);
+        this.open();
     }
 
     public SQLiteDatabase open() {
@@ -32,5 +33,11 @@ public abstract class DAOBase {
 
     public void restartDatabase() {
         this._mHandler.onUpgrade(_mDb, 0, 0);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        this.close();
+        super.finalize();
     }
 }

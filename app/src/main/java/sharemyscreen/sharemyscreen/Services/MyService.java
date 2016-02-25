@@ -13,14 +13,10 @@ import android.util.Log;
 
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
-import sharemyscreen.sharemyscreen.Model.RequestOfflineModel;
-import sharemyscreen.sharemyscreen.MyApi;
 
 public class MyService  extends Service{
-
 
     private static String CLASSE = MyService.class.getName();
     private static Thread _myThead = null;
@@ -58,7 +54,7 @@ public class MyService  extends Service{
         private boolean _bThreadExec = false;
         private Context _pContext;
         private final RequestOfflineManager _requestOfflineManager;
-        private RequestOfflineModel _requestOfflineModel = null;
+        private RequestOfflineService _requestOfflineModel = null;
 
         private ProfileEntity _currentprofile = null;
 
@@ -66,7 +62,7 @@ public class MyService  extends Service{
             _pContext = pContext;
             _requestOfflineManager = new RequestOfflineManager(pContext);
             _profileManager = new ProfileManager(pContext);
-            _requestOfflineModel = new RequestOfflineModel(null, pContext);
+            _requestOfflineModel = new RequestOfflineService(null, pContext);
         }
 
         @Override
@@ -90,13 +86,13 @@ public class MyService  extends Service{
         }
 
         private void requestOfflineTreatment() {
-            RequestOfflineEntity requestOfflineEntity = _requestOfflineManager.get_requestOfflineDAO().selectUntreated();
+            RequestOfflineEntity requestOfflineEntity = _requestOfflineManager.selectUntreated();
             if (requestOfflineEntity != null) {
                 Log.d(CLASSE, requestOfflineEntity.toString());
 
-                _requestOfflineManager.get_requestOfflineDAO().setRequestOfflineTreated(requestOfflineEntity.get_id());
+                _requestOfflineManager.setRequestOfflineTreated(requestOfflineEntity.get_id());
 
-                Log.d(CLASSE, _requestOfflineManager.get_requestOfflineDAO().selectById(requestOfflineEntity.get_id()).toString());
+                Log.d(CLASSE, _requestOfflineManager.selectById(requestOfflineEntity.get_id()).toString());
 
                 _currentprofile = _profileManager.selectById(requestOfflineEntity.get_profile_id());
                 if (_currentprofile !=  null) {

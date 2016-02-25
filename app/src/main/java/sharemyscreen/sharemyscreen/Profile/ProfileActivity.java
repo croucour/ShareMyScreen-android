@@ -1,12 +1,10 @@
-package sharemyscreen.sharemyscreen;
+package sharemyscreen.sharemyscreen.Profile;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,18 +18,17 @@ import com.dd.processbutton.iml.ActionProcessButton;
 import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.RoomsManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
-import sharemyscreen.sharemyscreen.Model.LogoutModel;
-import sharemyscreen.sharemyscreen.Model.ProfileModel;
+import sharemyscreen.sharemyscreen.Logout.LogoutService;
+import sharemyscreen.sharemyscreen.R;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, IProfileView {
 
-    private LogoutModel _logoutModel;
-    private ProfileModel _profileModel;
+    private LogoutService _logoutService;
+    private ProfilePresenter _profilePresenter;
     private EditText EditUsername;
     private EditText EditPhone;
     private EditText EditFirstname;
@@ -44,8 +41,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _profileModel = new ProfileModel(this);
-        _logoutModel = new LogoutModel(this);
+        _profilePresenter = new ProfilePresenter(this, getApplicationContext());
+//        _logoutService = new LogoutService(this);
 
         setContentView(R.layout.profile);
 
@@ -71,15 +68,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
         ProfileManager profileManager = new ProfileManager(this);
-        ProfileEntity profile = profileManager.get_profileDAO().selectProfileLogged();
+        ProfileEntity profile = profileManager.selectProfileLogged();
 
         if (profile != null) {
             populateProfile(profile);
         }
 
-        _profileModel.getProfil(this);
+        _profilePresenter.getProfile();
     }
 
+    @Override
     public void populateProfile(ProfileEntity profile) {
         this.EditUsername.setText(profile.get_username());
         this.EditEmail.setText(profile.get_email());
@@ -93,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         switch (v.getId()) {
             case R.id.profile_submit:
-                this.onSubmit();
+                this._profilePresenter.onSaveClicked();
                 break;
             case R.id.profile_cancel:
                 this.finish();
@@ -107,31 +105,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (v.getId() == R.id.signup_confirmPassword_editText)
         {
-            return this.onSubmit();
+            this._profilePresenter.onSaveClicked();
         }
         return false;
     }
 
-    private boolean onSubmit() {
-        if (setErrorBeforeSubmit()) {
-            submit();
-        }
-        return true;
-    }
 
-    private void submit() {
-        this.profile_submit.setProgress(1);
-
-        HashMap<String, String> userParams = new HashMap<>();
-
-        userParams.put("firstName", this.EditFirstname.getText().toString());
-        userParams.put("lastName", this.EditLastname.getText().toString());
-        userParams.put("phone", this.EditPhone.getText().toString());
-        userParams.put("username", this.EditUsername.getText().toString());
-        userParams.put("email", this.EditEmail.getText().toString());
-
-        this._profileModel.saveProfile(userParams, this);
-    }
+//    private void submit() {
+//        this.profile_submit.setProgress(1);
+//
+//        HashMap<String, String> userParams = new HashMap<>();
+//
+//        userParams.put("firstName", this.EditFirstname.getText().toString());
+//        userParams.put("lastName", this.EditLastname.getText().toString());
+//        userParams.put("phone", this.EditPhone.getText().toString());
+//        userParams.put("username", this.EditUsername.getText().toString());
+//        userParams.put("email", this.EditEmail.getText().toString());
+//
+////        this._profileModel.saveProfile(userParams, this);
+//    }
 
     private boolean setErrorBeforeSubmit() {
         boolean submit = true;
@@ -166,14 +158,83 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         switch (item.getItemId()) {
             case R.id.modify_profil:
-                _profileModel.getProfil(this);
+//                _profileModel.getProfil();
                 break;
             case R.id.disconnect:
-                this._logoutModel.logout(this);
+//                this._logoutService.logout(this);
                 break;
         }
 
         return false;
     }
 
+    @Override
+    public CoordinatorLayout getCoordinatorLayout() {
+        return (CoordinatorLayout) findViewById(R.id.display_snackbar);
+    }
+
+    @Override
+    public String getFirstName() {
+        return this.EditFirstname.getText().toString();
+    }
+
+    @Override
+    public String getLastName() {
+        return this.EditLastname.getText().toString();
+    }
+
+    @Override
+    public String getEmail() {
+        return this.EditEmail.getText().toString();
+    }
+
+    @Override
+    public String getPhone() {
+        return this.EditPhone.getText().toString();
+    }
+
+    @Override
+    public void setProcessLoadingButton(int process) {
+
+    }
+
+    public void initializeInputLayout() {
+        this.setErrorFirstName(0);
+        this.setErrorLastName(0);
+        this.setErrorEmail(0);
+        this.setErrorPhone(0);
+    }
+
+
+    @Override
+    public void setErrorFirstName(int resId) {
+        TextInputLayout profile_firstName_inputLayout = (TextInputLayout) findViewById(R.id.profile_firstname_inputLayout);
+        profile_firstName_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    }
+
+    @Override
+    public void setErrorLastName(int resId) {
+        TextInputLayout profile_lastname_inputLayout = (TextInputLayout) findViewById(R.id.profile_lastname_inputLayout);
+        profile_lastname_inputLayout.setError((resId == 0 ? null : getString(resId)));
+
+    }
+
+    @Override
+    public void setErrorEmail(int resId) {
+        TextInputLayout profile_email_inputLayout = (TextInputLayout) findViewById(R.id.profile_email_inputLayout);
+        profile_email_inputLayout.setError((resId == 0 ? null : getString(resId)));
+
+    }
+
+    @Override
+    public void setErrorPhone(int resId) {
+        TextInputLayout profile_phone_inputLayout = (TextInputLayout) findViewById(R.id.profile_phone_inputLayout);
+        profile_phone_inputLayout.setError((resId == 0 ? null : getString(resId)));
+
+    }
+
+    @Override
+    public ActionProcessButton getActionProcessButton() {
+        return (ActionProcessButton) findViewById(R.id.profile_submit);
+    }
 }

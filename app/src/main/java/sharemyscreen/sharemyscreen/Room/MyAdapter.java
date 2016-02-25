@@ -1,4 +1,4 @@
-package sharemyscreen.sharemyscreen;
+package sharemyscreen.sharemyscreen.Room;
 
 import android.content.pm.ApplicationInfo;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,7 @@ import java.util.List;
 
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
 import sharemyscreen.sharemyscreen.Entities.Room;
+import sharemyscreen.sharemyscreen.R;
 
 //public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RowViewHolder> {
 //    private final RoomsManager _roomsManager;

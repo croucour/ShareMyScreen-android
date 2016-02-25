@@ -35,7 +35,7 @@ import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 /**
  * Created by cleme_000 on 27/09/2015.
  */
-public abstract class MyApi extends AsyncTask<String, String, String> {
+public abstract class MyApi extends AsyncTask<String, String, String>{
 
     protected final short SERVER_API = 1;
     protected final short SERVER_STREAM = 2;
@@ -91,7 +91,8 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
     private boolean _internetConnection = false;
     private String _refresh_token = null;
     private String _authorization = null;
-
+    private IMyApiListener _mListener;
+//
     public MyApi(ProfileEntity profileEntity, Context pContext) {
         this.settingsManager = new SettingsManager(pContext);
         this._requestOfflineManager = new RequestOfflineManager(pContext);
@@ -112,6 +113,10 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
 
     public String getCurrentResquest() {
         return currentResquest;
+    }
+
+    public JSONObject getResultJSON() {
+        return resultJSON;
     }
 
     public void setdataParams(HashMap<String, String> params) {
@@ -197,7 +202,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         Log.d("apiURL", apiURL);
         Log.d("request", currentResquest);
         Log.d("methode", currentMethode);
-        if (this.haveInternetConnection()) {
+        if (haveInternetConnection(this._pContext)) {
             _internetConnection = true;
             String urlString = apiURL;
             InputStream in;
@@ -205,7 +210,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
             try {
                 if (this.resquestExist) {
                     urlString += this.currentResquest;
-                    if (this.dataParams != null && this.currentMethode == "GET") {
+                    if (this.dataParams != null && Objects.equals(this.currentMethode, "GET")) {
                         urlString += "?" + this.dataParams;
                     }
                     URL url = new URL(urlString);
@@ -292,7 +297,7 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         }
     }
 
-    protected String getNewExpireToken() {
+    public String getNewExpireToken() {
         long expires_in = Long.parseLong(this.settingsManager.select("expires_in"));
         Date date = new Date();
         long expireToken = date.getTime() + (expires_in * 1000);
@@ -346,9 +351,54 @@ public abstract class MyApi extends AsyncTask<String, String, String> {
         return _internetConnection;
     }
 
-    private boolean haveInternetConnection(){
-        NetworkInfo network = ((ConnectivityManager) _pContext.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+    public static boolean haveInternetConnection(Context pContext){
+        NetworkInfo network = ((ConnectivityManager) pContext.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         return !(network == null || !network.isConnected());
     }
+//
+    public MyApi setListener(IMyApiListener listener) {
+        this._mListener = listener;
+//        this._mListener.onComplete();
+        return this;
+    }
+//
+//    @Override
+//    protected void onCancelled() {
+//        super.onCancelled();
+//        if (_mListener != null) {
+////            this._mListener.onComplete();
+//        }
+//    }
+//
+    public interface IMyApiListener {
+        public void onComplete();
+    }
 
+//    @Override
+//    protected void onPreExecute() {
+//        super.onPreExecute();
+//        Log.i("Debug", "onPreExecute");
+//    }
+//
+//    @Override
+//    protected String doInBackground(String... params) {
+//        Log.i("Debug", "doInBackground");
+//        return "operation finished";
+//    }
+//
+//    @Override
+//    protected void onPostExecute(String result) {
+//        super.onPostExecute(result);
+//        Log.i("Debug", "onPostExecute");
+//        if (this._mListener != null) {
+////            this._mListener.onComplete();
+//        }
+//    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        Log.i("Debug", "onCancelled");
+    }
 }
+

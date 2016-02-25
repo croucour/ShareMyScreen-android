@@ -9,26 +9,23 @@ import sharemyscreen.sharemyscreen.Entities.Room;
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class RoomsManager {
-
-    private RoomsDAO roomsDAO;
+public class RoomsManager extends RoomsDAO{
 
     public RoomsManager(Context pContext) {
-
-        this.roomsDAO = new RoomsDAO(pContext);
-        this.roomsDAO.open();
+        super(pContext);
     }
 
     public void addRoom(Room room) {
-        this.roomsDAO.add(room);
+        super.add(room);
     }
 
     public void addRoom(String name) {
         Room room = new Room(0, name);
-        this.addRoom(room);
+        super.add(room);
     }
 
+    @Override
     public List<Room> selectAll(String orderBy) {
-        return this.roomsDAO.selectAll(orderBy);
+        return super.selectAll(orderBy);
     }
 }

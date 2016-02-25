@@ -42,19 +42,20 @@ public class MyError {
         return true;
     }
 
-    static public void displayErrorApi(MyApi myApi, final CoordinatorLayout coordinatorLayout, ActionProcessButton actionProcessButton) {
+    static public Snackbar displayErrorApi(MyApi myApi, final CoordinatorLayout coordinatorLayout, ActionProcessButton actionProcessButton) {
+
+        int msgId = 0;
 
         if (myApi.is_internetConnection()) {
             if (myApi.get_responseCode() == 0) { // impossible de contacter l'api
-                Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, R.string.connexionError, Snackbar.LENGTH_INDEFINITE);
-                snackbar.show();
+                msgId = R.string.connexionError;
+
                 if (actionProcessButton != null) {
                     actionProcessButton.setProgress(0);
                 }
             } else if (myApi.isErrorRequest()) { // erreur de l'api
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Erreur de l'api", Snackbar.LENGTH_INDEFINITE);
-                snackbar.show();
+                msgId = R.string.api_error;
+
                 if (actionProcessButton != null) {
                     actionProcessButton.setProgress(0);
                 }
@@ -66,29 +67,19 @@ public class MyError {
             }
         }
         else { // pas de connexion internet
-            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Travail hors connexion", Snackbar.LENGTH_INDEFINITE);
-            snackbar.show();
+            msgId = R.string.offline;
+
             if (actionProcessButton != null) {
                 actionProcessButton.setProgress(0);
             }
         }
-//        else if (myApi.resultJSON == null || !myApi.resultJSON.isNull("error_description")){
-//            try {
-//                if (myApi.resultJSON == null) {
-//                    Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.api_error, Snackbar.LENGTH_INDEFINITE);
-//                    snackbar.show();
-//                }
-//                else if (!myApi.resultJSON.isNull("error_description")) {
-//                    Snackbar snackbar = Snackbar.make(coordinatorLayout, myApi.resultJSON.getString("error_description"), Snackbar.LENGTH_INDEFINITE);
-//                    snackbar.show();
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            if (actionProcessButton != null) {
-//                actionProcessButton.setProgress(0);
-//            }
-//        }
+
+        if (msgId != 0) {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, msgId, Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
+            return snackbar;
+        }
+        return null;
     }
 
 }

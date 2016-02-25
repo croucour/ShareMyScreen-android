@@ -1,7 +1,6 @@
-package sharemyscreen.sharemyscreen;
+package sharemyscreen.sharemyscreen.SignUp;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.view.KeyEvent;
@@ -15,8 +14,10 @@ import com.dd.processbutton.iml.ActionProcessButton;
 import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
-import sharemyscreen.sharemyscreen.Model.SignInModel;
-import sharemyscreen.sharemyscreen.Model.SignUpModel;
+import sharemyscreen.sharemyscreen.MyError;
+import sharemyscreen.sharemyscreen.MyString;
+import sharemyscreen.sharemyscreen.R;
+import sharemyscreen.sharemyscreen.SignIn.SignInPresenter;
 
 /**
  * Created by cleme_000 on 23/09/2015.
@@ -26,7 +27,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     private MyError myError = new MyError(this);
 
     private SignUpModel signUpModel;
-    private SignInModel signInModel;
+    private SignInPresenter signInPresenter;
 
 
     EditText EditUsername = null;
@@ -61,7 +62,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.EditConfirPassword.setOnEditorActionListener(this);
 
         this.signUpModel = new SignUpModel(this);
-        this.signInModel = new SignInModel(this);
+//        this.signInPresenter = new SignInPresenter(this);
 
 //        this.EditUsername.setText("test2");
 //        this.EditEmail.setText("test2@test.fr");
@@ -122,7 +123,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         boolean submit = true;
         String StringUsername = this.EditUsername.getText().toString();
         String StringEmail = this.EditEmail.getText().toString();
-        MyString MyStringEmail = new MyString(StringEmail);
+        MyString myStringEmail = new MyString(StringEmail);
         String StringPassword = this.EditPassword.getText().toString();
         String StringConfirmPassword = this.EditConfirPassword.getText().toString();
 
@@ -144,7 +145,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
             signup_email_inputLayout.setError(getString(R.string.signup_emailEmpty));
             submit = false;
         }
-        else if (!MyStringEmail.isEmailValid()) {
+        else if (!myStringEmail.isEmailValid()) {
             signup_email_inputLayout.setError(getString(R.string.signup_emailNotValid));
             submit = false;
         }
