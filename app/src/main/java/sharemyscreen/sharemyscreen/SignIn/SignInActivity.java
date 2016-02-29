@@ -33,8 +33,6 @@ import sharemyscreen.sharemyscreen.SignUp.SignUpActivity;
  */
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, ISignInView {
 
-    private MyError myError = new MyError(this);
-
     EditText signin_username = null;
     EditText signin_password = null;
 
@@ -42,10 +40,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     Button signin_signup = null;
     Button signin_settings = null;
 
-    Context applicationContext = null;
-
     private SignInPresenter _signInPresenter;
-    private SettingsManager settingsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +67,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         setContentView(R.layout.signin);
 
-//        this._signInPresenter.isLogin(this);
-
+        this._signInPresenter.isLoginWithRefreshToken();
 
         this.signin_submitLogin = (ActionProcessButton) findViewById(R.id.signin_submitLogin);
         this.signin_submitLogin.setMode(ActionProcessButton.Mode.ENDLESS);
@@ -85,8 +79,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
 
         this.signin_username = (EditText) findViewById(R.id.signin_username_editText);
-//        this.signin_username.setText("test");
-//        this.signin_password.setText("test");
+        this.signin_username.setText("test");
+        this.signin_password.setText("test");
 
         this.signin_submitLogin.setOnClickListener(this);
         this.signin_signup.setOnClickListener(this);
@@ -187,33 +181,27 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void showUsernameError(int resId) {
+    public void setErrorUsername(int resId) {
         TextInputLayout signin_username_inputLayout = (TextInputLayout) findViewById(R.id.signin_username_inputLayout);
-        signin_username_inputLayout.setError(getString(resId));
+        signin_username_inputLayout.setError((resId == 0 ? null : getString(resId)));
     }
 
     @Override
-    public void showPasswordError(int resId) {
+    public void setErrorPassword(int resId) {
         TextInputLayout signin_password_inputLayout = (TextInputLayout) findViewById(R.id.signin_password_inputLayout);
-        signin_password_inputLayout.setError(getString(resId));
-    }
-
-    @Override
-    public void disableUsernameError() {
-        TextInputLayout signin_username_inputLayout = (TextInputLayout) findViewById(R.id.signin_username_inputLayout);
-        signin_username_inputLayout.setError(null);
-    }
-
-    @Override
-    public void disablePasswordError() {
-        TextInputLayout signin_password_inputLayout = (TextInputLayout) findViewById(R.id.signin_password_inputLayout);
-        signin_password_inputLayout.setError(null);
+        signin_password_inputLayout.setError((resId == 0 ? null : getString(resId)));
     }
 
     @Override
     public void setProcessLoadingButton(int process) {
         ActionProcessButton actionProcessButton = (ActionProcessButton) findViewById(R.id.signin_submitLogin);
         actionProcessButton.setProgress(process);
+    }
+
+    @Override
+    public void initializeInputLayout() {
+        this.setErrorUsername(0);
+        this.setErrorPassword(0);
     }
 
     @Override

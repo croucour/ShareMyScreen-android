@@ -1,10 +1,13 @@
 package sharemyscreen.sharemyscreen.SignIn;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.test.ActivityTestCase;
 import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
+import android.test.RenamingDelegatingContext;
 import android.test.UiThreadTest;
 import android.test.mock.MockContext;
 import android.util.Log;
@@ -25,6 +28,7 @@ import sharemyscreen.sharemyscreen.DAO.DatabaseHandler;
 import sharemyscreen.sharemyscreen.MyApi;
 import sharemyscreen.sharemyscreen.R;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,16 +36,16 @@ import static org.mockito.Mockito.when;
  * Created by cleme_000 on 23/02/2016.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SignInPresenterTest extends InstrumentationTestCase{
+public class SignInPresenterTest extends AndroidTestCase{
     @Mock
     private SignInActivity _view;
     private SignInPresenter _presenter;
+    @Mock
     private Context _pContext;
 
     @Before
     public void setUp() throws Exception {
-        _pContext = new MockContext();
-        this._presenter = new SignInPresenter(_view, _pContext);
+
     }
 
     @Test
@@ -64,6 +68,13 @@ public class SignInPresenterTest extends InstrumentationTestCase{
 
     @Test
     public void shouldShowLoginErrorWhenUsernameAndPasswordAreInvalid() throws Exception {
+        when(_view.getUsername()).thenReturn("");
+        when(_view.getPassword()).thenReturn("");
+        _presenter.onLoginClicked();
+
+        verify(_view).showUsernameError(R.string.signin_usernameEmpty);
+        verify(_view).showPasswordError(R.string.signin_passwordEmpty);
     }
+
 
 }

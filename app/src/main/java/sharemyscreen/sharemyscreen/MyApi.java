@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,7 +82,8 @@ public abstract class MyApi extends AsyncTask<String, String, String>{
             {"/logout", "GET", "Bearer"},
             {"/profile", "GET", "Bearer"},
             {"/profile", "PUT", "Bearer"},
-            {"/rooms", "GET", "Bearer"}
+            {"/rooms", "GET", "Bearer"},
+            {"/rooms", "POST", "Bearer"}
     };
 
     private final String[][] STREAM_REQUEST = {};
@@ -119,24 +121,24 @@ public abstract class MyApi extends AsyncTask<String, String, String>{
         return resultJSON;
     }
 
-    public void setdataParams(HashMap<String, String> params) {
+    public void setDataParams(HashMap<String, String> params) {
         if (params.size() != 0) {
             JSONObject jsonObject = new JSONObject(params);
             this.dataParams = jsonObject.toString();
         }
     }
 
-    public void setdataParams(String dataParams) {
+    public void setDataParams(String dataParams) {
         this.dataParams = dataParams;
     }
 
-    public void setCurrentResquest(String currentResquest, String requestCommand) {
+    public void setCurrentRequest(String currentRequest, String requestCommand) {
 
-        this.resquestExist = findIfRequestAccepted(currentResquest, requestCommand);
+        this.resquestExist = findIfRequestAccepted(currentRequest, requestCommand);
 
 
         if (this.resquestExist) {
-            this.currentResquest = currentResquest;
+            this.currentResquest = currentRequest;
         }
     }
 
@@ -282,7 +284,7 @@ public abstract class MyApi extends AsyncTask<String, String, String>{
     }
 
     private void updateExpireToken() {
-        if (_profileEntity == null) { // user non authen
+        if (_profileEntity == null && !this.resultJSON.isNull("expires_in")) { // user non authen
             try {
                 long expires_in = this.resultJSON.getInt("expires_in");
                 this.settingsManager.addSettings("expires_in", String.valueOf(expires_in));
@@ -318,8 +320,20 @@ public abstract class MyApi extends AsyncTask<String, String, String>{
             this.resultJSON = null;
         }
         else {
-            this.resultJSON = new JSONObject(sb.toString());
-            Log.i("result param API", this.resultJSON.toString());
+            if (this.apiURL.matches("room")) {
+                String tmp = " { \"rooms\":" + sb.toString() + "}";
+                this.resultJSON = new JSONObject(tmp);
+
+                Log.i("result param API", sb.toString());
+            }
+            else {
+                this.resultJSON = new JSONObject(sb.toString());
+
+            }
+
+//            JSONArray json = new JSONArray(sb);
+//            this.resultJSON = new JSONObject(tmp);
+//            Log.i("result param API", sb.toString());
         }
     }
 

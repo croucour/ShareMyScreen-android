@@ -1,16 +1,10 @@
 package sharemyscreen.sharemyscreen.Logout;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Menu.IMenuView;
 import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.MyService;
-import sharemyscreen.sharemyscreen.SignIn.ISignInView;
-import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 import sharemyscreen.sharemyscreen.MyApi;
 
 /**
@@ -43,6 +37,7 @@ public class LogoutService extends MyService {
     }
 
     public void logout() {
+        this.updateProfileLogged();
 
         MyApi myApi = new MyApi(_profileLogged, _pContext) {
             @Override
@@ -51,7 +46,7 @@ public class LogoutService extends MyService {
             }
         };
 
-        myApi.setCurrentResquest("/logout", "GET");
+        myApi.setCurrentRequest("/logout", "GET");
         myApi.execute();
     }
 }

@@ -11,26 +11,38 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.melnykov.fab.FloatingActionButton;
+import com.dd.processbutton.iml.ActionProcessButton;
+import com.gordonwong.materialsheetfab.MaterialSheetFab;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnClickListener;
+import com.orhanobut.dialogplus.ViewHolder;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
+import sharemyscreen.sharemyscreen.Fab;
 import sharemyscreen.sharemyscreen.LogOfflineActivity;
 import sharemyscreen.sharemyscreen.Logout.LogoutPresenter;
 import sharemyscreen.sharemyscreen.Profile.ProfileActivity;
@@ -41,7 +53,7 @@ import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
  * Created by roucou-c on 09/12/15.
  */
 
-public class RoomActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IRoomView{
+public class RoomActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IRoomView {
 
     private RoomsManager _roomsManager;
     private LogoutPresenter _logoutPresenter;
@@ -51,6 +63,12 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
     private SwipeMenuListView mListView;
     private SwipeRefreshLayout _swipeRefreshLayout;
     private Context _pContext;
+    private DialogPlus _dialogByUser;
+    private View _viewDialogByUser;
+    private ActionProcessButton _createRoom_by_user_cancel;
+    private ActionProcessButton _createRoom_by_user_submit;
+    private MaterialBetterSpinner _createRoom_by_user_choose_user;
+    private EditText _createRoom_by_user_name_editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +94,88 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
 
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        this.setUpFab();
+
+        this.setUpSwipeMenuItem();
+
+        this.setupDialogCreateRoomByUser();
+
+        this._roomPresenter.onSwipedForRefreshRooms();
+    }
+
+    private static final String[] USERS = new String[] {
+            "test98"
+    };
+
+    private void setupDialogCreateRoomByUser() {
+
+        _viewDialogByUser = this.getLayoutInflater().inflate(R.layout.dialog_create_room_by_user, null);
+
+        _createRoom_by_user_submit = (ActionProcessButton) _viewDialogByUser.findViewById(R.id.createRoom_by_user_submit);
+        _createRoom_by_user_cancel = (ActionProcessButton) _viewDialogByUser.findViewById(R.id.createRoom_by_user_cancel);
+
+
+        _createRoom_by_user_name_editText = (EditText) _viewDialogByUser.findViewById(R.id.createRoom_by_user_name_editText);
+        ViewHolder viewHolder = new ViewHolder(_viewDialogByUser);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, USERS);
+
+
+        _createRoom_by_user_choose_user = (MaterialBetterSpinner) _viewDialogByUser.findViewById(R.id.createRoom_by_user_choose_user);
+        _createRoom_by_user_choose_user.setAdapter(adapter);
+
+        OnClickListener onClickListener = new OnClickListener() {
+
+            @Override
+            public void onClick(DialogPlus dialog, View view) {
+                switch (view.getId()) {
+                    case R.id.createRoom_by_user_submit:
+                        _roomPresenter.onCreateRoomByUserClicked();
+                        break;
+                    case R.id.createRoom_by_user_cancel:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        _dialogByUser = DialogPlus.newDialog(this)
+                .setContentHolder(viewHolder)
+                .setGravity(Gravity.CENTER)
+                .setContentHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setCancelable(true)
+                .setOnClickListener(onClickListener)
+                .create();
+    }
+
+    private void setUpFab() {
+
+        Fab fab = (Fab) findViewById(R.id.fab);
         fab.attachToListView(mListView);
         fab.setOnClickListener(this);
 
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.display_snackbar);
+        View sheetView = findViewById(R.id.fab_sheet);
+        View overlay = findViewById(R.id.overlay);
+        int sheetColor = getResources().getColor(R.color.background);
+        int fabColor = getResources().getColor(R.color.colorPrimaryDark);
 
-            // step 1. create a MenuCreator
+//         Initialize material sheet FAB
+        MaterialSheetFab<Fab> materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay,
+                sheetColor, fabColor);
+
+
+
+        TextView fab_sheet_item_add_by_group = (TextView) findViewById(R.id.fab_sheet_item_add_by_group);
+        TextView fab_sheet_item_add_by_user = (TextView) findViewById(R.id.fab_sheet_item_add_by_user);
+        TextView fab_sheet_item_note = (TextView) findViewById(R.id.fab_sheet_item_note);
+
+        fab_sheet_item_add_by_group.setOnClickListener(this);
+        fab_sheet_item_add_by_user.setOnClickListener(this);
+        fab_sheet_item_note.setOnClickListener(this);
+    }
+
+    private void setUpSwipeMenuItem() {
+        // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
             @Override
@@ -117,24 +210,6 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
         // set creator
         mListView.setMenuCreator(creator);
 
-        // step 2. listener item click event
-//        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-//                ApplicationInfo item = mAppList.get(position);
-//                switch (index) {
-//                    case 0:
-//                        break;
-//                    case 1:
-//                        mAppList.remove(position);
-//                        mAdapter.notifyDataSetChanged();
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
-
-        // set SwipeListener
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
             @Override
@@ -178,7 +253,6 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
-
     }
 
     private void delete(ApplicationInfo item) {
@@ -253,7 +327,13 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.fab:
+            case R.id.fab_sheet_item_add_by_group:
+                Log.d("onclick", "fab_sheet_item_add_by_group");
+                break;
+            case R.id.fab_sheet_item_add_by_user:
+                initializeEditTextCreateRoomByUser();
+                initializeInputLayoutCreateRoomByUser();
+                _dialogByUser.show();
                 break;
         }
     }
@@ -294,17 +374,57 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 super.onDismissed(snackbar, event);
-                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                Fab fab = (Fab) findViewById(R.id.fab);
                 fab.animate().translationYBy((snackbar.getView().getHeight()));
             }
 
             @Override
             public void onShown(Snackbar snackbar) {
                 super.onShown(snackbar);
-                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                Fab fab = (Fab) findViewById(R.id.fab);
                 fab.animate().translationYBy(-(snackbar.getView().getHeight()));
             }
         });
+    }
+
+    @Override
+    public String getNameOfCreateRoomByUser() {
+        return _createRoom_by_user_name_editText.getText().toString();
+    }
+
+    public void setNameOfCreateRoomByUser(String string) {
+        _createRoom_by_user_name_editText.setText(string);
+    }
+
+    @Override
+    public void setErrorNameOfCreateRoomByUser(int resId) {
+        TextInputLayout  createRoom_by_user_name_inputLayout = (TextInputLayout) _viewDialogByUser.findViewById(R.id.createRoom_by_user_name_inputLayout);
+        createRoom_by_user_name_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    }
+
+    @Override
+    public String getUserOfCreateRoomByUser() {
+        return _createRoom_by_user_choose_user.getText().toString();
+    }
+
+    public void setUserOfCreateRoomByUser(String string) {
+        _createRoom_by_user_choose_user.setText(string);
+    }
+
+    @Override
+    public void setErrorUserOfCreateRoomByUser(int resId) {
+        _createRoom_by_user_choose_user.setError((resId == 0 ? null : getString(resId)));
+    }
+
+    @Override
+    public void initializeInputLayoutCreateRoomByUser() {
+        this.setErrorNameOfCreateRoomByUser(0);
+        this.setErrorUserOfCreateRoomByUser(0);
+    }
+
+    public void initializeEditTextCreateRoomByUser() {
+        this.setNameOfCreateRoomByUser("");
+        this.setUserOfCreateRoomByUser("");
     }
 }
 

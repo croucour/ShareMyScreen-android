@@ -11,4 +11,14 @@ public interface IRoomView extends IMenuView {
     void setRefreshing(boolean state);
 
     void setCallbackSnackbar(Snackbar snackbar);
+
+    String getNameOfCreateRoomByUser();
+
+    void setErrorNameOfCreateRoomByUser(int resId);
+
+    void initializeInputLayoutCreateRoomByUser();
+
+    String getUserOfCreateRoomByUser();
+
+    void setErrorUserOfCreateRoomByUser(int resId);
 }

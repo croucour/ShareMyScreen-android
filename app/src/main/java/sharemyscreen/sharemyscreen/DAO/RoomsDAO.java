@@ -32,7 +32,7 @@ public class RoomsDAO extends DAOBase {
     }
 
     public void delete(Room room) {
-        _mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(room.get_id())});
+        _mDb.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(room.getId())});
     }
 
     public void delete(long id) {
@@ -42,9 +42,9 @@ public class RoomsDAO extends DAOBase {
     public void modify(Room room) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY, room.get_id());
+        contentValues.put(KEY, room.getId());
         contentValues.put(NAME, room.get_name());
-        _mDb.update(TABLE_NAME, contentValues, KEY + " = ?", new String[]{String.valueOf(room.get_id())});
+        _mDb.update(TABLE_NAME, contentValues, KEY + " = ?", new String[]{String.valueOf(room.getId())});
     }
 
     public String select(long id) {

@@ -2,10 +2,13 @@ package sharemyscreen.sharemyscreen.Entities;
 
 import android.database.Cursor;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by roucou-c on 09/12/15.
@@ -15,21 +18,35 @@ public class ProfileEntity {
     /**
      * Attribut de l'API
      */
+    @SerializedName("_id")
     private String __id = null;
+    @SerializedName("createdAt")
     private String _createdAt = null;
+    @SerializedName("updatedAt")
     private String _updatedAt = null;
+    @SerializedName("username")
     private String _username = null;
+    @SerializedName("email")
     private String _email = null;
+    @SerializedName("firsName")
     private String _firstName = null;
+    @SerializedName("lastName")
     private String _lastName = null;
+    @SerializedName("phone")
     private String _phone = null;
+    @SerializedName("rooms")
+    private List<String> _listTooms = null;
+
     private String _rooms = null;
+    @SerializedName("tenant")
+    private String _tenant = null;
+    @SerializedName("role")
     private String _role = null;
 
     /**
      * Attribut locale
      */
-    private long _id = 0;
+    private transient long _id = 0;
     private String _password = null;
     private boolean _logged = false;
     private String _access_token = null;
@@ -296,5 +313,21 @@ public class ProfileEntity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<String> get_listTooms() {
+        return _listTooms;
+    }
+
+    public void set_listTooms(List<String> _listTooms) {
+        this._listTooms = _listTooms;
+    }
+
+    public String get_tenant() {
+        return _tenant;
+    }
+
+    public void set_tenant(String _tenant) {
+        this._tenant = _tenant;
     }
 }

@@ -35,4 +35,16 @@ public class MyService {
     public void set_profileLogged(ProfileEntity profileLogged) {
         this._profileLogged = profileLogged;
     }
+
+    public ProfileEntity get_profileLogged() {
+        return _profileLogged;
+    }
+
+    public ProfileManager get_profileManager() {
+        return _profileManager;
+    }
+
+    public void updateProfileLogged() {
+        _profileLogged = _profileManager.selectProfileLogged();
+    }
 }

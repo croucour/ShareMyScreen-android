@@ -95,11 +95,11 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     protected boolean onSubmit() {
         this.setErrorSubmitSettings();
 
-        if (this.myError.displayError())
-        {
+//        if (this.myError.displayError())
+//        {
             return this.saveSettings();
-        }
-        return false;
+//        }
+//        return false;
     }
 
 

@@ -32,8 +32,8 @@ public class RequestOfflineService extends MyService {
             }
         };
 
-        myApi.setdataParams(requestOfflineEntity.get_dataParams());
-        myApi.setCurrentResquest(requestOfflineEntity.get_request(), requestOfflineEntity.get_methode());
+        myApi.setDataParams(requestOfflineEntity.get_dataParams());
+        myApi.setCurrentRequest(requestOfflineEntity.get_request(), requestOfflineEntity.get_methode());
         myApi.execute();
     }
 }

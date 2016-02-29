@@ -23,25 +23,6 @@ public class MyError {
         this.activity = activity;
     }
 
-    /**
-     * return false => aucune erreur, true => erreur affiché
-     * @return
-     */
-    protected boolean displayError()
-    {
-        if (toast != null) {
-            toast.cancel();
-        }
-
-        if (msg_error != null) {
-            toast = Toast.makeText(this.activity, this.msg_error, Toast.LENGTH_LONG);
-            toast.show();
-            this.msg_error = null;
-            return false;
-        }
-        return true;
-    }
-
     static public Snackbar displayErrorApi(MyApi myApi, final CoordinatorLayout coordinatorLayout, ActionProcessButton actionProcessButton) {
 
         int msgId = 0;
@@ -82,4 +63,17 @@ public class MyError {
         return null;
     }
 
+    public static void displayError(CoordinatorLayout coordinatorLayout, int resId, ActionProcessButton actionProcessButton) {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, resId, Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+        actionProcessButton.setProgress(0);
+    }
+
+    public static void displayError(CoordinatorLayout coordinatorLayout, String msg, ActionProcessButton actionProcessButton) {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+        if (actionProcessButton != null) {
+            actionProcessButton.setProgress(0);
+        }
+    }
 }

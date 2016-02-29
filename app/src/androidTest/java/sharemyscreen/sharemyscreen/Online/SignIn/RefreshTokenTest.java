@@ -1,4 +1,4 @@
-package sharemyscreen.sharemyscreen.offline.SignIn;
+package sharemyscreen.sharemyscreen.Online.SignIn;
 
 import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
@@ -12,55 +12,48 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import sharemyscreen.sharemyscreen.Connexion;
+import java.util.Date;
+
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
- * Created by cleme_000 on 25/02/2016.
+ * Created by cleme_000 on 27/02/2016.
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SignInActivityTest {
+public class RefreshTokenTest{
 
     @Rule
     public ActivityTestRule<SignInActivity> mActivityRule = new ActivityTestRule<>(
             SignInActivity.class);
 
     private Context _pContext;
-    private String username;
-    private String password;
+    private String username = null;
+    private String password = null;
+    private SignInActivityTest _singnInActivity;
     private ProfileManager _profileManager;
 
-    public void set_pContext(Context _pContext) {
-        this._pContext = _pContext;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Before
     public void init()
     {
+        this._singnInActivity = new SignInActivityTest();
 
         this._pContext = mActivityRule.getActivity().getApplicationContext();
+        this._singnInActivity.set_pContext(_pContext);
 
         SettingsManager settingsManager = new SettingsManager(_pContext);
 
@@ -71,25 +64,55 @@ public class SignInActivityTest {
             username = "test";
             password = "test";
         }
+        this._singnInActivity.setPassword(password);
+        this._singnInActivity.setUsername(username);
 
         _profileManager = new ProfileManager(_pContext);
+
     }
 
     @Test
-    public void astep1signInWithoutConnexion() {
-        onView(withId(R.id.signin_username_editText)).perform(typeText(username));
-        onView(withId(R.id.signin_password_editText)).perform(typeText(password));
-        onView(withId(R.id.signin_submitLogin)).perform(click());
+    public void astep0RefreshToken()
+    {
+        this._singnInActivity.logout();
+    }
+
+    @Test
+    public void astep1RefreshToken()
+    {
+        this._singnInActivity.signIn();
+    }
+
+    @Test
+    public void astep2RefreshToken()
+    {
         onView(withId(R.id.fab)).check(matches(isDisplayed()));
+        this._singnInActivity.logout();
     }
 
     @Test
-    public void astep2signInWithoutConnexion() {
-        String tmpusername = username.substring(1);
-        onView(withId(R.id.signin_username_editText)).perform(typeText(tmpusername));
-        onView(withId(R.id.signin_password_editText)).perform(typeText(password));
-        onView(withId(R.id.signin_submitLogin)).perform(click());
-        onView(withId(R.id.display_snackbar)).check(matches(isDisplayed()));
-        onView(withId(android.support.design.R.id.snackbar_text)).check(matches(withText(R.string.connexionOfflline_errorUsernameOrPassword)));
+    public void bstep1RefreshToken()
+    {
+        this._singnInActivity.signIn();
+    }
+
+    @Test
+    public void bstep2RefreshToken()
+    {
+        ProfileEntity profileEntity = _profileManager.selectByUsername(username);
+
+        SettingsManager settingsManager = new SettingsManager(_pContext);
+
+        long expires_in = Long.parseLong(settingsManager.select("expires_in"));
+        long expireToken = Long.parseLong(profileEntity.get_expireAccess_token()) - (expires_in * 1000);
+
+        profileEntity.set_expireAccess_token(String.valueOf(expireToken));
+        _profileManager.modifyProfil(profileEntity);
+    }
+
+    @Test
+    public void bstep3RefreshToken()
+    {
+        onView(withId(R.id.fab)).check(matches(isDisplayed()));
     }
 }

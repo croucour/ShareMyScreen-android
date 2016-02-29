@@ -1,7 +1,10 @@
 package sharemyscreen.sharemyscreen.SignUp;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,18 +20,16 @@ import sharemyscreen.sharemyscreen.DAO.SettingsManager;
 import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.MyString;
 import sharemyscreen.sharemyscreen.R;
-import sharemyscreen.sharemyscreen.SignIn.SignInPresenter;
+import sharemyscreen.sharemyscreen.Room.RoomActivity;
 
 /**
  * Created by cleme_000 on 23/09/2015.
  */
-public class SignUpActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class SignUpActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener, ISignUpView {
 
-    private MyError myError = new MyError(this);
+    private SignUpPresenter _signUpPresenter;
 
-    private SignUpModel signUpModel;
-    private SignInPresenter signInPresenter;
-
+    private Context _pContext;
 
     EditText EditUsername = null;
     EditText EditEmail = null;
@@ -44,6 +45,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this._pContext = getApplicationContext();
         this.settingsManager = new SettingsManager(this);
         setContentView(R.layout.signup);
 
@@ -61,7 +63,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.signup_cancel.setOnClickListener(this);
         this.EditConfirPassword.setOnEditorActionListener(this);
 
-        this.signUpModel = new SignUpModel(this);
+        this._signUpPresenter = new SignUpPresenter(this, _pContext);
 //        this.signInPresenter = new SignInPresenter(this);
 
 //        this.EditUsername.setText("test2");
@@ -76,7 +78,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         switch (v.getId())
         {
             case R.id.signup_submit :
-                this.onSubmit();
+                this._signUpPresenter.onSignUpClicked();
                 break;
             case R.id.signup_cancel :
                 this.finish();
@@ -92,76 +94,84 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (v.getId() == R.id.signup_confirmPassword_editText)
         {
-            return this.onSubmit();
+            this._signUpPresenter.onSignUpClicked();
         }
         return false;
     }
 
-    protected boolean onSubmit() {
-        if (setErrorBeforeSubmit()) {
-            submit();
-        }
-        return true;
+    @Override
+    public String getEmail() {
+        return this.EditEmail.getText().toString();
     }
 
-    private void submit() {
-        this.signup_submit.setProgress(1);
-        signup();
+    @Override
+    public String getConfirmPassword() {
+        return this.EditConfirPassword.getText().toString();
     }
 
-    private void signup() {
-        HashMap<String, String> params = new HashMap<>();
-
-        params.put("username", this.EditUsername.getText().toString());
-        params.put("password", this.EditPassword.getText().toString());
-        params.put("email", this.EditEmail.getText().toString());
-
-        this.signUpModel.createUser(params, this);
-    }
-
-    private boolean setErrorBeforeSubmit() {
-        boolean submit = true;
-        String StringUsername = this.EditUsername.getText().toString();
-        String StringEmail = this.EditEmail.getText().toString();
-        MyString myStringEmail = new MyString(StringEmail);
-        String StringPassword = this.EditPassword.getText().toString();
-        String StringConfirmPassword = this.EditConfirPassword.getText().toString();
-
-        TextInputLayout signup_username_inputLayout = (TextInputLayout) findViewById(R.id.signup_username_inputLayout);
+    @Override
+    public void setErrorEmail(int resId) {
         TextInputLayout signup_email_inputLayout = (TextInputLayout) findViewById(R.id.signup_email_inputLayout);
-        TextInputLayout signup_password_inputLayout = (TextInputLayout) findViewById(R.id.signup_password_inputLayout);
+        signup_email_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    }
+
+    @Override
+    public void setErrorConfirmPassword(int resId) {
         TextInputLayout signup_confirmPassword_inputLayout = (TextInputLayout) findViewById(R.id.signup_confirmPassword_inputLayout);
+        signup_confirmPassword_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    }
 
-        signup_username_inputLayout.setError(null);
-        signup_email_inputLayout.setError(null);
-        signup_password_inputLayout.setError(null);
-        signup_confirmPassword_inputLayout.setError(null);
+    @Override
+    public String getUsername() {
+        return this.EditUsername.getText().toString();
+    }
 
-        if (StringUsername.isEmpty()) {
-            signup_username_inputLayout.setError(getString(R.string.signup_usernameEmpty));
-            submit = false;
-        }
-        if (StringEmail.isEmpty()) {
-            signup_email_inputLayout.setError(getString(R.string.signup_emailEmpty));
-            submit = false;
-        }
-        else if (!myStringEmail.isEmailValid()) {
-            signup_email_inputLayout.setError(getString(R.string.signup_emailNotValid));
-            submit = false;
-        }
-        if (StringPassword.isEmpty()) {
-            signup_password_inputLayout.setError(getString(R.string.signup_passwordEmpty));
-            submit = false;
-        }
-        if (StringConfirmPassword.isEmpty()) {
-            signup_confirmPassword_inputLayout.setError(getString(R.string.signup_confirmPasswordEmpty));
-            submit = false;
-        }
-        else if (!StringPassword.equals(StringConfirmPassword)) {
-            signup_confirmPassword_inputLayout.setError(getString(R.string.signup_confirmPasswordNotMatch));
-            submit = false;
-        }
+    @Override
+    public String getPassword() {
+        return this.EditPassword.getText().toString();
+    }
 
-        return submit;
+    @Override
+    public void setErrorUsername(int resId) {
+        TextInputLayout signup_username_inputLayout = (TextInputLayout) findViewById(R.id.signup_username_inputLayout);
+        signup_username_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    }
+
+    @Override
+    public void setErrorPassword(int resId) {
+        TextInputLayout signup_password_inputLayout = (TextInputLayout) findViewById(R.id.signup_password_inputLayout);
+        signup_password_inputLayout.setError((resId == 0 ? null : getString(resId)));
+
+    }
+
+    @Override
+    public void initializeInputLayout() {
+        this.setErrorUsername(0);
+        this.setErrorEmail(0);
+        this.setErrorPassword(0);
+        this.setErrorConfirmPassword(0);
+    }
+
+    @Override
+    public void setProcessLoadingButton(int process) {
+        ActionProcessButton actionProcessButton = (ActionProcessButton) findViewById(R.id.signup_submit);
+        actionProcessButton.setProgress(process);
+    }
+
+    @Override
+    public CoordinatorLayout getCoordinatorLayout() {
+        return (CoordinatorLayout) findViewById(R.id.display_snackbar);
+    }
+
+    @Override
+    public ActionProcessButton getActionProcessButton() {
+        return (ActionProcessButton) findViewById(R.id.signup_submit);
+    }
+
+    @Override
+    public void startRoomActivity() {
+        this.finish();
+        Intent intent = new Intent(this, RoomActivity.class);
+        startActivity(intent);
     }
 }

@@ -43,7 +43,7 @@ public class ProfileService extends MyService {
                 getProfileOnPostExecute(this);
             }
         };
-        myApi.setCurrentResquest("/profile", "GET");
+        myApi.setCurrentRequest("/profile", "GET");
         myApi.execute();
     }
 
@@ -75,8 +75,8 @@ public class ProfileService extends MyService {
 
         userParams.put("username", _profileLogged.get_username());
 
-        myApi.setdataParams(userParams);
-        myApi.setCurrentResquest("/profile", "PUT");
+        myApi.setDataParams(userParams);
+        myApi.setCurrentRequest("/profile", "PUT");
         myApi.execute();
     }
 }

@@ -42,7 +42,7 @@
 
 
         </android.support.v4.widget.SwipeRefreshLayout>
-            <com.melnykov.fab.FloatingActionButton
+            <sharemyscreen.sharemyscreen.Fab
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,6 +52,64 @@
                 fab:fab_colorNormal="@color/colorPrimary"
                 fab:fab_colorPressed="@color/colorPrimary"
                 fab:fab_colorRipple="@color/colorPrimary"/>
+            <!-- Overlay that dims the screen -->
+            <com.gordonwong.materialsheetfab.DimOverlayFrameLayout
+                android:id="@+id/overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <!-- Circular reveal container for the sheet -->
+            <io.codetail.widget.RevealLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="end|bottom"
+                android:orientation="vertical">
+
+                <!-- Sheet that contains your items -->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/fab_sheet"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!-- Recording -->
+                        <TextView
+                            android:id="@+id/fab_sheet_item_add_by_group"
+                            style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                            android:drawableLeft="@drawable/ic_add_white_24dp"
+                            android:drawableStart="@drawable/ic_add_white_24dp"
+                            android:text="toto" />
+
+                        <!-- Reminder -->
+                        <TextView
+                            android:id="@+id/fab_sheet_item_add_by_user"
+                            style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                            android:drawableLeft="@drawable/ic_add_white_24dp"
+                            android:drawableStart="@drawable/ic_add_white_24dp"
+                            android:text="toto" />
+
+                        <!-- Note -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary">
+
+                            <TextView
+                                android:id="@+id/fab_sheet_item_note"
+                                style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                                android:drawableLeft="@drawable/ic_add_white_24dp"
+                                android:drawableStart="@drawable/ic_add_white_24dp"
+                                android:text="toto" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+            </io.codetail.widget.RevealLinearLayout>
 
         </FrameLayout>
 

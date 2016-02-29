@@ -70,5 +70,13 @@
     <string name="profile_EmailEmpty">error</string>
     <string name="notEmail">error</string>
     <string name="profile_PhoneEmpty">error</string>
+    <string name="connexionOfflline_errorUsernameOrPassword">Password ou username incorrects</string>
+    <string name="createRoom_by_user_name_editText_hint">nom de la conversasion</string>
+    <string name="createRoom_by_user_choose_user_hint">Ajouter un utilisateur</string>
+    <string name="createRoom_by_user_submit">Ajouter</string>
+    <string name="createRoom_by_user_cancel">Annuler</string>
+    <string name="createRoom_by_user_name_isEmpty">Veuillez saisir un nom</string>
+    <string name="createRoom_by_user_user_isEmpty">Veuillez selectionner un utilisateur</string>
+    <string name="createRoom_by_user_user_notFound">Uitlisateur selectionner introuvable</string>
 
 </resources>
