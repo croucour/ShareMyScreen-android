@@ -19,9 +19,7 @@ import com.dd.processbutton.iml.ActionProcessButton;
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
-import sharemyscreen.sharemyscreen.Entities.Room;
-import sharemyscreen.sharemyscreen.MyError;
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.Room.RoomActivity;
 import sharemyscreen.sharemyscreen.Services.MyService;
@@ -48,7 +46,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         RoomsManager roomsManager = new RoomsManager(this);
 
-        List<Room> listRooms = roomsManager.selectAll(null);
+        List<RoomEntity> listRooms = roomsManager.selectAll(null);
 
         if (listRooms == null || listRooms.size() == 0) {
             roomsManager.addRoom("Room 1");
@@ -67,13 +65,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         setContentView(R.layout.signin);
 
-        this._signInPresenter.isLoginWithRefreshToken();
+//        this._signInPresenter.isLoginWithRefreshToken();
 
         this.signin_submitLogin = (ActionProcessButton) findViewById(R.id.signin_submitLogin);
         this.signin_submitLogin.setMode(ActionProcessButton.Mode.ENDLESS);
 
         this.signin_signup = (Button) findViewById(R.id.signin_signup);
-        this.signin_settings = (Button) findViewById(R.id.signin_settings);
+//        this.signin_settings = (Button) findViewById(R.id.signin_settings);
 
         this.signin_password = (EditText) findViewById(R.id.signin_password_editText);
 
@@ -84,7 +82,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         this.signin_submitLogin.setOnClickListener(this);
         this.signin_signup.setOnClickListener(this);
-        this.signin_settings.setOnClickListener(this);
+//        this.signin_settings.setOnClickListener(this);
 
         this.signin_password.setOnEditorActionListener(this);
 
@@ -109,11 +107,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(intent);
         }
-        else if (v.getId() == R.id.signin_settings)
-        {
-            Intent intent = new Intent(SignInActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        }
+//        else if (v.getId() == R.id.signin_settings)
+//        {
+//            Intent intent = new Intent(SignInActivity.this, SettingsActivity.class);
+//            startActivity(intent);
+//        }
     }
 
 //    protected boolean login() {

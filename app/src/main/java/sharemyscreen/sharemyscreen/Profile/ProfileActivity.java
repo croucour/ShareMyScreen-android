@@ -18,7 +18,10 @@ import com.dd.processbutton.iml.ActionProcessButton;
 import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
+import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.TokenManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Logout.LogoutService;
 import sharemyscreen.sharemyscreen.R;
 
@@ -66,12 +69,19 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        SettingsManager settingsManager = new SettingsManager(getApplicationContext());
+        TokenManager tokenManager = new TokenManager(getApplicationContext());
 
-        ProfileManager profileManager = new ProfileManager(this);
-        ProfileEntity profile = profileManager.selectProfileLogged();
+        String token_id = settingsManager.select("current_token_id");
+        if (token_id != null) {
+            TokenEntity tokenEntity = tokenManager.selectById(Long.parseLong(token_id));
 
-        if (profile != null) {
-            populateProfile(profile);
+            ProfileManager profileManager = new ProfileManager(this);
+            ProfileEntity profileEntity = profileManager.selectById(tokenEntity.get_profile_id());
+
+            if (profileEntity != null) {
+                populateProfile(profileEntity);
+            }
         }
 
         _profilePresenter.getProfile();

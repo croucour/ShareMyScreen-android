@@ -3,12 +3,9 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 
 /**
@@ -22,7 +19,7 @@ public class RequestOfflineDAO extends DAOBase{
      * Attribut de l'API
      */
     public static final String DATAPARAMS = "dataParams";
-    public static final String PROFILE_ID = "profile_id";
+    public static final String TOKEN_ID = "token_id";
     public static final String METHODE = "methode";
     public static final String REQUEST = "request";
     public static final String URL = "url";
@@ -39,7 +36,7 @@ public class RequestOfflineDAO extends DAOBase{
     public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
             + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + DATAPARAMS + " TEXT,"
-            + PROFILE_ID + " INT,"
+            + TOKEN_ID + " INT,"
             + METHODE + " TEXT,"
             + REQUEST + " TEXT,"
             + URL + " TEXT,"
@@ -56,7 +53,7 @@ public class RequestOfflineDAO extends DAOBase{
     public long add(RequestOfflineEntity requestOfflineEntity) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATAPARAMS, requestOfflineEntity.get_dataParams());
-        contentValues.put(PROFILE_ID, requestOfflineEntity.get_profile_id());
+        contentValues.put(TOKEN_ID, requestOfflineEntity.get_token_id());
         contentValues.put(METHODE, requestOfflineEntity.get_methode());
         contentValues.put(REQUEST, requestOfflineEntity.get_request());
         contentValues.put(URL, requestOfflineEntity.get_url());
@@ -71,7 +68,7 @@ public class RequestOfflineDAO extends DAOBase{
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATAPARAMS, requestOfflineEntity.get_dataParams());
-        contentValues.put(PROFILE_ID, requestOfflineEntity.get_profile_id());
+        contentValues.put(TOKEN_ID, requestOfflineEntity.get_token_id());
         contentValues.put(METHODE, requestOfflineEntity.get_methode());
         contentValues.put(REQUEST, requestOfflineEntity.get_request());
         contentValues.put(URL, requestOfflineEntity.get_url());

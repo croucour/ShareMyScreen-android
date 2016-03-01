@@ -61,12 +61,12 @@ public class SignUpActivityTest {
         onView(withId(R.id.signup_email_editText)).perform(typeText(email));
         onView(withId(R.id.signup_password_editText)).perform(typeText(password));
         onView(withId(R.id.signup_confirmPassword_editText)).perform(typeText(password));
+        SystemClock.sleep(1000);
         onView(withId(R.id.signup_submit)).perform(click());
-
-        onView(withId(R.id.fab)).check(matches(isDisplayed()));
+        SystemClock.sleep(1000);
+        onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
 
         SettingsManager settingsManager = new SettingsManager(_pContext);
-
         settingsManager.addSettings("test_username", username);
         settingsManager.addSettings("password", password);
 
@@ -76,6 +76,7 @@ public class SignUpActivityTest {
     private void logout() {
         openActionBarOverflowOrOptionsMenu(_pContext);
         onView(withText(R.string.disconnect)).perform(click());
+        SystemClock.sleep(1000);
         onView(withId(R.id.signin_submitLogin)).check(matches(isDisplayed()));
     }
 

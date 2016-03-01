@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
 import sharemyscreen.sharemyscreen.R;
 
 /**
@@ -50,7 +51,7 @@ public class RoomPresenter {
             HashMap<String, String> params = this.getParamsForCreateRoomByUser(name, user);
 
             if (params != null) {
-                this._roomService.addRoom(params);
+                this._roomService.postRoom(params);
             }
 
         }
@@ -59,24 +60,22 @@ public class RoomPresenter {
     private HashMap<String, String> getParamsForCreateRoomByUser(String name, String user) {
         HashMap<String, String> params = new HashMap<>();
 
-        ProfileEntity profileLogged = this._roomService.get_profileLogged();
+        ProfileManager profileManager = this._roomService.get_profileManager();
+        ProfileEntity profileSelected = profileManager.selectByUsername(user);
+        if (profileSelected != null && profileSelected.get__id() != null) {
 
-        if (profileLogged != null) {
-            ProfileManager profileManager = this._roomService.get_profileManager();
-            String owner__id = profileLogged.get__id();
-            ProfileEntity profileSelected = profileManager.selectByUsername(user);
-            if (profileSelected != null && profileSelected.get__id() != null) {
-
-                String member__id = profileSelected.get__id();
-                params.put("name", name);
-                params.put("owner", owner__id);
-                params.put("members", member__id);
-            }
-            else {
-                this._view.setErrorUserOfCreateRoomByUser(R.string.createRoom_by_user_user_notFound);
-            }
+            String member__id = profileSelected.get__id();
+            params.put("name", name);
+            params.put("members", member__id);
+        }
+        else {
+            this._view.setErrorUserOfCreateRoomByUser(R.string.createRoom_by_user_user_notFound);
         }
 
         return params.size() == 0 ? null : params;
+    }
+
+    public void deleteRoomOnClicked(RoomEntity roomEntity) {
+        this._roomService.deleteRoom(roomEntity);
     }
 }

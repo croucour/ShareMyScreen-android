@@ -17,17 +17,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(RoomsDAO.TABLE_CREATE);
+        db.execSQL(RoomByProfileDAO.TABLE_CREATE);
         db.execSQL(ProfileDAO.TABLE_CREATE);
         db.execSQL(SettingsDAO.TABLE_CREATE);
         db.execSQL(RequestOfflineDAO.TABLE_CREATE);
+        db.execSQL(TokenDAO.TABLE_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(RoomsDAO.TABLE_DROP);
+        db.execSQL(RoomByProfileDAO.TABLE_DROP);
         db.execSQL(ProfileDAO.TABLE_DROP);
         db.execSQL(SettingsDAO.TABLE_DROP);
         db.execSQL(RequestOfflineDAO.TABLE_DROP);
+        db.execSQL(TokenDAO.TABLE_DROP);
         onCreate(db);
     }
 }

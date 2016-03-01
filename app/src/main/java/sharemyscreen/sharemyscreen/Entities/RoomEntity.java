@@ -1,5 +1,7 @@
 package sharemyscreen.sharemyscreen.Entities;
 
+import android.database.Cursor;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class Room {
+public class RoomEntity {
     private long id;
 //    "_id": "56d47513ba979d11002b863c",
 //            "createdAt": "2016-02-29T16:42:59.413Z",
@@ -32,9 +34,17 @@ public class Room {
     private List<ProfileEntity> _members;
 
 
-    public Room(long id, String name) {
+    public RoomEntity(long id, String name) {
         this.id = id;
         this._name = name;
+    }
+
+    public RoomEntity(Cursor c) {
+        this.id = c.getLong(0);
+        this._name = c.getString(1);
+        this._createdAt = c.getString(2);
+        this._updatedAt = c.getString(3);
+        this._owner = c.getString(4);
     }
 
     public String get__id() {

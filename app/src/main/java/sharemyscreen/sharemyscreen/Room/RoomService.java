@@ -1,29 +1,27 @@
 package sharemyscreen.sharemyscreen.Room;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import sharemyscreen.sharemyscreen.ApiService;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
-import sharemyscreen.sharemyscreen.Entities.Profile;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
-import sharemyscreen.sharemyscreen.Entities.Room;
-import sharemyscreen.sharemyscreen.MyApi;
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
 import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
@@ -35,8 +33,13 @@ public class RoomService extends MyService{
 
     public interface IRoomService {
         @Headers("Content-Type: application/json")
-        @GET("v1/rooms")
-        Call<List<Room>> getRooms();
+        @GET("rooms")
+        Call<List<RoomEntity>> getRooms();
+        @POST("rooms")
+        Call<RoomEntity> postRooms(@Body Map<String, String> params);
+
+        @DELETE("rooms/{id}")
+        Call<ResponseBody> deleteRooms(@Path("id") String _id);
     }
 
     private final IRoomView _view;
@@ -48,23 +51,20 @@ public class RoomService extends MyService{
         super(pContext);
         this._view = view;
         this._roomsManager = new RoomsManager(pContext);
-        this._api = ServiceGeneratorApi.createService(IRoomService.class, _profileLogged);
+        this._api = ServiceGeneratorApi.createService(IRoomService.class, _tokenEntity, pContext);
     }
 
 
     public void getRooms() {
+        this._view.setRefreshing(false);
+
         Call call = _api.getRooms();
-        call.enqueue(new Callback<List<Room>>() {
+        call.enqueue(new Callback<List<RoomEntity>>() {
             @Override
-            public void onResponse(Call<List<Room>> call, Response<List<Room>> response) {
-                List<Room> model = response.body();
+            public void onResponse(Call<List<RoomEntity>> call, Response<List<RoomEntity>> response) {
+                List<RoomEntity> roomEntityList = response.body();
 
-                Log.d("code error", String.valueOf(response.code()));
-//                Log.d("code error", response.headers().toString());
-//                Log.d("code error", String.valueOf(response.));
-
-
-                if (model == null) {
+                if (roomEntityList == null) {
                     //404 or the response cannot be converted to User.
                     ResponseBody responseBody = response.errorBody();
                     if (responseBody != null) {
@@ -77,96 +77,86 @@ public class RoomService extends MyService{
                         MyError.displayError(_view.getCoordinatorLayout(), "responseBody = null", null);
                     }
                 } else {
-                    for (Room room : model) {
-                        Log.d("room id = ", room.get__id());
-                        Log.d("room name = ", room.get_name());
-                        Log.d("room createdAt = ", room.get_createdAt());
-                        Log.d("room updatedAt = ", room.get_updatedAt());
-                        Log.d("room owner = ", room.get_owner());
-                        List<ProfileEntity> members = room.get_members();
-                        for (ProfileEntity user : members) {
-                            Log.d("user id = ", user.get__id());
-
-                        }
-
-                    }
-
-                    Log.d("api result = ", "ok");
+                    _roomsManager.add(roomEntityList);
+                    _view.setRoomEntityList(roomEntityList);
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Room>> call, Throwable t) {
+            public void onFailure(Call<List<RoomEntity>> call, Throwable t) {
                 Log.d("code error", String.valueOf(t.getMessage()));
 
                 MyError.displayError(_view.getCoordinatorLayout(), "error= ", null);
             }
         });
+    }
 
 
+    public void postRoom(HashMap<String, String> params) {
 
+        this.updateProfileLogged();
+        params.put("owner", _profileLogged.get__id());
 
+        Call call = _api.postRooms(params);
+        call.enqueue(new Callback<RoomEntity>() {
+            @Override
+            public void onResponse(Call<RoomEntity> call, Response<RoomEntity> response) {
+                RoomEntity roomEntity = response.body();
+
+                if (roomEntity != null) {
+                    _roomsManager.add(roomEntity);
+                    _view.setRoomEntity(roomEntity);
+                    _view.hideDialogCreateRoomByUser();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RoomEntity> call, Throwable t) {
+
+            }
+        });
 
 
 //        MyApi myApi = new MyApi(_profileLogged, _pContext) {
 //            @Override
 //            protected void onPostExecute(String str) {
-//                getRoomsOnPostExecute(this);
+//                addRoomsOnPostExecute(this);
 //            }
 //        };
-//        myApi.setCurrentRequest("/rooms", "GET");
+//
+//        myApi.setDataParams(params);
+//        myApi.setCurrentRequest("/rooms", "POST");
 //        myApi.execute();
     }
 
-    private void getRoomsOnPostExecute(MyApi myApi) {
-        this._view.setRefreshing(false);
+    public void deleteRoom(final RoomEntity roomEntity) {
+        this.updateProfileLogged();
 
-        if (!myApi.isErrorRequest()) {
-            if (myApi.getResultJSON() != null) {
-                // TODO : refresh la liste des room
-                JSONObject result = myApi.getResultJSON();
-
-                String s = result.toString();
-
-                try {
-                    JSONArray jsonArray = new JSONArray(s);
-                    for (int i = 0; jsonArray.length() != i; ++i) {
-                        Log.d("jsonArray", String.valueOf(jsonArray.get(i)));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        else {
-            Snackbar snackbar = MyError.displayErrorApi(myApi, _view.getCoordinatorLayout(), null);
-            this._view.setCallbackSnackbar(snackbar);
-        }
-    }
-
-    public void addRoom(HashMap<String, String> params) {
-        MyApi myApi = new MyApi(_profileLogged, _pContext) {
+        Call call = _api.deleteRooms(roomEntity.get__id());
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            protected void onPostExecute(String str) {
-                addRoomsOnPostExecute(this);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                _view.deleteRoomEntityList(roomEntity);
+                _roomsManager.delete(roomEntity.get__id());
             }
-        };
 
-        myApi.setDataParams(params);
-        myApi.setCurrentRequest("/rooms", "POST");
-        myApi.execute();
-    }
-
-    private void addRoomsOnPostExecute(MyApi myApi) {
-        if (!myApi.isErrorRequest()) {
-            if (myApi.getResultJSON() != null) {
-                // TODO : refresh la liste des room
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
-        }
-        else {
-            Snackbar snackbar = MyError.displayErrorApi(myApi, _view.getCoordinatorLayout(), null);
-            this._view.setCallbackSnackbar(snackbar);
-        }
+        });
     }
+
+//    private void addRoomsOnPostExecute(MyApi myApi) {
+//        if (!myApi.isErrorRequest()) {
+//            if (myApi.getResultJSON() != null) {
+//                // TODO : refresh la liste des room
+//
+//            }
+//        }
+//        else {
+//            Snackbar snackbar = MyError.displayErrorApi(myApi, _view.getCoordinatorLayout(), null);
+//            this._view.setCallbackSnackbar(snackbar);
+//        }
+//    }
 }

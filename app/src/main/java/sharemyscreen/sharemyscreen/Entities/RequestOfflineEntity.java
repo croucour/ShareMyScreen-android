@@ -2,13 +2,22 @@ package sharemyscreen.sharemyscreen.Entities;
 
 import android.database.Cursor;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okio.Buffer;
+import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
+
 /**
  * Created by cleme_000 on 21/02/2016.
  */
 public class RequestOfflineEntity {
     private long _id = 0;
     private String _dataParams = null;
-    private long _profile_id = 0;
+    private long _token_id = 0;
     private String _methode = null;
     private String _request = null;
     private String _url = null;
@@ -19,7 +28,7 @@ public class RequestOfflineEntity {
     public RequestOfflineEntity(Cursor c) {
         this._id = c.getLong(0);
         this._dataParams = c.getString(1);
-        this._profile_id= c.getInt(2);
+        this._token_id = c.getInt(2);
         this._methode = c.getString(3);
         this._request = c.getString(4);
         this._url = c.getString(5);
@@ -30,6 +39,28 @@ public class RequestOfflineEntity {
 
     public RequestOfflineEntity() {
 
+    }
+
+    private static final Charset UTF8 = Charset.forName("UTF-8");
+
+    public RequestOfflineEntity(Request request, TokenEntity tokenEntity) throws IOException {
+        RequestBody requestBody = request.body();
+        if (requestBody != null) {
+            Buffer buffer = new Buffer();
+            requestBody.writeTo(buffer);
+
+            Charset charset = UTF8;
+            MediaType contentType = requestBody.contentType();
+            if (contentType != null) {
+                charset = contentType.charset(UTF8);
+            }
+
+            this._dataParams = buffer.readString(charset);
+            this._token_id = tokenEntity.get_id();
+            this._request = String.valueOf(request.url()).replace(ServiceGeneratorApi.API_BASE_URL+"/v1/", "");
+            this._methode = request.method();
+            this._url = String.valueOf(request.url()).replace(this._request, "");
+        }
     }
 
     public long get_id() {
@@ -48,12 +79,12 @@ public class RequestOfflineEntity {
         this._dataParams = _dataParams;
     }
 
-    public long get_profile_id() {
-        return _profile_id;
+    public long get_token_id() {
+        return _token_id;
     }
 
-    public void set_profile_id(long _profile_id) {
-        this._profile_id = _profile_id;
+    public void set_token_id(long _token_id) {
+        this._token_id = _token_id;
     }
 
     public String get_methode() {
@@ -108,7 +139,7 @@ public class RequestOfflineEntity {
     public String toString() {
         String  toString = "_id : " + String.valueOf(this.get_id());
         toString += " _dataParams : " + this._dataParams;
-        toString += " _profile_id : " + this._profile_id;
+        toString += " _token_id : " + this._token_id;
         toString += " _methode : " + this._methode;
         toString += " _request : " + this._request;
         toString += " _url : " + this._url;

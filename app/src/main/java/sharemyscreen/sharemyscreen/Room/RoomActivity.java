@@ -41,7 +41,13 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.List;
 
+import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
+import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.TokenManager;
+import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
+import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Fab;
 import sharemyscreen.sharemyscreen.LogOfflineActivity;
 import sharemyscreen.sharemyscreen.Logout.LogoutPresenter;
@@ -69,6 +75,7 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
     private ActionProcessButton _createRoom_by_user_submit;
     private MaterialBetterSpinner _createRoom_by_user_choose_user;
     private EditText _createRoom_by_user_name_editText;
+    private MaterialSheetFab<Fab> _materialSheetFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +95,20 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
 
         mListView = (SwipeMenuListView) findViewById(R.id.room_recycler_view);
 
+        SettingsManager settingsManager = new SettingsManager(_pContext);
+        TokenManager tokenManager = new TokenManager(_pContext);
 
-        mAdapter = new MyAdapter(this._roomsManager);
-        mListView.setAdapter(mAdapter);
+        String token_id = settingsManager.select("current_token_id");
+        if (token_id != null) {
+            TokenEntity tokenEntity = tokenManager.selectById(Long.parseLong(token_id));
+
+            ProfileManager profileManager = new ProfileManager(this);
+            ProfileEntity profileEntity = profileManager.selectById(tokenEntity.get_profile_id());
+
+            mAdapter = new MyAdapter(this._roomsManager, profileEntity == null ? null : profileEntity.get__id());
+            mAdapter.set_roomEntityList(null);
+            mListView.setAdapter(mAdapter);
+        }
 
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
@@ -103,8 +121,21 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
         this._roomPresenter.onSwipedForRefreshRooms();
     }
 
+    @Override
+    public void setRoomEntityList(List<RoomEntity> roomEntityList) {
+        mAdapter.set_roomEntityList(roomEntityList);
+    }
+
+    @Override
+    public void setRoomEntity(RoomEntity roomEntity) {
+        mAdapter.set_roomEntity(roomEntity);
+        mListView.invalidateViews();
+        mListView.smoothScrollToPosition(mAdapter.getCount());
+        _materialSheetFab.hideSheet();
+    }
+
     private static final String[] USERS = new String[] {
-            "test98"
+        "test98"
     };
 
     private void setupDialogCreateRoomByUser() {
@@ -160,7 +191,7 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
         int fabColor = getResources().getColor(R.color.colorPrimaryDark);
 
 //         Initialize material sheet FAB
-        MaterialSheetFab<Fab> materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay,
+        _materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay,
                 sheetColor, fabColor);
 
 
@@ -222,7 +253,6 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSwipeEnd(int position) {
                 _swipeRefreshLayout.setEnabled(true);
-                Log.i("info", "end");
                 // swipe end
             }
         });
@@ -250,6 +280,24 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
                 Toast.makeText(getApplicationContext(), position + " long click", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                RoomEntity item = mAdapter.getItem(position);
+                switch (index) {
+                    case 0:
+                        // open
+                        break;
+                    case 1:
+                        _roomPresenter.deleteRoomOnClicked(item);
+                        Log.i("info", "remove");
+
+                        break;
+                }
                 return false;
             }
         });
@@ -425,6 +473,17 @@ public class RoomActivity extends AppCompatActivity implements View.OnClickListe
     public void initializeEditTextCreateRoomByUser() {
         this.setNameOfCreateRoomByUser("");
         this.setUserOfCreateRoomByUser("");
+    }
+
+    @Override
+    public void deleteRoomEntityList(RoomEntity roomEntity) {
+        mAdapter.delete(roomEntity);
+        mListView.invalidateViews();
+    }
+
+    @Override
+    public void hideDialogCreateRoomByUser() {
+        _dialogByUser.dismiss();
     }
 }
 

@@ -11,8 +11,11 @@ import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.json.JSONException;
+
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
+import sharemyscreen.sharemyscreen.DAO.TokenManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 
@@ -50,19 +53,15 @@ public class MyService  extends Service{
     }
 
     public class SurveillanceRunnable implements Runnable {
-        private final ProfileManager _profileManager;
         private boolean _bThreadExec = false;
         private Context _pContext;
         private final RequestOfflineManager _requestOfflineManager;
-        private RequestOfflineService _requestOfflineModel = null;
-
-        private ProfileEntity _currentprofile = null;
+        private RequestOfflineService _requestOfflineService = null;
 
         public SurveillanceRunnable(Context pContext) {
             _pContext = pContext;
             _requestOfflineManager = new RequestOfflineManager(pContext);
-            _profileManager = new ProfileManager(pContext);
-            _requestOfflineModel = new RequestOfflineService(null, pContext);
+            _requestOfflineService = new RequestOfflineService(pContext);
         }
 
         @Override
@@ -75,7 +74,6 @@ public class MyService  extends Service{
                     if (this.haveInternetConnection()) {
                         this.requestOfflineTreatment();
                     }
-
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     _bThreadExec = false;
@@ -88,17 +86,12 @@ public class MyService  extends Service{
         private void requestOfflineTreatment() {
             RequestOfflineEntity requestOfflineEntity = _requestOfflineManager.selectUntreated();
             if (requestOfflineEntity != null) {
-                Log.d(CLASSE, requestOfflineEntity.toString());
-
                 _requestOfflineManager.setRequestOfflineTreated(requestOfflineEntity.get_id());
 
-                Log.d(CLASSE, _requestOfflineManager.selectById(requestOfflineEntity.get_id()).toString());
-
-                _currentprofile = _profileManager.selectById(requestOfflineEntity.get_profile_id());
-                if (_currentprofile !=  null) {
-                    Log.d(CLASSE, _currentprofile.toString());
-                    _requestOfflineModel.set_profileLogged(_currentprofile);
-                    _requestOfflineModel.runRequest(requestOfflineEntity);
+                try {
+                    _requestOfflineService.runRequest(requestOfflineEntity);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }

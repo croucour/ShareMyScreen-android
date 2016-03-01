@@ -1,8 +1,5 @@
 package sharemyscreen.sharemyscreen.Room;
 
-import android.content.pm.ApplicationInfo;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,12 +9,12 @@ import android.widget.TextView;
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.DAO.RoomsManager;
-import sharemyscreen.sharemyscreen.Entities.Room;
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
 import sharemyscreen.sharemyscreen.R;
 
 //public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RowViewHolder> {
 //    private final RoomsManager _roomsManager;
-//    private List<Room> _rooms;
+//    private List<Room> _roomEntityList;
 //
 //    // Provide a reference to the views for each data item
 //    // Complex data items may need more than one view per item, and
@@ -35,7 +32,7 @@ import sharemyscreen.sharemyscreen.R;
 //    public MyAdapter(RoomsManager roomsManager) {
 //
 //        this._roomsManager = roomsManager;
-//        this._rooms = this._roomsManager.selectAll("id");
+//        this._roomEntityList = this._roomsManager.selectAll("id");
 //    }
 //
 //    // Create new views (invoked by the layout manager)
@@ -57,7 +54,7 @@ import sharemyscreen.sharemyscreen.R;
 ////        holder.textView.setText(String.valueOf(items.getTitle()));
 ////        holder.imageView.setBackgroundResource(items.getImgIcon());
 //
-//        Room room = this._rooms.get(position);
+//        Room room = this._roomEntityList.get(position);
 //        holder.textView.setText(room.get_name());
 //    }
 //
@@ -65,7 +62,7 @@ import sharemyscreen.sharemyscreen.R;
 //    // Return the size of your dataset (invoked by the layout manager)
 //    @Override
 //    public int getItemCount() {
-//        return this._rooms.size();
+//        return this._roomEntityList.size();
 //    }
 //
 //
@@ -106,56 +103,88 @@ import sharemyscreen.sharemyscreen.R;
 class MyAdapter extends BaseAdapter {
 
     private final RoomsManager _roomsManager;
-    private List<Room> _rooms;
+    private List<RoomEntity> _roomEntityList;
+    private String _profile__id = null;
+    private RoomEntity _roomEntity;
 
-    public MyAdapter(RoomsManager roomsManager) {
-
-        this._roomsManager = roomsManager;
-        this._rooms = this._roomsManager.selectAll("id");
+    public void set_profile__id(String _profile__id) {
+        this._profile__id = _profile__id;
     }
 
+    public void set_roomEntityList(List<RoomEntity> roomEntityList) {
+        if (roomEntityList == null) {
+            roomEntityList = this.updateRoomEntityList();
+        }
+        this._roomEntityList = roomEntityList;
+        this.notifyDataSetChanged();
+    }
+
+    private List<RoomEntity> updateRoomEntityList() {
+        return _profile__id != null ? this._roomsManager.selectAllByProfile_id(_profile__id) : null;
+    }
+
+    public MyAdapter(RoomsManager roomsManager, String profile__id) {
+        this._profile__id = profile__id;
+        this._roomsManager = roomsManager;
+        this._roomEntityList = updateRoomEntityList();
+    }
 
     @Override
-        public int getCount() {
-            return this._rooms.size();
-        }
-
-        @Override
-        public Room getItem(int position) {
-            return this._rooms.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = View.inflate(parent.getContext(),
-                        R.layout.single_row, null);
-                new ViewHolder(convertView);
-            }
-            ViewHolder holder = (ViewHolder) convertView.getTag();
-            Room room = getItem(position);
-//            holder.iv_icon.setImageDrawable(item.loadIcon(getPackageManager()));
-            holder.tv_name.setText(room.get_name());
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            ImageView iv_icon;
-            TextView tv_name;
-
-            public ViewHolder(View view) {
-                iv_icon = (ImageView) view.findViewById(R.id.image);
-                tv_name = (TextView) view.findViewById(R.id.title);
-                view.setTag(this);
-            }
-        }
-
+    public int getCount() {
+        return this._roomEntityList == null ? 0 : this._roomEntityList.size();
     }
+
+    @Override
+    public RoomEntity getItem(int position) {
+        return this._roomEntityList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = View.inflate(parent.getContext(),
+                    R.layout.single_row, null);
+            new ViewHolder(convertView);
+        }
+        ViewHolder holder = (ViewHolder) convertView.getTag();
+        RoomEntity room = getItem(position);
+    //            holder.iv_icon.setImageDrawable(item.loadIcon(getPackageManager()));
+        holder.tv_name.setText(room.get_name());
+
+        return convertView;
+    }
+
+    public void set_roomEntity(RoomEntity roomEntity) {
+        if (roomEntity != null) {
+            this._roomEntityList.add(roomEntity);
+        }
+        else {
+            this.set_roomEntityList(null);
+        }
+        this.notifyDataSetChanged();
+    }
+
+    public void delete(RoomEntity item) {
+        this._roomEntityList.remove(item);
+        this.notifyDataSetChanged();
+    }
+
+    class ViewHolder {
+        ImageView iv_icon;
+        TextView tv_name;
+
+        public ViewHolder(View view) {
+            iv_icon = (ImageView) view.findViewById(R.id.image);
+            tv_name = (TextView) view.findViewById(R.id.title);
+            view.setTag(this);
+        }
+    }
+
+}
 
 

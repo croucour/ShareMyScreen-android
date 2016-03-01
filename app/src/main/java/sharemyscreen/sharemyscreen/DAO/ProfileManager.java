@@ -18,6 +18,21 @@ public class ProfileManager extends ProfileDAO{
         super(pContext);
     }
 
+    public long add(ProfileEntity profileEntity) {
+        if (profileEntity !=  null && profileEntity.get_username() != null) {
+            ProfileEntity newProfile = this.selectByUsername(profileEntity.get_username());
+            if (newProfile != null) {
+                profileEntity.set_id(newProfile.get_id());
+                super.modify(profileEntity);
+                return newProfile.get_id();
+            }
+            else {
+                return super.add(profileEntity);
+            }
+        }
+        return 0;
+    }
+
     public void modifyProfil(ProfileEntity profile) {
         this.modify(profile);
     }

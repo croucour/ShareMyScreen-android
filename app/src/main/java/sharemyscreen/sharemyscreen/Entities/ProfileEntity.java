@@ -28,14 +28,14 @@ public class ProfileEntity {
     private String _username = null;
     @SerializedName("email")
     private String _email = null;
-    @SerializedName("firsName")
+    @SerializedName("firstName")
     private String _firstName = null;
     @SerializedName("lastName")
     private String _lastName = null;
     @SerializedName("phone")
     private String _phone = null;
     @SerializedName("rooms")
-    private List<String> _listTooms = null;
+    private List<String> _listRooms = null;
 
     private String _rooms = null;
     @SerializedName("tenant")
@@ -109,6 +109,15 @@ public class ProfileEntity {
     public ProfileEntity(String username, String password) {
         this._username = username;
         this._password = password;
+    }
+
+    public ProfileEntity(HashMap<String, String> params) {
+        this._firstName = params.get("firstName");
+        this._lastName = params.get("lastName");
+        this._username = params.get("username");
+        this._password = params.get("password");
+        this._email = params.get("email");
+        this._phone = params.get("phone");
     }
 
     public long get_id() {
@@ -296,31 +305,12 @@ public class ProfileEntity {
         }
     }
 
-    public void update(JSONObject resultJSON) {
-        if (resultJSON != null) {
-            try {
-                this.__id = resultJSON.isNull("_id") ? null : resultJSON.getString("_id");
-                this._createdAt = resultJSON.isNull("createdAt") ? null : resultJSON.getString("createdAt");
-                this._updatedAt = resultJSON.isNull("updatedAt") ? null : resultJSON.getString("updatedAt");
-                this._username = resultJSON.isNull("username") ? null : resultJSON.getString("username");
-                this._email = resultJSON.isNull("email") ? null : resultJSON.getString("email");
-                this._rooms = resultJSON.isNull("rooms") ? null : resultJSON.getString("rooms");
-                this._firstName = resultJSON.isNull("firstName") ? null : resultJSON.getString("firstName");
-                this._lastName = resultJSON.isNull("lastName") ? null : resultJSON.getString("lastName");
-                this._phone = resultJSON.isNull("phone") ? null : resultJSON.getString("phone");
-                this._role = resultJSON.isNull("role") ? null : resultJSON.getString("role");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+    public List<String> get_listRooms() {
+        return _listRooms;
     }
 
-    public List<String> get_listTooms() {
-        return _listTooms;
-    }
-
-    public void set_listTooms(List<String> _listTooms) {
-        this._listTooms = _listTooms;
+    public void set_listRooms(List<String> _listRooms) {
+        this._listRooms = _listRooms;
     }
 
     public String get_tenant() {

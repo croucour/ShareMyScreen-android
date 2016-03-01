@@ -3,80 +3,102 @@ package sharemyscreen.sharemyscreen.Profile;
 import android.content.Context;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import sharemyscreen.sharemyscreen.MyApi;
-import sharemyscreen.sharemyscreen.MyError;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.PUT;
+import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.MyService;
+import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
 public class ProfileService extends MyService {
 
+    private final IProfileService _api;
+
+    public interface IProfileService {
+        @Headers("Content-Type: application/json")
+        @GET("profile")
+        Call<ProfileEntity> getProfile();
+
+        @PUT("profile")
+        Call<ProfileEntity> putProfile(@Body Map<String, String> params);
+    }
+
     private final IProfileView _view;
 
     public ProfileService(IProfileView view, Context pContext) {
         super(pContext);
         this._view = view;
+        this._api = ServiceGeneratorApi.createService(IProfileService.class, _tokenEntity, pContext);
     }
 
-    public void getProfileOnPostExecute(MyApi myApi) {
-        if (!myApi.isErrorRequest()) {
-
-            _profileLogged.update(myApi.getResultJSON());
-            _profileManager.modifyProfil(_profileLogged);
-
+    public void getProfileOnResponse(Response<ProfileEntity> response) {
+        ProfileEntity profileEntity = response.body();
+        if (profileEntity != null) {
             if (_view != null) {
-                _view.populateProfile(_profileLogged);
+                _view.populateProfile(profileEntity);
+            }
+
+            long profile_id = _profileManager.add(profileEntity);
+            if (profile_id != 0) {
+                _tokenEntity.set_profile_id(profile_id);
+                _tokenManager.modify(_tokenEntity);
             }
         }
-        else if (_view != null){
-            MyError.displayErrorApi(myApi, _view.getCoordinatorLayout(), null);
-        }
-
-
     }
+
     public void getProfile() {
-        MyApi myApi = new MyApi(_profileLogged, _pContext) {
+        Call call = _api.getProfile();
+        call.enqueue(new Callback<ProfileEntity>() {
             @Override
-            protected void onPostExecute(String str) {
-                getProfileOnPostExecute(this);
+            public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
+                getProfileOnResponse(response);
             }
-        };
-        myApi.setCurrentRequest("/profile", "GET");
-        myApi.execute();
+
+            @Override
+            public void onFailure(Call<ProfileEntity> call, Throwable t) {
+            }
+        });
     }
 
-    public void saveProfileOnPostExecute(MyApi myApi) {
+    public void putProfileOnResponse(Response<ProfileEntity> response, ProfileEntity profileEntityFail) {
+        ProfileEntity profileEntity = response != null ? response.body() : null;
 
-        if (myApi.is_internetConnection()) {
-            if (!myApi.isErrorRequest()) {
-                this._view.setProcessLoadingButton(100);
-                this._view.finish();
-            } else {
-                MyError.displayErrorApi(myApi, this._view.getCoordinatorLayout(), this._view.getActionProcessButton());
-            }
+        if (profileEntity != null) {
+            _profileManager.modifyProfil(profileEntity);
+            _view.setProcessLoadingButton(100);
         }
         else {
-            this._view.finish();
+            _profileManager.modifyProfil(profileEntityFail);
         }
+        _view.finish();
     }
 
     public void saveProfile(HashMap<String, String> userParams) {
-        MyApi myApi = new MyApi(_profileLogged, _pContext) {
-            @Override
-            protected void onPostExecute(String str) {
-                saveProfileOnPostExecute(this);
-            }
-        };
-
-        _profileLogged.update(userParams);
-        _profileManager.modifyProfil(_profileLogged);
-
         userParams.put("username", _profileLogged.get_username());
 
-        myApi.setDataParams(userParams);
-        myApi.setCurrentRequest("/profile", "PUT");
-        myApi.execute();
+        final ProfileEntity profileEntityFail = new ProfileEntity(userParams);
+        Call call = _api.putProfile(userParams);
+        call.enqueue(new Callback<ProfileEntity>() {
+
+            @Override
+            public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
+                putProfileOnResponse(response, profileEntityFail);
+            }
+
+            @Override
+            public void onFailure(Call<ProfileEntity> call, Throwable t) {
+                putProfileOnResponse(null, profileEntityFail);
+            }
+        });
     }
 }

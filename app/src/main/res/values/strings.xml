@@ -78,5 +78,8 @@
     <string name="createRoom_by_user_name_isEmpty">Veuillez saisir un nom</string>
     <string name="createRoom_by_user_user_isEmpty">Veuillez selectionner un utilisateur</string>
     <string name="createRoom_by_user_user_notFound">Uitlisateur selectionner introuvable</string>
+    <string name="room_createRoomByGroup">A partir d\'un groupe</string>
+    <string name="room_createRoomByUser">A partir d\'un utilisateur</string>
+    <string name="room_addRoom">Ajouter une conversation</string>
 
 </resources>

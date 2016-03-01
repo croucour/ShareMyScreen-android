@@ -2,6 +2,9 @@ package sharemyscreen.sharemyscreen.Room;
 
 import android.support.design.widget.Snackbar;
 
+import java.util.List;
+
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
 import sharemyscreen.sharemyscreen.Menu.IMenuView;
 
 /**
@@ -21,4 +24,12 @@ public interface IRoomView extends IMenuView {
     String getUserOfCreateRoomByUser();
 
     void setErrorUserOfCreateRoomByUser(int resId);
+
+    void setRoomEntityList(List<RoomEntity> roomEntityList);
+
+    void setRoomEntity(RoomEntity roomEntity);
+
+    void deleteRoomEntityList(RoomEntity roomEntity);
+
+    void hideDialogCreateRoomByUser();
 }

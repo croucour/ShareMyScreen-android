@@ -55,51 +55,51 @@ public class SignInPresenter{
         }
     }
 
-    public boolean isLoginWithRefreshToken() {
-        String lastSignInProfileId = this._settingsManager.select("lastSignInProfileId");
+//    public boolean isLoginWithRefreshToken() {
+//        String lastSignInProfileId = this._settingsManager.select("lastSignInProfileId");
+//
+//        if (lastSignInProfileId == null) {
+//            return false;
+//        }
+//
+//        ProfileManager profileManager = this._signInService.get_profileManager();
+//
+//        ProfileEntity lastSignInProfileEntity = profileManager.selectById(Long.parseLong(lastSignInProfileId));
+//
+//        if (lastSignInProfileEntity == null) {
+//            return false;
+//        }
+//
+//        String refresh_token = lastSignInProfileEntity.get_refresh_token();
+//        String expireAccess_token = lastSignInProfileEntity.get_expireAccess_token();
+//
+//        if (refresh_token == null || expireAccess_token == null) {
+//            return false;
+//        }
+//
+//        // TODO : faire le test sur l'expiration du token refresh
+//
+//        if (isValidAccessToken(expireAccess_token)) {
+//            this._signInService.signInWithAccessTokenValid(lastSignInProfileEntity);
+//        }
+//        else {
+//            HashMap<String, String> params = new HashMap<>();
+//
+//            params.put("grant_type", "refresh_token");
+//            params.put("refresh_token", refresh_token);
+//
+//            this._signInService.refreshToken(params, lastSignInProfileEntity);
+//        }
+//        return true;
+//    }
 
-        if (lastSignInProfileId == null) {
-            return false;
-        }
-
-        ProfileManager profileManager = this._signInService.get_profileManager();
-
-        ProfileEntity lastSignInProfileEntity = profileManager.selectById(Long.parseLong(lastSignInProfileId));
-
-        if (lastSignInProfileEntity == null) {
-            return false;
-        }
-
-        String refresh_token = lastSignInProfileEntity.get_refresh_token();
-        String expireAccess_token = lastSignInProfileEntity.get_expireAccess_token();
-
-        if (refresh_token == null || expireAccess_token == null) {
-            return false;
-        }
-
-        // TODO : faire le test sur l'expiration du token refresh
-
-        if (isValidAccessToken(expireAccess_token)) {
-            this._signInService.signInWithAccessTokenValid(lastSignInProfileEntity);
-        }
-        else {
-            HashMap<String, String> params = new HashMap<>();
-
-            params.put("grant_type", "refresh_token");
-            params.put("refresh_token", refresh_token);
-
-            this._signInService.refreshToken(params, lastSignInProfileEntity);
-        }
-        return true;
-    }
-
-    public boolean isValidAccessToken(String expireAccess_token) {
-        Date date = new Date();
-
-        if (date.getTime() > Long.parseLong(expireAccess_token)) {
-            return false;
-        }
-        return true;
-    }
+//    public boolean isValidAccessToken(String expireAccess_token) {
+//        Date date = new Date();
+//
+//        if (date.getTime() > Long.parseLong(expireAccess_token)) {
+//            return false;
+//        }
+//        return true;
+//    }
 
 }
