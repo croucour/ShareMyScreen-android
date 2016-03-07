@@ -1,13 +1,12 @@
 package sharemyscreen.sharemyscreen.Logout;
 
-import android.content.Context;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.Manager;
+import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.Menu.IMenuView;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
@@ -22,41 +21,34 @@ public class LogoutService extends MyService {
     public interface ILogoutService {
         @Headers("Content-Type: application/json")
         @GET("logout")
-        Call<String> logout();
+        Call<Void> logout();
     }
 
     private final IMenuView _view;
 
-    public LogoutService(IMenuView view, Context pContext) {
-        super(pContext);
+    public LogoutService(IMenuView view, Manager manager, UserEntity userEntity) {
+        super(manager, userEntity);
         this._view = view;
-        this._api = ServiceGeneratorApi.createService(ILogoutService.class, _tokenEntity, pContext);
+        this._api = ServiceGeneratorApi.createService(ILogoutService.class, _userEntity._tokenEntity, manager);
     }
 
     private void logoutOnPostExecute() {
-        _tokenEntity.set_access_token(null);
-        _tokenEntity.set_expire_access_token(null);
-        _tokenEntity.set_refresh_token(null);
-        _tokenManager.modify(_tokenEntity);
+        _userEntity.logout();
 
-        SettingsManager settingsManager = new SettingsManager(_pContext);
-
-        settingsManager.delete("current_token_id");
-
-        _view.logout();
+        _view.startSignInActivity();
     }
 
     public void logout() {
         Call call = _api.logout();
-        call.enqueue(new Callback() {
+        call.enqueue(new Callback<Void>() {
 
             @Override
-            public void onResponse(Call call, Response response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 logoutOnPostExecute();
             }
 
             @Override
-            public void onFailure(Call call, Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 logoutOnPostExecute();
             }
         });

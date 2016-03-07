@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/navigation_room"
+            android:icon="@drawable/ic_launcher"
+            android:title="@string/navigation_room"/>
+        <item
+            android:id="@+id/navigation_log"
+            android:icon="@drawable/ic_launcher"
+            android:title="@string/navigation_log"/>
+    </group>
+
+    <item
+        android:id="@+id/navigation_account"
+        android:title="@string/navigation_account">
+        <menu>
+            <group android:checkableBehavior="all">
+                <item
+                    android:id="@+id/navigation_profile"
+                    android:icon="@drawable/ic_launcher"
+                    android:title="@string/navigation_profile"/>
+                <item
+                    android:id="@+id/navigation_settings"
+                    android:icon="@drawable/ic_launcher"
+                    android:title="@string/navigation_settings"/>
+                <item
+                    android:id="@+id/navigation_logout"
+                    android:icon="@drawable/ic_launcher"
+                    android:title="@string/navigation_logout"/>
+            </group>
+        </menu>
+    </item>
+</menu>

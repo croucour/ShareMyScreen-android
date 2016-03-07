@@ -48,11 +48,6 @@ public class ProfileEntity {
      */
     private transient long _id = 0;
     private String _password = null;
-    private boolean _logged = false;
-    private String _access_token = null;
-    private String _refresh_token = null;
-    private String _expireAccess_token = null;
-    private String _expireRefresh_token = null;
 
 
 
@@ -76,31 +71,8 @@ public class ProfileEntity {
         this._rooms = c.getString(9);
         this._password = c.getString(10);
         this._role = c.getString(11);
-        this._logged = c.getInt(12) == 1;
-        this._access_token = c.getString(13);
-        this._refresh_token = c.getString(14);
-        this._expireAccess_token = c.getString(15);
-        this._expireRefresh_token = c.getString(16);
     }
 
-    public ProfileEntity(JSONObject resultJSON) {
-        if (resultJSON != null) {
-            try {
-                this.__id = resultJSON.isNull("_id") ? null : resultJSON.getString("_id");
-                this._createdAt = resultJSON.isNull("createdAt") ? null : resultJSON.getString("createdAt");
-                this._updatedAt = resultJSON.isNull("updatedAt") ? null : resultJSON.getString("updatedAt");
-                this._username = resultJSON.isNull("username") ? null : resultJSON.getString("username");
-                this._email = resultJSON.isNull("email") ? null : resultJSON.getString("email");
-                this._rooms = resultJSON.isNull("rooms") ? null : resultJSON.getString("rooms");
-                this._firstName = resultJSON.isNull("firstName") ? null : resultJSON.getString("firstName");
-                this._lastName = resultJSON.isNull("lastName") ? null : resultJSON.getString("lastName");
-                this._phone = resultJSON.isNull("phone") ? null : resultJSON.getString("phone");
-                this._role = resultJSON.isNull("role") ? null : resultJSON.getString("role");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public ProfileEntity(String username) {
         this._username = username;
@@ -216,39 +188,6 @@ public class ProfileEntity {
         this._password = password;
     }
 
-    public String get_access_token() {
-        return _access_token;
-    }
-
-    public void set_access_token(String _access_token) {
-        this._access_token = _access_token;
-    }
-
-    public String get_refresh_token() {
-        return _refresh_token;
-    }
-
-    public void set_refresh_token(String _refresh_token) {
-        this._refresh_token = _refresh_token;
-    }
-
-    public String get_expireAccess_token() {
-        return _expireAccess_token;
-    }
-
-    public void set_expireAccess_token(String _expireAccess_token) {
-        this._expireAccess_token = _expireAccess_token;
-    }
-
-    public String get_expireRefresh_token() {
-        return _expireRefresh_token;
-    }
-
-    public void set_expireRefresh_token(String _expireRefresh_token) {
-        this._expireRefresh_token = _expireRefresh_token;
-    }
-
-
     @Override
     public String toString() {
         String  toString = "id : " + String.valueOf(this.get_id());
@@ -263,47 +202,34 @@ public class ProfileEntity {
         toString += " _rooms : " + this._rooms;
         toString += " _role : " + this._role;
         toString += " _password : " + this._password;
-        toString += " _logged : " + this._logged;
-        toString += " _access_token : " + this._access_token;
-        toString += " _refresh_token : " + this._refresh_token;
-        toString += " _expireAccess_token : " + this._expireAccess_token;
-        toString += " _expireRefresh_token : " + this._expireRefresh_token;
 
         return toString;
     }
 
-    public void set_logged(boolean logged) {
-        this._logged = logged;
-    }
-
-    public boolean is_logged() {
-        return _logged;
-    }
-
-    public void update(HashMap<String, String> mapProfile) {
-        if (mapProfile != null && !mapProfile.isEmpty()) {
-            String username = mapProfile.get("username");
-            if (username != null) {
-                this._username = username;
-            }
-            String firstName = mapProfile.get("firstName");
-            if (firstName != null) {
-                this._firstName = firstName;
-            }
-            String lastName = mapProfile.get("lastName");
-            if (lastName != null) {
-                this._lastName = lastName;
-            }
-            String phone = mapProfile.get("phone");
-            if (phone != null) {
-                this._phone = phone;
-            }
-            String email = mapProfile.get("email");
-            if (email != null) {
-                this._email = email;
-            }
-        }
-    }
+//    public void update(HashMap<String, String> mapProfile) {
+//        if (mapProfile != null && !mapProfile.isEmpty()) {
+//            String username = mapProfile.get("username");
+//            if (username != null) {
+//                this._username = username;
+//            }
+//            String firstName = mapProfile.get("firstName");
+//            if (firstName != null) {
+//                this._firstName = firstName;
+//            }
+//            String lastName = mapProfile.get("lastName");
+//            if (lastName != null) {
+//                this._lastName = lastName;
+//            }
+//            String phone = mapProfile.get("phone");
+//            if (phone != null) {
+//                this._phone = phone;
+//            }
+//            String email = mapProfile.get("email");
+//            if (email != null) {
+//                this._email = email;
+//            }
+//        }
+//    }
 
     public List<String> get_listRooms() {
         return _listRooms;
@@ -320,4 +246,21 @@ public class ProfileEntity {
     public void set_tenant(String _tenant) {
         this._tenant = _tenant;
     }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (!(o instanceof ProfileEntity)) {
+//            return false;
+//        }
+//
+//        ProfileEntity profileEntity = (ProfileEntity) o;
+//
+//        return _id == profileEntity._id && __id.equals(profileEntity.__id) &&
+//                _createdAt.equals(profileEntity._createdAt) &&
+//                _updatedAt.equals(profileEntity._updatedAt) &&
+//                _username.equals(profileEntity._username) && _email.equals(profileEntity._email) &&
+//                _firstName.equals(profileEntity._firstName) && _lastName.equals(profileEntity._lastName) &&
+//                _phone.equals(profileEntity._phone) && _rooms.equals(profileEntity._rooms) &&
+//                _password.equals(profileEntity._password) && _role.equals(profileEntity._role);
+//    }
 }

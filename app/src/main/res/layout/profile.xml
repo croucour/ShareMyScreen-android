@@ -1,154 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/display_snackbar">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:id="@+id/profile">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/profile"
-        android:screenOrientation="portrait">
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical"
+        android:id="@+id/LinearLayout_profile">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_firstname_inputLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            android:layout_height="wrap_content">
 
-        <LinearLayout
+            <EditText
+                android:id="@+id/profile_firstname_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_firstname_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_lastname_inputLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:orientation="vertical"
-            android:id="@+id/LinearLayout_profile">
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profile_firstname_inputLayout"
+            <EditText
+                android:id="@+id/profile_lastname_editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_lastname_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
 
-                <EditText
-                    android:id="@+id/profile_firstname_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/profile_firstname_editText_hint"
-                    android:singleLine="true"
-                    android:lines="1" />
-                <requestFocus></requestFocus>
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_username_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profile_lastname_inputLayout"
+            <EditText
+                android:id="@+id/profile_username_editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_username_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
 
-                <EditText
-                    android:id="@+id/profile_lastname_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/profile_lastname_editText_hint"
-                    android:singleLine="true"
-                    android:lines="1" />
-                <requestFocus></requestFocus>
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_email_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profile_username_inputLayout"
+            <EditText
+                android:id="@+id/profile_email_editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_email_editText_hint"
+                android:singleLine="true"
+                android:lines="1" />
+            <requestFocus></requestFocus>
 
-                <EditText
-                    android:id="@+id/profile_username_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/profile_username_editText_hint"
-                    android:singleLine="true"
-                    android:lines="1" />
-                <requestFocus></requestFocus>
+        </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/profile_phone_inputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profile_email_inputLayout"
+            <EditText
+                android:id="@+id/profile_phone_editText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/profile_phone_editText_hint"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:ems="10"
+                android:lines="1" />
+            <requestFocus></requestFocus>
 
-                <EditText
-                    android:id="@+id/profile_email_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/profile_email_editText_hint"
-                    android:singleLine="true"
-                    android:lines="1" />
-                <requestFocus></requestFocus>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profile_phone_inputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/profile_phone_editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/profile_phone_editText_hint"
-                    android:singleLine="true"
-                    android:inputType="phone"
-                    android:ems="10"
-                    android:lines="1" />
-                <requestFocus></requestFocus>
-
-            </android.support.design.widget.TextInputLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginTop="50dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/LinearLayout_profile">
-
-            <com.dd.processbutton.iml.ActionProcessButton
-                android:layout_width="0.0dip"
-                android:layout_height="match_parent"
-                android:id="@+id/profile_submit"
-                android:text="@string/profile_submit"
-                android:theme="@style/MyButtonLoading"
-                android:layout_weight="1.0"
-                custom:pb_textError="Error"
-                custom:pb_textComplete="Success"
-                custom:pb_textProgress="Loading"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
-
-            <com.dd.processbutton.iml.ActionProcessButton
-                android:layout_width="0.0dip"
-                android:layout_height="fill_parent"
-                android:text="@string/profile_cancel"
-                android:id="@+id/profile_cancel"
-                android:layout_weight="1.0"
-                android:theme="@style/MyButtonCancel"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
-
-        </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/LinearLayout_profile">
+
+        <com.dd.processbutton.iml.ActionProcessButton
+            android:layout_width="0.0dip"
+            android:layout_height="match_parent"
+            android:id="@+id/profile_submit"
+            android:text="@string/profile_submit"
+            android:theme="@style/MyButtonLoading"
+            android:layout_weight="1.0"
+            custom:pb_textError="Error"
+            custom:pb_textComplete="Success"
+            custom:pb_textProgress="Loading"/>
+
+    </LinearLayout>
+
+</LinearLayout>

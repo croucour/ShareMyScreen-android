@@ -1,12 +1,10 @@
 package sharemyscreen.sharemyscreen.Profile;
 
-import android.content.Context;
-import android.support.design.widget.TextInputLayout;
-
 import java.util.HashMap;
 
+import sharemyscreen.sharemyscreen.DAO.Manager;
+import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.R;
-import sharemyscreen.sharemyscreen.Room.IRoomView;
 
 /**
  * Created by cleme_000 on 25/02/2016.
@@ -16,13 +14,13 @@ public class ProfilePresenter {
     private final IProfileView _view;
     private final ProfileService _profileService;
 
-    public ProfilePresenter(IProfileView view, Context pContext) {
+    public ProfilePresenter(IProfileView view, Manager manager, UserEntity userEntity) {
         this._view = view;
-        this._profileService = new ProfileService(view, pContext);
+        this._profileService = new ProfileService(view, manager, userEntity);
     }
 
     protected void getProfile() {
-        this._profileService.getProfile();
+        this._profileService.getProfile(null);
     }
 
     public void onSaveClicked() {

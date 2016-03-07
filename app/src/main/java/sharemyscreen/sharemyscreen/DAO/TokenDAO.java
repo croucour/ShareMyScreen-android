@@ -87,6 +87,18 @@ public class TokenDAO extends DAOBase{
 
         c.close();
         return tokenEntity;
+    }
 
+    public TokenEntity selectByProfileId(long profile_id) {
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + PROFILE_ID + " = ? " , new String[] {String.valueOf(profile_id)});
+
+        TokenEntity tokenEntity = null;
+
+        if (c.moveToFirst()) {
+            tokenEntity = new TokenEntity(c);
+        }
+
+        c.close();
+        return tokenEntity;
     }
 }

@@ -13,17 +13,14 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.RequestOfflineDAO;
 import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.RandomString;
 import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
-import sharemyscreen.sharemyscreen.SignUp.SignUpActivity;
 import sharemyscreen.sharemyscreen.offline.Profile.ProfileActivityTest;
 import sharemyscreen.sharemyscreen.offline.SignIn.SignInActivityTest;
-import sharemyscreen.sharemyscreen.offline.SignUp.SignUpActivityTest;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -59,10 +56,10 @@ public class OfflineTest {
 
         _signUpActivityTest.set_pContext(_pContext);
         _profileActivityTest.set_pContext(_pContext);
-        SettingsManager settingsManager = new SettingsManager(_pContext);
+        GlobalManager globalManager = new GlobalManager(_pContext);
 
-        username = settingsManager.select("test_username");
-        password = settingsManager.select("password");
+        username = globalManager.select("test_username");
+        password = globalManager.select("password");
 
         if (username == null || password == null) {
             username = "test";

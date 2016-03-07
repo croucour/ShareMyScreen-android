@@ -17,4 +17,11 @@ public class TokenManager extends TokenDAO {
 
         super.modify(tokenEntity);
     }
+
+    public TokenEntity selectById(String current_token_id) {
+        if (current_token_id == null) {
+            return null;
+        }
+        return super.selectById(Long.parseLong(current_token_id));
+    }
 }

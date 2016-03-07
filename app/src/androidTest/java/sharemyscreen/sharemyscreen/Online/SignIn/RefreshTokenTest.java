@@ -12,10 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.util.Date;
-
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
@@ -55,10 +53,10 @@ public class RefreshTokenTest{
         this._pContext = mActivityRule.getActivity().getApplicationContext();
         this._singnInActivity.set_pContext(_pContext);
 
-        SettingsManager settingsManager = new SettingsManager(_pContext);
+        GlobalManager globalManager = new GlobalManager(_pContext);
 
-        username = settingsManager.select("test_username");
-        password = settingsManager.select("password");
+        username = globalManager.select("test_username");
+        password = globalManager.select("password");
 
         if (username == null || password == null) {
             username = "test";
@@ -96,19 +94,19 @@ public class RefreshTokenTest{
         this._singnInActivity.signIn();
     }
 
-    @Test
-    public void bstep2RefreshToken()
-    {
-        ProfileEntity profileEntity = _profileManager.selectByUsername(username);
-
-        SettingsManager settingsManager = new SettingsManager(_pContext);
-
-        long expires_in = Long.parseLong(settingsManager.select("expires_in"));
-        long expireToken = Long.parseLong(profileEntity.get_expireAccess_token()) - (expires_in * 1000);
-
-        profileEntity.set_expireAccess_token(String.valueOf(expireToken));
-        _profileManager.modifyProfil(profileEntity);
-    }
+//    @Test
+//    public void bstep2RefreshToken()
+//    {
+//        ProfileEntity profileEntity = _profileManager.selectByUsername(username);
+//
+//        GlobalManager globalManager = new GlobalManager(_pContext);
+//
+//        long expires_in = Long.parseLong(globalManager.select("expires_in"));
+//        long expireToken = Long.parseLong(profileEntity.get_expireAccess_token()) - (expires_in * 1000);
+//
+//        profileEntity.set_expireAccess_token(String.valueOf(expireToken));
+//        _profileManager.modifyProfil(profileEntity);
+//    }
 
     @Test
     public void bstep3RefreshToken()

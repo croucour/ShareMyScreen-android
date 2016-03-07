@@ -10,8 +10,7 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 import sharemyscreen.sharemyscreen.offline.SignIn.SignInActivityTest;
@@ -20,12 +19,10 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.*;
 
 /**
  * Created by cleme_000 on 28/02/2016.
@@ -63,10 +60,10 @@ public class ProfileActivityTest {
         this._pContext = mActivityRule.getActivity().getApplicationContext();
 
         _signUpActivityTest.set_pContext(_pContext);
-        SettingsManager settingsManager = new SettingsManager(_pContext);
+        GlobalManager globalManager = new GlobalManager(_pContext);
 
-        username = settingsManager.select("test_username");
-        password = settingsManager.select("password");
+        username = globalManager.select("test_username");
+        password = globalManager.select("password");
 
         if (username == null || password == null) {
             username = "test";

@@ -2,12 +2,18 @@ package sharemyscreen.sharemyscreen.SignIn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -16,19 +22,16 @@ import android.widget.TextView;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 
-import java.util.List;
-
-import sharemyscreen.sharemyscreen.DAO.RoomsManager;
-import sharemyscreen.sharemyscreen.Entities.RoomEntity;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.Room.RoomActivity;
 import sharemyscreen.sharemyscreen.Services.MyService;
-import sharemyscreen.sharemyscreen.SettingsActivity;
 import sharemyscreen.sharemyscreen.SignUp.SignUpActivity;
 
 /**
  * Created by roucou-c on 07/12/15.
  */
+
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, ISignInView {
 
     EditText signin_username = null;
@@ -39,39 +42,24 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     Button signin_settings = null;
 
     private SignInPresenter _signInPresenter;
+    private Manager _manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RoomsManager roomsManager = new RoomsManager(this);
+        _manager = new Manager(getApplicationContext());
 
-        List<RoomEntity> listRooms = roomsManager.selectAll(null);
-
-        if (listRooms == null || listRooms.size() == 0) {
-            roomsManager.addRoom("Room 1");
-            roomsManager.addRoom("Room 2");
-            roomsManager.addRoom("Room 3");
-            roomsManager.addRoom("Room 4");
-            roomsManager.addRoom("Room 5");
-            roomsManager.addRoom("Room 6");
-            roomsManager.addRoom("Room 7");
-            roomsManager.addRoom("Room 8");
-            roomsManager.addRoom("Room 9");
-            roomsManager.addRoom("Room 10");
-        }
-
-        this._signInPresenter = new SignInPresenter(this, getApplicationContext());
+        this._signInPresenter = new SignInPresenter(this, _manager);
 
         setContentView(R.layout.signin);
 
-//        this._signInPresenter.isLoginWithRefreshToken();
+        this._signInPresenter.isLoginWithRefreshToken();
 
         this.signin_submitLogin = (ActionProcessButton) findViewById(R.id.signin_submitLogin);
         this.signin_submitLogin.setMode(ActionProcessButton.Mode.ENDLESS);
 
         this.signin_signup = (Button) findViewById(R.id.signin_signup);
-//        this.signin_settings = (Button) findViewById(R.id.signin_settings);
 
         this.signin_password = (EditText) findViewById(R.id.signin_password_editText);
 
@@ -82,7 +70,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         this.signin_submitLogin.setOnClickListener(this);
         this.signin_signup.setOnClickListener(this);
-//        this.signin_settings.setOnClickListener(this);
 
         this.signin_password.setOnEditorActionListener(this);
 
@@ -107,57 +94,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(intent);
         }
-//        else if (v.getId() == R.id.signin_settings)
-//        {
-//            Intent intent = new Intent(SignInActivity.this, SettingsActivity.class);
-//            startActivity(intent);
-//        }
     }
 
-//    protected boolean login() {
-//
-//        HashMap<String, String> params = new HashMap<>();
-//
-//        params.put("username", this.signin_username.getText().toString());
-//        params.put("password", this.signin_password.getText().toString());
-//
-//        this._signInPresenter.signIn(params, this);
-//
-//        return true;
-//    }
-
-//    protected boolean onSubmit() {
-//        if (setErrorBeforeSubmit()) {
-//            submit();
-//        }
-//        return true;
-//    }
-//
-//    private void submit() {
-//        this.signin_submitLogin.setProgress(1);
-//        login();
-//    }
-
-//    private boolean setErrorBeforeSubmit() {
-//        boolean submit = true;
-//
-//        String StringUsername = this.signin_username.getText().toString();
-//        String StringPassword = this.signin_password.getText().toString();
-//
-//
-//        signin_password_inputLayout.setError(null);
-//
-//        if (StringUsername.isEmpty()) {
-//            submit = false;
-//        }
-//        if (StringPassword.isEmpty()) {
-//
-//            signin_password_inputLayout.setError(getString(R.string.signin_passwordEmpty));
-//            submit = false;
-//        }
-//
-//        return submit;
-//    }
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -215,8 +153,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void startRoomActivity() {
         this.finish();
-        Intent intent = new Intent(this, RoomActivity.class);
+        Intent intent = new Intent(SignInActivity.this, RoomActivity.class);
         startActivity(intent);
     }
-}
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addCategory(Intent.CATEGORY_HOME);
+        startActivity(i);
+    }
+}

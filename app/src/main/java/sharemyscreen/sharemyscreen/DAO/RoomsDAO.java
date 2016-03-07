@@ -108,7 +108,7 @@ public class RoomsDAO extends DAOBase {
 
         Cursor c = _mDb.rawQuery("select "+ TABLE_NAME+".* from " + TABLE_NAME
                 + " INNER JOIN " + RoomByProfileDAO.TABLE_NAME + " on " + TABLE_NAME+"."+_ID+"="+RoomByProfileDAO.TABLE_NAME+"."+RoomByProfileDAO.ROOM_ID
-                + " WHERE "+RoomByProfileDAO.ROOM_ID+ " = ?", new String[] {profile__id});
+                + " WHERE "+RoomByProfileDAO.PROFILE_ID+ " = ?", new String[] {profile__id});
 
         while (c.moveToNext()) {
             roomEntityList.add(new RoomEntity(c));

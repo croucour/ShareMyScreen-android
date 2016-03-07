@@ -1,6 +1,7 @@
 package sharemyscreen.sharemyscreen.Online.SignIn;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -10,9 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 
@@ -58,10 +57,10 @@ public class SignInActivityTest{
     {
         this._pContext = mActivityRule.getActivity().getApplicationContext();
 
-        SettingsManager settingsManager = new SettingsManager(_pContext);
+        GlobalManager globalManager = new GlobalManager(_pContext);
 
-        username = settingsManager.select("test_username");
-        password = settingsManager.select("password");
+        username = globalManager.select("test_username");
+        password = globalManager.select("password");
 
         if (username == null || password == null) {
             username = "test";
@@ -74,6 +73,8 @@ public class SignInActivityTest{
         onView(withId(R.id.signin_username_editText)).perform(typeText(username));
         onView(withId(R.id.signin_password_editText)).perform(typeText(password));
         onView(withId(R.id.signin_submitLogin)).perform(click());
+
+        SystemClock.sleep(1000);
 
         onView(withId(R.id.fab)).check(matches(isDisplayed()));
 
@@ -94,6 +95,7 @@ public class SignInActivityTest{
     protected void logout() {
         openActionBarOverflowOrOptionsMenu(_pContext);
         onView(withText(R.string.disconnect)).perform(click());
+        SystemClock.sleep(1000);
         onView(withId(R.id.signin_submitLogin)).check(matches(isDisplayed()));
     }
 
@@ -111,6 +113,7 @@ public class SignInActivityTest{
     @Test
     public void SignUp() {
         onView(withId(R.id.signin_signup)).perform(click());
+        SystemClock.sleep(1000);
 
         onView(withId(R.id.signup_submit)).check(matches(isDisplayed()));
     }

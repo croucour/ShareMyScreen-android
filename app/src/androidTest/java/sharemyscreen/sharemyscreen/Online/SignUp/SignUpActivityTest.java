@@ -5,16 +5,13 @@ import android.os.SystemClock;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Set;
-
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.RandomString;
 import sharemyscreen.sharemyscreen.SignUp.SignUpActivity;
@@ -66,9 +63,9 @@ public class SignUpActivityTest {
         SystemClock.sleep(1000);
         onView(withId(R.id.toolbar)).check(matches(isDisplayed()));
 
-        SettingsManager settingsManager = new SettingsManager(_pContext);
-        settingsManager.addSettings("test_username", username);
-        settingsManager.addSettings("password", password);
+        GlobalManager globalManager = new GlobalManager(_pContext);
+        globalManager.addGlobal("test_username", username);
+        globalManager.addGlobal("password", password);
 
         this.logout();
     }

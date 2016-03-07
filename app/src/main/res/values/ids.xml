@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="connexionOfflline_error" type="id">Une erreur inconnue est survenue</item>
+</resources>

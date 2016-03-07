@@ -13,6 +13,7 @@ import android.util.Log;
 
 import org.json.JSONException;
 
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
 import sharemyscreen.sharemyscreen.DAO.TokenManager;
@@ -53,15 +54,13 @@ public class MyService  extends Service{
     }
 
     public class SurveillanceRunnable implements Runnable {
+        private final Manager _manager;
         private boolean _bThreadExec = false;
-        private Context _pContext;
-        private final RequestOfflineManager _requestOfflineManager;
         private RequestOfflineService _requestOfflineService = null;
 
         public SurveillanceRunnable(Context pContext) {
-            _pContext = pContext;
-            _requestOfflineManager = new RequestOfflineManager(pContext);
-            _requestOfflineService = new RequestOfflineService(pContext);
+            this._manager = new Manager(pContext);
+            _requestOfflineService = new RequestOfflineService(_manager);
         }
 
         @Override
@@ -84,9 +83,9 @@ public class MyService  extends Service{
         }
 
         private void requestOfflineTreatment() {
-            RequestOfflineEntity requestOfflineEntity = _requestOfflineManager.selectUntreated();
+            RequestOfflineEntity requestOfflineEntity = _manager._requestOfflineManager.selectUntreated();
             if (requestOfflineEntity != null) {
-                _requestOfflineManager.setRequestOfflineTreated(requestOfflineEntity.get_id());
+                _manager._requestOfflineManager.setRequestOfflineTreated(requestOfflineEntity.get_id());
 
                 try {
                     _requestOfflineService.runRequest(requestOfflineEntity);
@@ -97,7 +96,7 @@ public class MyService  extends Service{
         }
 
         private boolean haveInternetConnection(){
-            NetworkInfo network = ((ConnectivityManager) _pContext.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+            NetworkInfo network = ((ConnectivityManager) _manager.get_pContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
             return !(network == null || !network.isConnected());
         }
     }

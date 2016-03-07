@@ -2,10 +2,14 @@ package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.Entities.RoomEntity;
+import sharemyscreen.sharemyscreen.Entities.SettingsEntity;
 
 /**
  * Created by cleme_000 on 01/03/2016.
@@ -40,7 +44,6 @@ public class RoomByProfileDAO extends DAOBase {
             this.add(profileEntity.get__id(), room__id);
         }
     }
-
 
     public void deleteByRoom_id(String room__id) {
         _mDb.delete(TABLE_NAME, ROOM_ID + " = ?", new String[]{room__id});

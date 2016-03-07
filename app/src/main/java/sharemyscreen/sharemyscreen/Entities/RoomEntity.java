@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,6 +46,12 @@ public class RoomEntity {
         this._createdAt = c.getString(2);
         this._updatedAt = c.getString(3);
         this._owner = c.getString(4);
+    }
+
+    public RoomEntity(HashMap<String, String> params, List<ProfileEntity> members) {
+        this._name = params.get("name");
+        this._owner = params.get("owner");
+        this._members = members;
     }
 
     public String get__id() {

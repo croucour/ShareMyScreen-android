@@ -1,12 +1,15 @@
 package sharemyscreen.sharemyscreen.Room;
 
-import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import java.util.HashMap;
 
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RoomEntity;
+import sharemyscreen.sharemyscreen.Entities.UserEntity;
+import sharemyscreen.sharemyscreen.MySnacbarCallBack;
 import sharemyscreen.sharemyscreen.R;
 
 /**
@@ -14,14 +17,14 @@ import sharemyscreen.sharemyscreen.R;
  */
 public class RoomPresenter {
 
-    private final Context _pContext;
     private final IRoomView _view;
     private final RoomService _roomService;
+    private final Manager _manager;
 
-    public RoomPresenter(IRoomView _view, Context _pContext) {
-        this._pContext = _pContext;
+    public RoomPresenter(IRoomView _view, Manager manager, UserEntity userEntity) {
+        this._manager = manager;
         this._view = _view;
-        this._roomService = new RoomService(_view, _pContext);
+        this._roomService = new RoomService(_view, manager, userEntity);
     }
 
     public void onSwipedForRefreshRooms() {
@@ -60,8 +63,7 @@ public class RoomPresenter {
     private HashMap<String, String> getParamsForCreateRoomByUser(String name, String user) {
         HashMap<String, String> params = new HashMap<>();
 
-        ProfileManager profileManager = this._roomService.get_profileManager();
-        ProfileEntity profileSelected = profileManager.selectByUsername(user);
+        ProfileEntity profileSelected = _manager._profileManager.selectByUsername(user);
         if (profileSelected != null && profileSelected.get__id() != null) {
 
             String member__id = profileSelected.get__id();
@@ -75,7 +77,27 @@ public class RoomPresenter {
         return params.size() == 0 ? null : params;
     }
 
-    public void deleteRoomOnClicked(RoomEntity roomEntity) {
-        this._roomService.deleteRoom(roomEntity);
+    public void deleteRoomOnClicked(final RoomEntity roomEntity) {
+
+        _view.deleteRoomEntityList(roomEntity);
+
+        Snackbar snackbar = Snackbar.make(this._view.getCoordinatorLayout(), "Suppresion d'une conversation", Snackbar.LENGTH_LONG);
+        snackbar.setAction("Annuler", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _view.addRoomEntityList(roomEntity);
+            }
+        });
+
+        snackbar.setCallback(new MySnacbarCallBack(_view) {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
+                if (event != DISMISS_EVENT_ACTION) {
+                    _roomService.deleteRoom(roomEntity);
+                }
+            }
+        });
+        snackbar.show();
     }
 }

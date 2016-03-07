@@ -12,9 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import sharemyscreen.sharemyscreen.Connexion;
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 
@@ -25,7 +24,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.junit.Assert.*;
 
 /**
  * Created by cleme_000 on 25/02/2016.
@@ -62,10 +60,10 @@ public class SignInActivityTest {
 
         this._pContext = mActivityRule.getActivity().getApplicationContext();
 
-        SettingsManager settingsManager = new SettingsManager(_pContext);
+        GlobalManager globalManager = new GlobalManager(_pContext);
 
-        username = settingsManager.select("test_username");
-        password = settingsManager.select("password");
+        username = globalManager.select("test_username");
+        password = globalManager.select("password");
 
         if (username == null || password == null) {
             username = "test";

@@ -1,15 +1,10 @@
 package sharemyscreen.sharemyscreen.SignUp;
 
-import android.content.Context;
-import android.support.design.widget.TextInputLayout;
-
 import java.util.HashMap;
 
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.MyString;
 import sharemyscreen.sharemyscreen.R;
-import sharemyscreen.sharemyscreen.SignIn.ISignInView;
-import sharemyscreen.sharemyscreen.SignIn.SignInService;
 
 /**
  * Created by cleme_000 on 27/02/2016.
@@ -19,9 +14,9 @@ public class SignUpPresenter {
     private ISignUpView _view;
     protected SignUpService _signUpService;
 
-    public SignUpPresenter(ISignUpView view, Context pContext) {
+    public SignUpPresenter(ISignUpView view, Manager manager) {
         this._view = view;
-        this._signUpService = new SignUpService(view, pContext);
+        this._signUpService = new SignUpService(view, manager);
     }
 
     public void onSignUpClicked() {

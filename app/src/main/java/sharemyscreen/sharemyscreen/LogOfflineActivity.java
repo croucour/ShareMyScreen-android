@@ -16,7 +16,7 @@ import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 /**
  * Created by cleme_000 on 22/02/2016.
  */
-public class LogOfflineActivity extends AppCompatActivity {
+public class LogOfflineActivity extends MyActivity {
 
     private RequestOfflineManager _requestOfflineManager = null;
 
@@ -26,7 +26,8 @@ public class LogOfflineActivity extends AppCompatActivity {
 
         _requestOfflineManager = new RequestOfflineManager(this);
 
-        setContentView(R.layout.log_offline);
+        _layout_stub.setLayoutResource(R.layout.log_offline);
+        _layout_stub.inflate();
 
         TableLayout table = (TableLayout) findViewById(R.id.table_log);
 
@@ -76,5 +77,11 @@ public class LogOfflineActivity extends AppCompatActivity {
 
             table.addView(row);
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        navigation.setCheckedItem(R.id.navigation_log);
     }
 }

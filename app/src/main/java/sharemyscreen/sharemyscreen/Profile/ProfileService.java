@@ -12,8 +12,10 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.PUT;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
+import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
 
@@ -35,33 +37,35 @@ public class ProfileService extends MyService {
 
     private final IProfileView _view;
 
-    public ProfileService(IProfileView view, Context pContext) {
-        super(pContext);
+    public ProfileService(IProfileView view, Manager manager, UserEntity userEntity) {
+        super(manager, userEntity);
         this._view = view;
-        this._api = ServiceGeneratorApi.createService(IProfileService.class, _tokenEntity, pContext);
+        this._api = ServiceGeneratorApi.createService(IProfileService.class, _userEntity._tokenEntity, manager);
     }
 
     public void getProfileOnResponse(Response<ProfileEntity> response) {
         ProfileEntity profileEntity = response.body();
         if (profileEntity != null) {
+
             if (_view != null) {
                 _view.populateProfile(profileEntity);
             }
 
-            long profile_id = _profileManager.add(profileEntity);
-            if (profile_id != 0) {
-                _tokenEntity.set_profile_id(profile_id);
-                _tokenManager.modify(_tokenEntity);
-            }
+            this._userEntity.addProfile(profileEntity);
         }
     }
 
-    public void getProfile() {
+    public void getProfile(final String profilePassword) {
+        this._userEntity.refresh();
         Call call = _api.getProfile();
         call.enqueue(new Callback<ProfileEntity>() {
             @Override
             public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
                 getProfileOnResponse(response);
+                if (profilePassword != null) {
+                    _userEntity._profileEntity.set_password(profilePassword);
+                    _userEntity.update_profileEntity();
+                }
             }
 
             @Override
@@ -74,17 +78,17 @@ public class ProfileService extends MyService {
         ProfileEntity profileEntity = response != null ? response.body() : null;
 
         if (profileEntity != null) {
-            _profileManager.modifyProfil(profileEntity);
+            _manager._profileManager.modifyProfil(profileEntity);
             _view.setProcessLoadingButton(100);
         }
         else {
-            _profileManager.modifyProfil(profileEntityFail);
+            _manager._profileManager.modifyProfil(profileEntityFail);
         }
         _view.finish();
     }
 
     public void saveProfile(HashMap<String, String> userParams) {
-        userParams.put("username", _profileLogged.get_username());
+        userParams.put("username", _userEntity._profileEntity.get_username());
 
         final ProfileEntity profileEntityFail = new ProfileEntity(userParams);
         Call call = _api.putProfile(userParams);

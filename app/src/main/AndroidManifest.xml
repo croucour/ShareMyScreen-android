@@ -11,20 +11,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar" >
         <activity
-            android:name=".SignIn.SignInActivity"
-            android:label="@string/app_name" >
+            android:name=".SignIn.SignInActivity" android:label="@string/app_name" android:launchMode= "singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUp.SignUpActivity" android:label="@string/app_name"/>
-        <activity android:name=".Logout.LogoutActivity" android:label="@string/app_name"/>
-        <activity android:name=".SettingsActivity" android:label="@string/app_name"/>
-        <activity android:name=".Room.RoomActivity" android:label="@string/app_name"/>
-        <activity android:name=".Profile.ProfileActivity" android:label="@string/app_name"/>
-        <activity android:name=".LogOfflineActivity" android:label="@string/app_name"/>
+        <activity android:name=".SignUp.SignUpActivity" android:label="@string/app_name" android:launchMode= "singleInstance" />
+        <activity android:name=".Settings.SettingsActivity" android:label="@string/settings" android:launchMode= "singleInstance" />
+        <activity android:name=".Room.RoomActivity" android:label="@string/navigation_room" android:launchMode= "singleInstance" />
+        <activity android:name=".Profile.ProfileActivity" android:label="@string/navigation_profile" android:launchMode= "singleInstance" />
+        <activity android:name=".LogOfflineActivity" android:label="@string/navigation_log" android:launchMode= "singleInstance" />
 
         <service android:name="sharemyscreen.sharemyscreen.Services.MyService" />
     </application>

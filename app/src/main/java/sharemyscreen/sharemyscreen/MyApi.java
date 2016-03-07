@@ -286,7 +286,7 @@
 //        if (_profileEntity == null && !this.resultJSON.isNull("expires_in")) { // user non authen
 //            try {
 //                long expires_in = this.resultJSON.getInt("expires_in");
-//                this.settingsManager.addSettings("expires_in", String.valueOf(expires_in));
+//                this.settingsManager.addGlobal("expires_in", String.valueOf(expires_in));
 //            } catch (JSONException e) {
 //                e.printStackTrace();
 //            }

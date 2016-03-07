@@ -11,6 +11,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
@@ -32,11 +33,11 @@ public class SignUpService extends MyService{
     private final SignInService _signInService;
     private final ISignUpView _view;
 
-    public SignUpService(ISignUpView view, Context pContext) {
-        super(pContext);
+    public SignUpService(ISignUpView view, Manager manager) {
+        super(manager);
         this._view = view;
-        this._signInService = new SignInService(view, pContext);
-        this._api = ServiceGeneratorApi.createService(ISignUpService.class, pContext);
+        this._signInService = new SignInService(view, manager);
+        this._api = ServiceGeneratorApi.createService(ISignUpService.class, manager);
     }
 
     public void createUser(final HashMap<String, String> userParams) {

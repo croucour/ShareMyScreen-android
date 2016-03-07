@@ -22,6 +22,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Url;
 import sharemyscreen.sharemyscreen.*;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
@@ -46,17 +47,16 @@ public class RequestOfflineService extends MyService {
     }
     private RequestOfflineManager _requestOfflineManager = null;
 
-    public RequestOfflineService(Context pContext) {
-        super(pContext);
-        _requestOfflineManager = new RequestOfflineManager(pContext);
+    public RequestOfflineService(Manager manager) {
+        super(manager);
     }
 
     public void runRequest(final RequestOfflineEntity requestOfflineEntity) throws JSONException {
 
-        TokenEntity tokenEntity = _tokenManager.selectById(requestOfflineEntity.get_token_id());
+        TokenEntity tokenEntity = _manager._tokenManager.selectById(requestOfflineEntity.get_token_id());
         if (tokenEntity != null) {
 
-            IAPIService api = ServiceGeneratorApi.createService(IAPIService.class, tokenEntity, requestOfflineEntity, _pContext);
+            IAPIService api = ServiceGeneratorApi.createService(IAPIService.class, tokenEntity, requestOfflineEntity, _manager);
 
             JSONObject json = new JSONObject(requestOfflineEntity.get_dataParams());
             Iterator<String> keys = json.keys();

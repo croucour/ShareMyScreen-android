@@ -18,6 +18,7 @@ public class TokenEntity {
     @SerializedName("token_type")
     private String _token_type = null;
 
+    public boolean refreshed = false;
 
     private transient long _id = 0;
     private transient long _profile_id = 0;

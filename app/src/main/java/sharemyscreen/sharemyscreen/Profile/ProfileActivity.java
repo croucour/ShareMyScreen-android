@@ -1,34 +1,38 @@
 package sharemyscreen.sharemyscreen.Profile;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 
-import java.util.HashMap;
-
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
+import sharemyscreen.sharemyscreen.DAO.GlobalManager;
 import sharemyscreen.sharemyscreen.DAO.TokenManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Logout.LogoutService;
+import sharemyscreen.sharemyscreen.MyActivity;
 import sharemyscreen.sharemyscreen.R;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, IProfileView {
+public class ProfileActivity extends MyActivity implements View.OnClickListener, TextView.OnEditorActionListener, IProfileView {
 
     private LogoutService _logoutService;
     private ProfilePresenter _profilePresenter;
@@ -37,17 +41,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private EditText EditFirstname;
     private EditText EditLastname;
     private EditText EditEmail;
-    private Button profile_cancel;
     private ActionProcessButton profile_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _profilePresenter = new ProfilePresenter(this, getApplicationContext());
-//        _logoutService = new LogoutService(this);
+        _layout_stub.setLayoutResource(R.layout.profile);
+        _layout_stub.inflate();
 
-        setContentView(R.layout.profile);
+        _profilePresenter = new ProfilePresenter(this, _manager, _userEntity);
+
 
         this.EditUsername = (EditText) findViewById(R.id.profile_username_editText); // TODO : supprimer le username
         this.EditEmail = (EditText) findViewById(R.id.profile_email_editText);
@@ -58,21 +62,15 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         this.profile_submit = (ActionProcessButton) findViewById(R.id.profile_submit);
         this.profile_submit.setMode(ActionProcessButton.Mode.ENDLESS);
 
-        this.profile_cancel = (Button) findViewById(R.id.profile_cancel);
-
 
         this.profile_submit.setOnClickListener(this);
-        this.profile_cancel.setOnClickListener(this);
 
         this.EditEmail.setOnEditorActionListener(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        SettingsManager settingsManager = new SettingsManager(getApplicationContext());
+        GlobalManager globalManager = new GlobalManager(getApplicationContext());
         TokenManager tokenManager = new TokenManager(getApplicationContext());
 
-        String token_id = settingsManager.select("current_token_id");
+        String token_id = globalManager.select("current_token_id");
         if (token_id != null) {
             TokenEntity tokenEntity = tokenManager.selectById(Long.parseLong(token_id));
 
@@ -85,6 +83,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         _profilePresenter.getProfile();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        navigation.setCheckedItem(R.id.navigation_profile);
     }
 
     @Override
@@ -103,9 +107,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.profile_submit:
                 this._profilePresenter.onSaveClicked();
                 break;
-            case R.id.profile_cancel:
-                this.finish();
-                break;
 
         }
 
@@ -120,68 +121,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
-
-//    private void submit() {
-//        this.profile_submit.setProgress(1);
-//
-//        HashMap<String, String> userParams = new HashMap<>();
-//
-//        userParams.put("firstName", this.EditFirstname.getText().toString());
-//        userParams.put("lastName", this.EditLastname.getText().toString());
-//        userParams.put("phone", this.EditPhone.getText().toString());
-//        userParams.put("username", this.EditUsername.getText().toString());
-//        userParams.put("email", this.EditEmail.getText().toString());
-//
-////        this._profileModel.saveProfile(userParams, this);
-//    }
-
-    private boolean setErrorBeforeSubmit() {
-        boolean submit = true;
-        String StringUsername = this.EditUsername.getText().toString();
-        String StringEmail = this.EditEmail.getText().toString();
-
-        TextInputLayout profile_username_inputLayout = (TextInputLayout) findViewById(R.id.profile_username_inputLayout);
-        TextInputLayout profile_email_inputLayout = (TextInputLayout) findViewById(R.id.profile_email_inputLayout);
-
-        profile_username_inputLayout.setError(null);
-        profile_email_inputLayout.setError(null);
-
-        if (StringUsername.isEmpty()) {
-            profile_username_inputLayout.setError(getString(R.string.profile_usernameEmpty));
-            submit = false;
-        }
-        if (StringEmail.isEmpty()) {
-            profile_email_inputLayout.setError(getString(R.string.profile_emailEmpty));
-            submit = false;
-        }
-        return submit;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.modify_profil:
-//                _profileModel.getProfil();
-                break;
-            case R.id.disconnect:
-//                this._logoutService.logout(this);
-                break;
-        }
-
-        return false;
-    }
-
-    @Override
-    public CoordinatorLayout getCoordinatorLayout() {
-        return (CoordinatorLayout) findViewById(R.id.display_snackbar);
-    }
 
     @Override
     public String getFirstName() {

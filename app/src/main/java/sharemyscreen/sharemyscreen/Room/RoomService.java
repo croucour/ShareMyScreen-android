@@ -1,9 +1,7 @@
 package sharemyscreen.sharemyscreen.Room;
 
-import android.content.Context;
-import android.util.Log;
-
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +14,11 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import sharemyscreen.sharemyscreen.DAO.RoomsManager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.RoomEntity;
+import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.MyError;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
@@ -43,19 +40,19 @@ public class RoomService extends MyService{
     }
 
     private final IRoomView _view;
-    private final RoomsManager _roomsManager;
 
     private IRoomService _api;
 
-    public RoomService(IRoomView view, Context pContext) {
-        super(pContext);
+    public RoomService(IRoomView view, Manager manager, UserEntity userEntity) {
+        super(manager, userEntity);
         this._view = view;
-        this._roomsManager = new RoomsManager(pContext);
-        this._api = ServiceGeneratorApi.createService(IRoomService.class, _tokenEntity, pContext);
+        this._api = ServiceGeneratorApi.createService(IRoomService.class, _userEntity._tokenEntity, _manager);
     }
 
 
     public void getRooms() {
+        _userEntity.refresh();
+
         this._view.setRefreshing(false);
 
         Call call = _api.getRooms();
@@ -65,6 +62,7 @@ public class RoomService extends MyService{
                 List<RoomEntity> roomEntityList = response.body();
 
                 if (roomEntityList == null) {
+
                     //404 or the response cannot be converted to User.
                     ResponseBody responseBody = response.errorBody();
                     if (responseBody != null) {
@@ -77,86 +75,80 @@ public class RoomService extends MyService{
                         MyError.displayError(_view.getCoordinatorLayout(), "responseBody = null", null);
                     }
                 } else {
-                    _roomsManager.add(roomEntityList);
+                    _manager._roomsManager.add(roomEntityList);
                     _view.setRoomEntityList(roomEntityList);
                 }
             }
 
             @Override
             public void onFailure(Call<List<RoomEntity>> call, Throwable t) {
-                Log.d("code error", String.valueOf(t.getMessage()));
 
-                MyError.displayError(_view.getCoordinatorLayout(), "error= ", null);
+                if (t instanceof UnknownHostException && _userEntity._settingsEntity.is_displayOffline()){
+                    MyError.displayErrorNoConnexion(_view, null);
+                }
             }
         });
     }
 
 
-    public void postRoom(HashMap<String, String> params) {
+    private void postRoomOnResponse(Response<RoomEntity> response, RoomEntity roomEntityFail) {
+        if (response == null) {
+            _manager._roomsManager.add(roomEntityFail);
+            _view.setRoomEntity(roomEntityFail);
+        }
+        else {
+            RoomEntity roomEntity = response.body();
 
-        this.updateProfileLogged();
-        params.put("owner", _profileLogged.get__id());
+            if (roomEntity != null) {
+                _manager._roomsManager.add(roomEntity);
+                _view.setRoomEntity(roomEntity);
+            }
+        }
+        _view.hideDialogCreateRoomByUser();
+    }
+
+    public void postRoom(HashMap<String, String> params) {
+        this._userEntity.refreshToken();
+
+        params.put("owner", this._userEntity._profileEntity.get__id());
+
+        // TODO envoiyer la liste des profiles present dans params
+
+        final RoomEntity roomEntityFail = new RoomEntity(params, null);
 
         Call call = _api.postRooms(params);
         call.enqueue(new Callback<RoomEntity>() {
             @Override
             public void onResponse(Call<RoomEntity> call, Response<RoomEntity> response) {
-                RoomEntity roomEntity = response.body();
-
-                if (roomEntity != null) {
-                    _roomsManager.add(roomEntity);
-                    _view.setRoomEntity(roomEntity);
-                    _view.hideDialogCreateRoomByUser();
-                }
+                postRoomOnResponse(response, roomEntityFail);
             }
 
             @Override
             public void onFailure(Call<RoomEntity> call, Throwable t) {
-
+                if (t instanceof UnknownHostException && _userEntity._settingsEntity.is_displayOffline()){
+                    postRoomOnResponse(null, roomEntityFail);
+                }
             }
         });
-
-
-//        MyApi myApi = new MyApi(_profileLogged, _pContext) {
-//            @Override
-//            protected void onPostExecute(String str) {
-//                addRoomsOnPostExecute(this);
-//            }
-//        };
-//
-//        myApi.setDataParams(params);
-//        myApi.setCurrentRequest("/rooms", "POST");
-//        myApi.execute();
     }
 
     public void deleteRoom(final RoomEntity roomEntity) {
-        this.updateProfileLogged();
+        this._userEntity.refreshToken();
 
         Call call = _api.deleteRooms(roomEntity.get__id());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 _view.deleteRoomEntityList(roomEntity);
-                _roomsManager.delete(roomEntity.get__id());
+                _manager._roomsManager.delete(roomEntity.get__id());
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                if (t instanceof UnknownHostException && _userEntity._settingsEntity.is_displayOffline()){
+                    MyError.displayErrorNoConnexion(_view, null);
+                }
             }
         });
     }
-
-//    private void addRoomsOnPostExecute(MyApi myApi) {
-//        if (!myApi.isErrorRequest()) {
-//            if (myApi.getResultJSON() != null) {
-//                // TODO : refresh la liste des room
-//
-//            }
-//        }
-//        else {
-//            Snackbar snackbar = MyError.displayErrorApi(myApi, _view.getCoordinatorLayout(), null);
-//            this._view.setCallbackSnackbar(snackbar);
-//        }
-//    }
 }

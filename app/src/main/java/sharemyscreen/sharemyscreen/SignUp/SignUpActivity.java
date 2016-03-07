@@ -1,8 +1,6 @@
 package sharemyscreen.sharemyscreen.SignUp;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
@@ -14,22 +12,16 @@ import android.widget.TextView;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 
-import java.util.HashMap;
-
-import sharemyscreen.sharemyscreen.DAO.SettingsManager;
-import sharemyscreen.sharemyscreen.MyError;
-import sharemyscreen.sharemyscreen.MyString;
+import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.R;
-import sharemyscreen.sharemyscreen.Room.RoomActivity;
 
 /**
  * Created by cleme_000 on 23/09/2015.
  */
 public class SignUpActivity extends Activity implements View.OnClickListener, TextView.OnEditorActionListener, ISignUpView {
 
+    private Manager _manager;
     private SignUpPresenter _signUpPresenter;
-
-    private Context _pContext;
 
     EditText EditUsername = null;
     EditText EditEmail = null;
@@ -39,15 +31,13 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     ActionProcessButton signup_submit = null;
     Button signup_cancel = null;
 
-    private SettingsManager settingsManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this._pContext = getApplicationContext();
-        this.settingsManager = new SettingsManager(this);
         setContentView(R.layout.signup);
+
+        this._manager = new Manager(getApplicationContext());
 
         this.EditUsername = (EditText) findViewById(R.id.signup_username_editText);
         this.EditEmail = (EditText) findViewById(R.id.signup_email_editText);
@@ -63,7 +53,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.signup_cancel.setOnClickListener(this);
         this.EditConfirPassword.setOnEditorActionListener(this);
 
-        this._signUpPresenter = new SignUpPresenter(this, _pContext);
+        this._signUpPresenter = new SignUpPresenter(this, _manager);
 //        this.signInPresenter = new SignInPresenter(this);
 
 //        this.EditUsername.setText("test2");
@@ -171,7 +161,8 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     @Override
     public void startRoomActivity() {
         this.finish();
-        Intent intent = new Intent(this, RoomActivity.class);
-        startActivity(intent);
+//        RoomActivity roomActivity = new RoomActivity(_manager);
+//        Intent intent = new Intent(SignUpActivity.this, roomActivity.getClass());
+//        startActivity(intent);
     }
 }
