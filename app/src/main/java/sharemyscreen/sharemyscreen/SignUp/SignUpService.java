@@ -1,7 +1,5 @@
 package sharemyscreen.sharemyscreen.SignUp;
 
-import android.content.Context;
-
 import java.util.HashMap;
 import java.util.Map;
 

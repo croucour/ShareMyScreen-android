@@ -1,7 +1,6 @@
 package sharemyscreen.sharemyscreen;
 
 import android.support.design.widget.Snackbar;
-import android.view.ViewGroup;
 
 /**
  * Created by cleme_000 on 05/03/2016.

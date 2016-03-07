@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen.Services;
 /**
  * Created by cleme_000 on 20/02/2016.
  */
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +15,6 @@ import android.util.Log;
 import org.json.JSONException;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
-import sharemyscreen.sharemyscreen.DAO.TokenManager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 
 public class MyService  extends Service{

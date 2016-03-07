@@ -1,8 +1,5 @@
 package sharemyscreen.sharemyscreen.Services;
 
-import android.content.Context;
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,18 +13,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Url;
-import sharemyscreen.sharemyscreen.*;
 import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.DAO.RequestOfflineManager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.MyService;
+import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
 
 /**
  * Created by cleme_000 on 22/02/2016.

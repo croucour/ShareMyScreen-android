@@ -52,7 +52,6 @@ public class RoomService extends MyService{
 
     public void getRooms() {
         _userEntity.refresh();
-
         this._view.setRefreshing(false);
 
         Call call = _api.getRooms();
@@ -61,21 +60,9 @@ public class RoomService extends MyService{
             public void onResponse(Call<List<RoomEntity>> call, Response<List<RoomEntity>> response) {
                 List<RoomEntity> roomEntityList = response.body();
 
-                if (roomEntityList == null) {
-
-                    //404 or the response cannot be converted to User.
-                    ResponseBody responseBody = response.errorBody();
-                    if (responseBody != null) {
-                        try {
-                            MyError.displayError(_view.getCoordinatorLayout(), "responseBody = " + responseBody.string(), null);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        MyError.displayError(_view.getCoordinatorLayout(), "responseBody = null", null);
-                    }
-                } else {
+                if (roomEntityList != null) {
                     _manager._roomsManager.add(roomEntityList);
+                    _userEntity.refreshRoomEntityList();
                     _view.setRoomEntityList(roomEntityList);
                 }
             }
@@ -85,6 +72,7 @@ public class RoomService extends MyService{
 
                 if (t instanceof UnknownHostException && _userEntity._settingsEntity.is_displayOffline()){
                     MyError.displayErrorNoConnexion(_view, null);
+                    _view.localRefreshRooms();
                 }
             }
         });
@@ -139,14 +127,15 @@ public class RoomService extends MyService{
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                _view.deleteRoomEntityList(roomEntity);
                 _manager._roomsManager.delete(roomEntity.get__id());
+                _view.deleteRoomEntityList(roomEntity);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (t instanceof UnknownHostException && _userEntity._settingsEntity.is_displayOffline()){
                     MyError.displayErrorNoConnexion(_view, null);
+                    _view.deleteRoomEntityList(roomEntity);
                 }
             }
         });

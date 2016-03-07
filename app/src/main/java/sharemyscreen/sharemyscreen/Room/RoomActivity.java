@@ -10,11 +10,10 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -29,19 +28,16 @@ import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.List;
 
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.RoomEntity;
-import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Fab;
-import sharemyscreen.sharemyscreen.MyActivity;
+import sharemyscreen.sharemyscreen.MyActivityDrawer;
 import sharemyscreen.sharemyscreen.R;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
 
-public class RoomActivity extends MyActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IRoomView{
+public class RoomActivity extends MyActivityDrawer implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IRoomView{
 
     private RoomPresenter _roomPresenter;
 
@@ -56,6 +52,8 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
     private MaterialBetterSpinner _createRoom_by_user_choose_user;
     private EditText _createRoom_by_user_name_editText;
     private MaterialSheetFab<Fab> _materialSheetFab;
+    private Fab _fab;
+    private FrameLayout _frameLayout_without_room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,12 +65,27 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
         _swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         _swipeRefreshLayout.setOnRefreshListener(this);
 
+        _frameLayout_without_room = (FrameLayout) findViewById(R.id.FrameLayout_without_room);
+
         this._roomPresenter = new RoomPresenter(this, _manager, _userEntity);
 
         mListView = (SwipeMenuListView) findViewById(R.id.room_recycler_view);
         mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
-        mAdapter = new MyAdapter(_manager._roomsManager, _userEntity._profileEntity == null ? null : _userEntity._profileEntity.get__id());
+        mAdapter = new MyAdapter(_manager._roomsManager, _userEntity._profileEntity == null ? null : _userEntity._profileEntity.get__id()) {
+            @Override
+            public void notifyDataSetChanged() {
+                super.notifyDataSetChanged();
+
+                if (_frameLayout_without_room != null) {
+                    if (this.getCount() != 0) {
+                        _frameLayout_without_room.setVisibility(FrameLayout.GONE);
+                    } else {
+                        _frameLayout_without_room.setVisibility(FrameLayout.VISIBLE);
+                    }
+                }
+            }
+        };
         mAdapter.set_roomEntityList(null);
         mListView.setAdapter(mAdapter);
 
@@ -93,13 +106,14 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
 
     public void localRefreshRooms() {
         _userEntity.refreshRoomEntityList();
-        this.setRoomEntityList(_userEntity._roomEntityList);
+        mAdapter.set_roomEntityList(_userEntity._roomEntityList);
         mListView.invalidateViews();
     }
 
     @Override
     public void setRoomEntityList(List<RoomEntity> roomEntityList) {
         mAdapter.set_roomEntityList(roomEntityList);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -108,6 +122,7 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
         mListView.invalidateViews();
         mListView.smoothScrollToPosition(mAdapter.getCount());
         _materialSheetFab.hideSheet();
+        localRefreshRooms();
     }
 
     private static final String[] USERS = new String[] {
@@ -157,20 +172,17 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
 
     private void setUpFab() {
 
-        Fab fab = (Fab) findViewById(R.id.fab);
-        fab.attachToListView(mListView);
-        fab.setOnClickListener(this);
+        _fab = (Fab) findViewById(R.id.fab);
+        _fab.attachToListView(mListView);
+        _fab.setOnClickListener(this);
 
         View sheetView = findViewById(R.id.fab_sheet);
         View overlay = findViewById(R.id.overlay);
         int sheetColor = getResources().getColor(R.color.background);
         int fabColor = getResources().getColor(R.color.colorPrimaryDark);
 
-//         Initialize material sheet FAB
-        _materialSheetFab = new MaterialSheetFab<>(fab, sheetView, overlay,
+        _materialSheetFab = new MaterialSheetFab<>(_fab, sheetView, overlay,
                 sheetColor, fabColor);
-
-
 
         TextView fab_sheet_item_add_by_group = (TextView) findViewById(R.id.fab_sheet_item_add_by_group);
         TextView fab_sheet_item_add_by_user = (TextView) findViewById(R.id.fab_sheet_item_add_by_user);
@@ -202,6 +214,7 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
         };
 
         mListView.setMenuCreator(creator);
+
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
             @Override
@@ -225,8 +238,6 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
                         break;
                     case 1:
                         _roomPresenter.deleteRoomOnClicked(item);
-                        Log.i("info", "remove");
-
                         break;
                 }
                 return false;
@@ -309,11 +320,13 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
     public void deleteRoomEntityList(RoomEntity roomEntity) {
         mAdapter.delete(roomEntity);
         mListView.invalidateViews();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void addRoomEntityList(RoomEntity roomEntity) {
         mAdapter.add(roomEntity);
+        mAdapter.notifyDataSetChanged();
         mListView.invalidateViews();
     }
 
@@ -322,15 +335,4 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
     public void hideDialogCreateRoomByUser() {
         _dialogByUser.dismiss();
     }
-
-//    @Override
-//    public void startSettingsActivity() {
-//        Intent intent = new Intent(this, SettingsActivity.class);
-//        startActivity(intent);
-//    }
-
-//    @Override
-//    public Fab getFab() {
-//        return (Fab) findViewById(R.id.fab);
-//    }
 }

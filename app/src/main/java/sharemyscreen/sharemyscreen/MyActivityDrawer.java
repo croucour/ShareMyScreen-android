@@ -27,7 +27,7 @@ import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 /**
  * Created by cleme_000 on 06/03/2016.
  */
-public class MyActivity extends AppCompatActivity implements IView, NavigationView.OnNavigationItemSelectedListener {
+public class MyActivityDrawer extends AppCompatActivity implements IView, NavigationView.OnNavigationItemSelectedListener {
 
     protected DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -40,6 +40,7 @@ public class MyActivity extends AppCompatActivity implements IView, NavigationVi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.layout_with_drawer);
 
         _layout_stub = (ViewStub) findViewById(R.id.layout_stub);
@@ -47,7 +48,6 @@ public class MyActivity extends AppCompatActivity implements IView, NavigationVi
         this._manager = new Manager(getApplicationContext());
 
         this._userEntity = new UserEntity(_manager);
-
     }
 
     @Override
@@ -64,7 +64,9 @@ public class MyActivity extends AppCompatActivity implements IView, NavigationVi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.hello_world, R.string.hello_world);
+
             drawerLayout.setDrawerListener(drawerToggle);
 
             navigation = (NavigationView) findViewById(R.id.navigation_view);
@@ -83,6 +85,11 @@ public class MyActivity extends AppCompatActivity implements IView, NavigationVi
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

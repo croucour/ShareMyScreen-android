@@ -2,14 +2,10 @@ package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
-import sharemyscreen.sharemyscreen.Entities.RoomEntity;
-import sharemyscreen.sharemyscreen.Entities.SettingsEntity;
 
 /**
  * Created by cleme_000 on 01/03/2016.

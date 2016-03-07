@@ -1,7 +1,5 @@
 package sharemyscreen.sharemyscreen.Profile;
 
-import android.content.Context;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +12,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.PUT;
 import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
-import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;

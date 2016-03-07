@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 
 /**

@@ -1,9 +1,7 @@
 package sharemyscreen.sharemyscreen;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -16,7 +14,7 @@ import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 /**
  * Created by cleme_000 on 22/02/2016.
  */
-public class LogOfflineActivity extends MyActivity {
+public class LogOfflineActivity extends MyActivityDrawer {
 
     private RequestOfflineManager _requestOfflineManager = null;
 

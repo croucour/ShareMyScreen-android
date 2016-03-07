@@ -1,8 +1,6 @@
 package sharemyscreen.sharemyscreen;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
-import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
-import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Entities.UserEntity;
 
 /**

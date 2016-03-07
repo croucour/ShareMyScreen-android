@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import sharemyscreen.sharemyscreen.Entities.SettingsEntity;
-import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 
 /**
  * Created by cleme_000 on 04/03/2016.

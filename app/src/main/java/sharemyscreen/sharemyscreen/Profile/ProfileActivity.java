@@ -1,38 +1,27 @@
 package sharemyscreen.sharemyscreen.Profile;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 
-import sharemyscreen.sharemyscreen.DAO.Manager;
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.GlobalManager;
+import sharemyscreen.sharemyscreen.DAO.ProfileManager;
 import sharemyscreen.sharemyscreen.DAO.TokenManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Logout.LogoutService;
-import sharemyscreen.sharemyscreen.MyActivity;
+import sharemyscreen.sharemyscreen.MyActivityDrawer;
 import sharemyscreen.sharemyscreen.R;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class ProfileActivity extends MyActivity implements View.OnClickListener, TextView.OnEditorActionListener, IProfileView {
+public class ProfileActivity extends MyActivityDrawer implements View.OnClickListener, TextView.OnEditorActionListener, IProfileView {
 
     private LogoutService _logoutService;
     private ProfilePresenter _profilePresenter;

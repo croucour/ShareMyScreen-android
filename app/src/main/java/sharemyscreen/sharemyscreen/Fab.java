@@ -2,7 +2,6 @@ package sharemyscreen.sharemyscreen;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.gordonwong.materialsheetfab.AnimatedFab;
 import com.melnykov.fab.FloatingActionButton;

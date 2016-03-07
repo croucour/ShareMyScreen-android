@@ -1,7 +1,5 @@
 package sharemyscreen.sharemyscreen.Logout;
 
-import android.content.Context;
-
 import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.Menu.IMenuView;

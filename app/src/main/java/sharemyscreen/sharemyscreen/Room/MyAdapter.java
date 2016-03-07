@@ -55,14 +55,13 @@ class MyAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = View.inflate(parent.getContext(),
-                    R.layout.single_row, null);
+            convertView = View.inflate(parent.getContext(), R.layout.single_row, null);
             new ViewHolder(convertView);
         }
+
         ViewHolder holder = (ViewHolder) convertView.getTag();
         RoomEntity room = getItem(position);
         holder.tv_name.setText(room.get_name());
-
         return convertView;
     }
 
