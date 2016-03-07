@@ -42,10 +42,11 @@ public class RoomEntity {
 
     public RoomEntity(Cursor c) {
         this.id = c.getLong(0);
-        this._name = c.getString(1);
-        this._createdAt = c.getString(2);
-        this._updatedAt = c.getString(3);
-        this._owner = c.getString(4);
+        this.__id = c.getString(1);
+        this._name = c.getString(2);
+        this._createdAt = c.getString(3);
+        this._updatedAt = c.getString(4);
+        this._owner = c.getString(5);
     }
 
     public RoomEntity(HashMap<String, String> params, List<ProfileEntity> members) {

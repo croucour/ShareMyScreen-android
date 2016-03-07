@@ -108,7 +108,7 @@ public class RoomsDAO extends DAOBase {
 
         Cursor c = _mDb.rawQuery("select "+ TABLE_NAME+".* from " + TABLE_NAME
                 + " INNER JOIN " + RoomByProfileDAO.TABLE_NAME + " on " + TABLE_NAME+"."+_ID+"="+RoomByProfileDAO.TABLE_NAME+"."+RoomByProfileDAO.ROOM_ID
-                + " WHERE "+RoomByProfileDAO.PROFILE_ID+ " = ?", new String[] {profile__id});
+                + " WHERE "+RoomByProfileDAO.PROFILE_ID+ " = ? ORDER BY "+UPDATEDAT+" DESC", new String[] {profile__id});
 
         while (c.moveToNext()) {
             roomEntityList.add(new RoomEntity(c));
@@ -120,5 +120,19 @@ public class RoomsDAO extends DAOBase {
 
     public void delete(String room__id) {
         _mDb.delete(TABLE_NAME, _ID + " = ?", new String[]{room__id});
+    }
+
+    public RoomEntity selectBy_id(String _id) {
+
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE "+_ID+" = ?" , new String[] {String.valueOf(_id)});
+
+        RoomEntity roomEntity = null;
+
+        if (c.moveToFirst()) {
+            roomEntity = new RoomEntity(c);
+        }
+
+        c.close();
+        return roomEntity;
     }
 }

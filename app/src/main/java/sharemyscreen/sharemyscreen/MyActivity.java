@@ -89,8 +89,6 @@ public class MyActivity extends AppCompatActivity implements IView, NavigationVi
     protected void onPostResume() {
         super.onPostResume();
 
-
-        probleme lors de changement d'user'
         this._userEntity = new UserEntity(_manager);
 
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {

@@ -88,6 +88,7 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
         super.onPostResume();
         navigation.setCheckedItem(R.id.navigation_room);
         localRefreshRooms();
+        this._roomPresenter.onSwipedForRefreshRooms();
     }
 
     public void localRefreshRooms() {
@@ -181,81 +182,36 @@ public class RoomActivity extends MyActivity implements View.OnClickListener, Sw
     }
 
     private void setUpSwipeMenuItem() {
-        // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
             @Override
             public void create(SwipeMenu menu) {
-                // create "open" item
                 SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
-                // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
-                // set item width
                 openItem.setWidth(dp2px(90));
-                // set item title
-                openItem.setTitle("Open");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
+                openItem.setIcon(R.drawable.ic_open_in_browser_white_36dp);
                 openItem.setTitleColor(Color.WHITE);
-                // add to menu
-                menu.addMenuItem(openItem);
 
-                // create "delete" item
+                menu.addMenuItem(openItem);
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
-                // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,0x3F, 0x25)));
-                // set item width
                 deleteItem.setWidth(dp2px(90));
-                // set a icon
-                deleteItem.setIcon(R.drawable.ic_delete);
-                // add to menu
+                deleteItem.setIcon(R.drawable.ic_delete_white_36dp);
                 menu.addMenuItem(deleteItem);
             }
         };
-        // set creator
-        mListView.setMenuCreator(creator);
 
+        mListView.setMenuCreator(creator);
         mListView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
 
             @Override
             public void onSwipeStart(int position) {
                 _swipeRefreshLayout.setEnabled(false);
-                Log.i("info", "start");
-                // swipe start
             }
 
             @Override
             public void onSwipeEnd(int position) {
                 _swipeRefreshLayout.setEnabled(true);
-                // swipe end
-            }
-        });
-
-        // set MenuStateChangeListener
-        mListView.setOnMenuStateChangeListener(new SwipeMenuListView.OnMenuStateChangeListener() {
-            @Override
-            public void onMenuOpen(int position) {
-                Log.i("info", "open");
-            }
-
-            @Override
-            public void onMenuClose(int position) {
-                Log.i("info", "close");
-            }
-        });
-
-        // other setting
-//		listView.setCloseInterpolator(new BounceInterpolator());
-
-        // test item long click
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                           int position, long id) {
-                Toast.makeText(getApplicationContext(), position + " long click", Toast.LENGTH_SHORT).show();
-                return false;
             }
         });
 

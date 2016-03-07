@@ -30,17 +30,19 @@ public class RoomsManager extends RoomsDAO{
 
     @Override
     public long add(RoomEntity room) {
-        if (room.get_members() != null) {
-            _roomByProfileManager.add(room.get_members(), room.get__id());
+        if (this.selectBy_id(room.get__id()) == null) {
+            if (room.get_members() != null) {
+                _roomByProfileManager.add(room.get_members(), room.get__id());
+            }
+            return super.add(room);
         }
-        return super.add(room);
+        return 0;
     }
 
     public void add(List<RoomEntity> roomEntityList) {
         if (roomEntityList != null) {
             for (RoomEntity roomEntity : roomEntityList) {
                 long room_id = this.add(roomEntity);
-
             }
         }
     }
