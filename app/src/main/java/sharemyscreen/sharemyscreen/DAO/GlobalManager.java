@@ -1,14 +1,14 @@
 package sharemyscreen.sharemyscreen.DAO;
 
-import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Created by roucou-c on 07/12/15.
  */
 public class GlobalManager extends GlobalDAO {
 
-    public GlobalManager(Context pContext) {
-        super(pContext);
+    public GlobalManager(SQLiteDatabase mDb) {
+        super(mDb);
 
         if (this.select("settings_offline") == null) {
             super.add("settings_offline", "true");

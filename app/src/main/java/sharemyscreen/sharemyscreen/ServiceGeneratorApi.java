@@ -35,7 +35,7 @@ public class ServiceGeneratorApi {
         return createService(serviceClass, null, manager);
     }
 
-    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
     public static <S> S createService(Class<S> serviceClass, TokenEntity tokenEntity, final Manager manager) {
 

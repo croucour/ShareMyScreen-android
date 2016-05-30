@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,10 @@ import sharemyscreen.sharemyscreen.Entities.RoomEntity;
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class RoomsDAO extends DAOBase {
+public class RoomsDAO{
     public static final String TABLE_NAME = "rooms";
+    private final SQLiteDatabase _mDb;
+
     public static final String KEY = "id";
     public static final String _ID = "__id";
     public static final String NAME = "name";
@@ -32,8 +35,8 @@ public class RoomsDAO extends DAOBase {
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
-    public RoomsDAO(Context pContext) {
-        super(pContext);
+    public RoomsDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     public long add(RoomEntity room) {

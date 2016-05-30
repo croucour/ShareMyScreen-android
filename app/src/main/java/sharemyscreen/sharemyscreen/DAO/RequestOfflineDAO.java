@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
@@ -11,9 +12,9 @@ import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
 /**
  * Created by cleme_000 on 21/02/2016.
  */
-public class RequestOfflineDAO extends DAOBase{
+public class RequestOfflineDAO{
     public static final String TABLE_NAME = "requestOffline";
-
+    private final SQLiteDatabase _mDb;
 
     /**
      * Attribut de l'API
@@ -46,8 +47,8 @@ public class RequestOfflineDAO extends DAOBase{
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
-    public RequestOfflineDAO(Context pContext) {
-        super(pContext);
+    public RequestOfflineDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     public long add(RequestOfflineEntity requestOfflineEntity) {

@@ -16,20 +16,17 @@ import sharemyscreen.sharemyscreen.Entities.RequestOfflineEntity;
  */
 public class LogOfflineActivity extends MyActivityDrawer {
 
-    private RequestOfflineManager _requestOfflineManager = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _requestOfflineManager = new RequestOfflineManager(this);
 
         _layout_stub.setLayoutResource(R.layout.log_offline);
         _layout_stub.inflate();
 
         TableLayout table = (TableLayout) findViewById(R.id.table_log);
 
-        List<RequestOfflineEntity> requestOfflineEntities =  _requestOfflineManager.selectAll();
+        List<RequestOfflineEntity> requestOfflineEntities =  _manager._requestOfflineManager.selectAll();
 
         TableRow row;
         TextView tv1;

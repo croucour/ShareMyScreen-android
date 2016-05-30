@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by cleme_000 on 04/03/2016.
  */
-public class Manager{
+public class Manager extends DAOBase{
     final public ProfileManager _profileManager;
     final public RequestOfflineManager _requestOfflineManager;
     final public RoomByProfileManager _roomByProfileManager;
@@ -17,14 +17,16 @@ public class Manager{
 
 
     public Manager(Context pContext) {
+        super(pContext);
         this._pContext = pContext;
-        this._tokenManager = new TokenManager(pContext);
-        this._profileManager = new ProfileManager(pContext);
-        this._requestOfflineManager = new RequestOfflineManager(pContext);
-        this._roomByProfileManager = new RoomByProfileManager(pContext);
-        this._roomsManager = new RoomsManager(pContext);
-        this._globalManager = new GlobalManager(pContext);
-        this._settingsManager = new SettingsManager(pContext);
+
+        this._tokenManager = new TokenManager(this._mDb);
+        this._profileManager = new ProfileManager(this._mDb);
+        this._requestOfflineManager = new RequestOfflineManager(this._mDb);
+        this._roomByProfileManager = new RoomByProfileManager(this._mDb);
+        this._roomsManager = new RoomsManager(this._mDb);
+        this._globalManager = new GlobalManager(this._mDb);
+        this._settingsManager = new SettingsManager(this._mDb);
     }
 
     public Context get_pContext() {

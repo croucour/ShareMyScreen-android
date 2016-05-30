@@ -3,15 +3,16 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 
 /**
  * Created by roucou-c on 09/12/15.
  */
-public class ProfileDAO extends DAOBase {
+public class ProfileDAO{
     public static final String TABLE_NAME = "profile";
-
+    private final SQLiteDatabase _mDb;
 
     /**
      * Attribut de l'API
@@ -50,8 +51,8 @@ public class ProfileDAO extends DAOBase {
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
-    public ProfileDAO(Context pContext) {
-        super(pContext);
+    public ProfileDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     public ProfileEntity selectByUsername(String username) {

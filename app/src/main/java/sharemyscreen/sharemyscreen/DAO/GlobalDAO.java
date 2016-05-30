@@ -3,12 +3,15 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Created by cleme_000 on 03/11/2015.
  */
-public class GlobalDAO extends DAOBase {
+public class GlobalDAO{
     public static final String TABLE_NAME = "global";
+    private final SQLiteDatabase _mDb;
+
     public static final String KEY = "key";
     public static final String VALUE = "value";
 
@@ -16,8 +19,8 @@ public class GlobalDAO extends DAOBase {
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
-    public GlobalDAO(Context pContext) {
-        super(pContext);
+    public GlobalDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     public long add(String key, String value) {

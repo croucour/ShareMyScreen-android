@@ -2,6 +2,7 @@ package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
@@ -10,9 +11,11 @@ import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 /**
  * Created by cleme_000 on 01/03/2016.
  */
-public class RoomByProfileDAO extends DAOBase {
+public class RoomByProfileDAO{
 
     public static final String TABLE_NAME = "roomsByProfile";
+    private final SQLiteDatabase _mDb;
+
     public static final String KEY = "id";
     public static final String ROOM_ID = "room_id";
     public static final String PROFILE_ID = "profile_id";
@@ -24,8 +27,8 @@ public class RoomByProfileDAO extends DAOBase {
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
-    public RoomByProfileDAO(Context pContext) {
-        super(pContext);
+    public RoomByProfileDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     public long add(String profile__id, String room__id) {

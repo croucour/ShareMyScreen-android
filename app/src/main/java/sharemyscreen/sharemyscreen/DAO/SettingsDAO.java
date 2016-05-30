@@ -3,17 +3,19 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import sharemyscreen.sharemyscreen.Entities.SettingsEntity;
 
 /**
  * Created by cleme_000 on 04/03/2016.
  */
-public class SettingsDAO extends DAOBase{
+public class SettingsDAO{
     public static final String TABLE_NAME = "settings";
+    private final SQLiteDatabase _mDb;
 
-    public SettingsDAO(Context pContext) {
-        super(pContext);
+    public SettingsDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     /**

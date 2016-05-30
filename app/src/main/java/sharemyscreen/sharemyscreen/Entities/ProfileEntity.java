@@ -15,19 +15,19 @@ public class ProfileEntity {
     /**
      * Attribut de l'API
      */
-    @SerializedName("_id")
+    @SerializedName("id")
     private String __id = null;
-    @SerializedName("createdAt")
+    @SerializedName("created_at")
     private String _createdAt = null;
-    @SerializedName("updatedAt")
+    @SerializedName("updated_at")
     private String _updatedAt = null;
     @SerializedName("username")
     private String _username = null;
     @SerializedName("email")
     private String _email = null;
-    @SerializedName("firstName")
+    @SerializedName("first_name")
     private String _firstName = null;
-    @SerializedName("lastName")
+    @SerializedName("last_name")
     private String _lastName = null;
     @SerializedName("phone")
     private String _phone = null;

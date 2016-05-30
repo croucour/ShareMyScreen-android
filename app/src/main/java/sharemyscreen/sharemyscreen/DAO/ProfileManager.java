@@ -1,6 +1,6 @@
 package sharemyscreen.sharemyscreen.DAO;
 
-import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 
@@ -9,8 +9,8 @@ import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
  */
 public class ProfileManager extends ProfileDAO{
 
-    public ProfileManager(Context pContext) {
-        super(pContext);
+    public ProfileManager(SQLiteDatabase mDb) {
+        super(mDb);
     }
 
     public long add(ProfileEntity profileEntity) {

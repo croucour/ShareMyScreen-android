@@ -1,6 +1,7 @@
 package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
@@ -13,9 +14,9 @@ public class RoomsManager extends RoomsDAO{
 
     private final RoomByProfileManager _roomByProfileManager;
 
-    public RoomsManager(Context pContext) {
-        super(pContext);
-        _roomByProfileManager = new RoomByProfileManager(pContext);
+    public RoomsManager(SQLiteDatabase mDb) {
+        super(mDb);
+        _roomByProfileManager = new RoomByProfileManager(mDb);
     }
 
     public void addRoom(String name) {

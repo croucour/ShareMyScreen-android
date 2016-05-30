@@ -3,15 +3,16 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 
 /**
  * Created by cleme_000 on 01/03/2016.
  */
-public class TokenDAO extends DAOBase{
+public class TokenDAO{
+    private final SQLiteDatabase _mDb;
     public static final String TABLE_NAME = "token";
-
 
     /**
      * Attribut de l'API
@@ -43,8 +44,8 @@ public class TokenDAO extends DAOBase{
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
-    public TokenDAO(Context pContext) {
-        super(pContext);
+    public TokenDAO(SQLiteDatabase mDb) {
+        this._mDb = mDb;
     }
 
     public long add(TokenEntity tokenEntity) {

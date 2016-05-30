@@ -51,20 +51,15 @@ public class ProfileActivity extends MyActivityDrawer implements View.OnClickLis
         this.profile_submit = (ActionProcessButton) findViewById(R.id.profile_submit);
         this.profile_submit.setMode(ActionProcessButton.Mode.ENDLESS);
 
-
         this.profile_submit.setOnClickListener(this);
 
         this.EditEmail.setOnEditorActionListener(this);
 
-        GlobalManager globalManager = new GlobalManager(getApplicationContext());
-        TokenManager tokenManager = new TokenManager(getApplicationContext());
-
-        String token_id = globalManager.select("current_token_id");
+        String token_id = _manager._globalManager.select("current_token_id");
         if (token_id != null) {
-            TokenEntity tokenEntity = tokenManager.selectById(Long.parseLong(token_id));
+            TokenEntity tokenEntity = _manager._tokenManager.selectById(Long.parseLong(token_id));
 
-            ProfileManager profileManager = new ProfileManager(this);
-            ProfileEntity profileEntity = profileManager.selectById(tokenEntity.get_profile_id());
+            ProfileEntity profileEntity = _manager._profileManager.selectById(tokenEntity.get_profile_id());
 
             if (profileEntity != null) {
                 populateProfile(profileEntity);
