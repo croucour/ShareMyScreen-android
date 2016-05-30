@@ -97,10 +97,6 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
         super.onPostResume();
 
         this._userEntity = new UserEntity(_manager);
-
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-        }
     }
 
     @Override
@@ -109,14 +105,10 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//            super.onBackPressed();
+//    }
 
     @Override
     public CoordinatorLayout getCoordinatorLayout() {
@@ -130,6 +122,7 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
 
     @Override
     public void startRoomActivity() {
+
         Intent intent = new Intent(this, RoomActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
@@ -177,6 +170,7 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         int id = item.getItemId();
         switch (id) {
             case R.id.navigation_room:
@@ -200,9 +194,9 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
 
     @Override
     protected void onStop() {
-        super.onStop();
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            this.drawerLayout.closeDrawer(GravityCompat.START);
+            drawerLayout.closeDrawer(navigation);
         }
+        super.onStop();
     }
 }
