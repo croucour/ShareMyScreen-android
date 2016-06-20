@@ -1,16 +1,7 @@
 package sharemyscreen.sharemyscreen.SignIn;
 
-import android.app.Activity;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.test.ActivityTestCase;
 import android.test.AndroidTestCase;
-import android.test.InstrumentationTestCase;
-import android.test.RenamingDelegatingContext;
-import android.test.UiThreadTest;
-import android.test.mock.MockContext;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,13 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import sharemyscreen.sharemyscreen.DAO.DAOBase;
-import sharemyscreen.sharemyscreen.DAO.DatabaseHandler;
 import sharemyscreen.sharemyscreen.MyApi;
 import sharemyscreen.sharemyscreen.R;
 
@@ -54,7 +38,7 @@ public class SignInPresenterTest extends AndroidTestCase{
         when(_view.getPassword()).thenReturn("test");
         _presenter.onLoginClicked();
 
-        verify(_view).showUsernameError(R.string.signin_usernameEmpty);
+        verify(_view).showUsernameError(R.string.signin_emailEmpty);
     }
 
     @Test
@@ -72,7 +56,7 @@ public class SignInPresenterTest extends AndroidTestCase{
         when(_view.getPassword()).thenReturn("");
         _presenter.onLoginClicked();
 
-        verify(_view).showUsernameError(R.string.signin_usernameEmpty);
+        verify(_view).showUsernameError(R.string.signin_emailEmpty);
         verify(_view).showPasswordError(R.string.signin_passwordEmpty);
     }
 

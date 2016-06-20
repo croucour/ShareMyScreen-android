@@ -11,7 +11,7 @@
     <string name="signin_settings">Settings</string>
 
     <!--msg error-->
-    <string name="signin_usernameEmpty">Veuillez saisir un username</string>
+    <string name="signin_emailEmpty">Veuillez saisir un username</string>
     <string name="signin_passwordEmpty">Veuillez saisir un password</string>
 
 
@@ -26,7 +26,8 @@
     <string name="signup_cancel">Annuler</string>
 
     <!--msg error-->
-    <string name="signup_usernameEmpty">Veuillez saisir un username</string>
+    <string name="signup_lastnameEmpty">Veuillez saisir votre nom</string>
+    <string name="signup_firstnameEmpty">Veuillez saisir votre prénom</string>
     <string name="signup_emailEmpty">Veuillez saissir une adresse email</string>
     <string name="signup_emailNotValid">Votre adresse email n\'est pas valide !</string>
     <string name="signup_passwordEmpty">Veuillez saissir un mot de passe</string>
@@ -107,6 +108,12 @@
     <string name="navigation_settings">Paramètres</string>
     <string name="navigation_logout">Se déconnecter</string>
     <string name="navigation_profile">Profil</string>
+    <string name="signin_facebook">Facebook</string>
+    <string name="signin_google">Google</string>
 
+    <string name="facebook_app_id">565509136962999</string>
+    <string name="server_client_id">220029720276-a8okmd49jv5ft5638smpvn58781gjc50.apps.googleusercontent.com</string>
+    <string name="signup_firstname__editText_hint">Prénom</string>
+    <string name="signup_lastname_editText_hint">Nom</string>
 
 </resources>

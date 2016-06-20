@@ -22,7 +22,7 @@ public class ProfileEntity {
     @SerializedName("updated_at")
     private String _updatedAt = null;
     @SerializedName("username")
-    private String _username = null;
+    private String _username = null; // TODO à supprimer
     @SerializedName("email")
     private String _email = null;
     @SerializedName("first_name")

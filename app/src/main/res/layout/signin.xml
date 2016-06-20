@@ -7,11 +7,18 @@
     android:layout_height="match_parent"
     android:id="@+id/display_snackbar">
 
+    <!--<fragment android:name="sharemyscreen.sharemyscreen.SignIn.Api.ApiLogin"-->
+        <!--android:id="@+id/fragment_apiLogin"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent" />-->
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
+
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -32,12 +39,12 @@
             android:id="@+id/LinearLayout_signin">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/signin_username_inputLayout"
+                android:id="@+id/signin_email_inputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/signin_username_editText"
+                    android:id="@+id/signin_email_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/signin_username_editText_hint"
@@ -100,6 +107,58 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LinearLayout_signin">
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/signin_facebook"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="1.0"/>
+
+            <!--<com.dd.processbutton.iml.ActionProcessButton-->
+                <!--android:layout_width="0.0dip"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:id="@+id/signin_facebook"-->
+                <!--android:text="@string/signin_facebook"-->
+                <!--android:theme="@style/MyButtonLoading"-->
+                <!--android:layout_weight="1.0"-->
+                <!--custom:pb_textError="Error"-->
+                <!--custom:pb_textComplete="Success"-->
+                <!--custom:pb_textProgress="Loading"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--/>-->
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/signin_google"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.0" />
+
+            <!--<com.dd.processbutton.iml.ActionProcessButton-->
+                <!--android:layout_width="0.0dip"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:text="@string/signin_google"-->
+                <!--android:id="@+id/signin_google"-->
+                <!--android:layout_weight="1.0"-->
+                <!--android:theme="@style/MyButtonLoading"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--/>-->
 
         </LinearLayout>
 

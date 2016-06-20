@@ -55,11 +55,11 @@ public class ProfileDAO{
         this._mDb = mDb;
     }
 
-    public ProfileEntity selectByUsername(String username) {
+    public ProfileEntity selectByEmail(String email) {
 
         ProfileEntity profile = null;
 
-        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE username = ?" , new String[] {username});
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE email = ?" , new String[] {email});
 
         if (c.moveToFirst()) {
             profile = new ProfileEntity(c);

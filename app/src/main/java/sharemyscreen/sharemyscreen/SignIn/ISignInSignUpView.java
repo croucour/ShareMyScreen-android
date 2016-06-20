@@ -8,10 +8,11 @@ import com.dd.processbutton.iml.ActionProcessButton;
  * Created by cleme_000 on 27/02/2016.
  */
 public interface ISignInSignUpView {
-    String getUsername();
+    String getEmail();
     String getPassword();
 
-    void setErrorUsername(int resId);
+    void setErrorEmail(int resId);
+
     void setErrorPassword(int resId);
 
     void initializeInputLayout();

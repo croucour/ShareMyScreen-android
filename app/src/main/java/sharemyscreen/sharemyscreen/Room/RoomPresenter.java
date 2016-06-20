@@ -63,7 +63,7 @@ public class RoomPresenter {
     private HashMap<String, String> getParamsForCreateRoomByUser(String name, String user) {
         HashMap<String, String> params = new HashMap<>();
 
-        ProfileEntity profileSelected = _manager._profileManager.selectByUsername(user);
+        ProfileEntity profileSelected = _manager._profileManager.selectByEmail(user);
         if (profileSelected != null && profileSelected.get__id() != null) {
 
             String member__id = profileSelected.get__id();

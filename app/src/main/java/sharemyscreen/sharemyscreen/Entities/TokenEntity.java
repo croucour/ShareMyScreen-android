@@ -13,7 +13,7 @@ public class TokenEntity {
     private String _access_token = null;
     @SerializedName("refresh_token")
     private String _refresh_token = null;
-    @SerializedName("expires_in")
+    @SerializedName(value="expires_in", alternate={"expire_in"})
     private String _expire_in = null;
     @SerializedName("token_type")
     private String _token_type = null;

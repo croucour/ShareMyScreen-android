@@ -23,10 +23,11 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     private Manager _manager;
     private SignUpPresenter _signUpPresenter;
 
-    EditText EditUsername = null;
-    EditText EditEmail = null;
-    EditText EditPassword = null;
-    EditText EditConfirPassword = null;
+    private EditText EditEmail = null;
+    private EditText EditPassword = null;
+    private EditText EditConfirPassword = null;
+    private EditText EditFirstName;
+    private EditText EditLastName;
 
     ActionProcessButton signup_submit = null;
     Button signup_cancel = null;
@@ -39,7 +40,8 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
 
         this._manager = new Manager(getApplicationContext());
 
-        this.EditUsername = (EditText) findViewById(R.id.signup_username_editText);
+        this.EditFirstName = (EditText) findViewById(R.id.signup_firstname__editText);
+        this.EditLastName = (EditText) findViewById(R.id.signup_lastname_editText);
         this.EditEmail = (EditText) findViewById(R.id.signup_email_editText);
         this.EditPassword = (EditText) findViewById(R.id.signup_password_editText);
         this.EditConfirPassword = (EditText) findViewById(R.id.signup_confirmPassword_editText);
@@ -54,12 +56,6 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
         this.EditConfirPassword.setOnEditorActionListener(this);
 
         this._signUpPresenter = new SignUpPresenter(this, _manager);
-//        this.signInPresenter = new SignInPresenter(this);
-
-//        this.EditUsername.setText("test2");
-//        this.EditEmail.setText("test2@test.fr");
-//        this.EditPassword.setText("test2");
-//        this.EditConfirPassword.setText("test2");
     }
 
     @Override
@@ -72,7 +68,6 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
                 break;
             case R.id.signup_cancel :
                 this.finish();
-
                 break;
             default:
                 break;
@@ -95,6 +90,16 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     }
 
     @Override
+    public String getLastName() {
+        return this.EditLastName.getText().toString();
+    }
+
+    @Override
+    public String getFirstName() {
+        return this.EditFirstName.getText().toString();
+    }
+
+    @Override
     public String getConfirmPassword() {
         return this.EditConfirPassword.getText().toString();
     }
@@ -112,19 +117,20 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     }
 
     @Override
-    public String getUsername() {
-        return this.EditUsername.getText().toString();
+    public void setErrorFirstName(int resId) {
+        TextInputLayout signup_firstName_inputLayout = (TextInputLayout) findViewById(R.id.signup_firstname_inputLayout);
+        signup_firstName_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    }
+
+    @Override
+    public void setErrorLastName(int resId) {
+        TextInputLayout signup_lastName_inputLayout = (TextInputLayout) findViewById(R.id.signup_lastname_inputLayout);
+        signup_lastName_inputLayout.setError((resId == 0 ? null : getString(resId)));
     }
 
     @Override
     public String getPassword() {
         return this.EditPassword.getText().toString();
-    }
-
-    @Override
-    public void setErrorUsername(int resId) {
-        TextInputLayout signup_username_inputLayout = (TextInputLayout) findViewById(R.id.signup_username_inputLayout);
-        signup_username_inputLayout.setError((resId == 0 ? null : getString(resId)));
     }
 
     @Override
@@ -136,7 +142,8 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
 
     @Override
     public void initializeInputLayout() {
-        this.setErrorUsername(0);
+        this.setErrorFirstName(0);
+        this.setErrorLastName(0);
         this.setErrorEmail(0);
         this.setErrorPassword(0);
         this.setErrorConfirmPassword(0);

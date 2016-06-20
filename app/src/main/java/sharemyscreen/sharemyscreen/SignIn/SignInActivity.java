@@ -15,11 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.dd.processbutton.iml.ActionProcessButton;
+import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.common.SignInButton;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.Room.RoomActivity;
 import sharemyscreen.sharemyscreen.Services.MyService;
+import sharemyscreen.sharemyscreen.SignIn.Api.ApiLogin;
 import sharemyscreen.sharemyscreen.SignUp.SignUpActivity;
 
 /**
@@ -28,15 +31,16 @@ import sharemyscreen.sharemyscreen.SignUp.SignUpActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, ISignInView {
 
-    EditText signin_username = null;
+
+    EditText signin_email = null;
     EditText signin_password = null;
 
     ActionProcessButton signin_submitLogin = null;
     Button signin_signup = null;
-    Button signin_settings = null;
 
-    private SignInPresenter _signInPresenter;
+    public SignInPresenter _signInPresenter;
     private Manager _manager;
+    private ApiLogin _apiLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         _manager = new Manager(getApplicationContext());
 
         this._signInPresenter = new SignInPresenter(this, _manager);
+
+        _apiLogin = new ApiLogin(this);
+
 
         setContentView(R.layout.signin);
 
@@ -58,8 +65,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         this.signin_password = (EditText) findViewById(R.id.signin_password_editText);
 
 
-        this.signin_username = (EditText) findViewById(R.id.signin_username_editText);
-        this.signin_username.setText("test");
+        this.signin_email = (EditText) findViewById(R.id.signin_email_editText);
+        this.signin_email.setText("test@test.fr");
         this.signin_password.setText("test");
 
         this.signin_submitLogin.setOnClickListener(this);
@@ -73,23 +80,32 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent(this, MyService.class);
         startService(intent);
 
+        _apiLogin.launch();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        _apiLogin.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.signin_submitLogin) {
-
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            this._signInPresenter.onLoginClicked();
-        }
-        else if (v.getId() == R.id.signin_signup)
-        {
-            Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-            startActivity(intent);
+        switch (v.getId()) {
+            case R.id.signin_submitLogin:
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                this._signInPresenter.onLoginClicked();
+                break;
+            case R.id.signin_signup:
+                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.signin_google:
+               _apiLogin.login("google");
+                break;
         }
     }
-
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -101,8 +117,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public String getUsername() {
-        return this.signin_username.getText().toString();
+    public String getEmail() {
+        return this.signin_email.getText().toString();
     }
 
     @Override
@@ -111,9 +127,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void setErrorUsername(int resId) {
-        TextInputLayout signin_username_inputLayout = (TextInputLayout) findViewById(R.id.signin_username_inputLayout);
-        signin_username_inputLayout.setError((resId == 0 ? null : getString(resId)));
+    public void setErrorEmail(int resId) {
+
     }
 
     @Override
@@ -130,7 +145,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void initializeInputLayout() {
-        this.setErrorUsername(0);
+        this.setErrorEmail(0);
         this.setErrorPassword(0);
     }
 
@@ -156,5 +171,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Intent i = new Intent(Intent.ACTION_MAIN);
         i.addCategory(Intent.CATEGORY_HOME);
         startActivity(i);
+    }
+
+    @Override
+    public LoginButton getSignInButtonFacebook() {
+        return (LoginButton) findViewById(R.id.signin_facebook);
+    }
+
+    @Override
+    public SignInButton getSignInButtonGoogle() {
+        return (SignInButton) findViewById(R.id.signin_google);
     }
 }

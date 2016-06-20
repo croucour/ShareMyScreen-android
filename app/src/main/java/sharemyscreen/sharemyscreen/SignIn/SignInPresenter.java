@@ -26,12 +26,12 @@ public class SignInPresenter{
 
     public void onLoginClicked() {
         boolean error = false;
-        String username = _view.getUsername();
+        String email = _view.getEmail();
 
         this._view.initializeInputLayout();
 
-        if (username.isEmpty()) {
-            _view.setErrorUsername(R.string.signin_usernameEmpty);
+        if (email.isEmpty()) {
+            _view.setErrorEmail(R.string.signin_emailEmpty);
             error = true;
         }
 
@@ -45,10 +45,10 @@ public class SignInPresenter{
             _view.setProcessLoadingButton(1);
             HashMap<String, String> params = new HashMap<>();
 
-            params.put("username", username);
+            params.put("username", email);
             params.put("password", password);
 
-//            ProfileEntity profileEntity = _manager._profileManager.selectByUsername(username);
+//            ProfileEntity profileEntity = _manager._profileManager.selectByEmail(username);
 //
 //            if (profileEntity != null) {
 //                this._signInService._userEntity.refresh(profileEntity);
@@ -59,14 +59,29 @@ public class SignInPresenter{
 //                    _manager._globalManager.addGlobal("current_token_id", String.valueOf(tokenEntity.get_id()));
 //                }
 //            }
-            this._signInService._userEntity.refresh(username);
+            this._signInService._userEntity.refresh(email);
 
             this._signInService.signIn(params);
         }
     }
 
-    public boolean isLoginWithRefreshToken() {
+    public void onLoginFacebookClicked(String access_token_facebook) {
+        HashMap<String, String> params = new HashMap<>();
 
+        params.put("access_token", access_token_facebook);
+
+        this._signInService.signInExternalApi(params, "facebook");
+    }
+
+    public void onLoginGoogleClicked(String access_token_google) {
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put("access_token", access_token_google);
+
+        this._signInService.signInExternalApi(params, "google");
+    }
+
+    public boolean isLoginWithRefreshToken() {
 
         ProfileEntity profileLogged = _signInService._userEntity._profileEntity;
         TokenEntity tokenEntity = _signInService._userEntity._tokenEntity;

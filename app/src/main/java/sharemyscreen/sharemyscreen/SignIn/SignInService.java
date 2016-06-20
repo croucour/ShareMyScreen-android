@@ -35,6 +35,15 @@ public class SignInService extends MyService {
         Call<TokenEntity> signIn(@Body Map<String, String> params);
 
         @Headers("Content-Type: application/json")
+        @POST("oauth2/facebook-connect")
+        Call<TokenEntity> signInFacebook(@Body Map<String, String> params);
+
+        @Headers("Content-Type: application/json")
+        @POST("oauth2/google-connect")
+        Call<TokenEntity> signInGoogle(@Body Map<String, String> params);
+
+
+        @Headers("Content-Type: application/json")
         @POST("oauth2/token")
         Call<TokenEntity> refreshToken(@Body Map<String, String> params);
 
@@ -50,10 +59,10 @@ public class SignInService extends MyService {
 
     // TODO immplementer le loginWithoutConnexion
     private void signInWithoutConnexion() {
-        String username = this._view.getUsername();
+        String email = this._view.getEmail();
         String password = this._view.getPassword();
 
-        ProfileEntity profileEntity = _manager._profileManager.selectByUsername(username);
+        ProfileEntity profileEntity = _manager._profileManager.selectByEmail(email);
 
         if (profileEntity == null || !Objects.equals(profileEntity.get_password(), password)) {
             this._view.setErrorPassword(R.string.connexionOfflline_errorUsernameOrPassword);
@@ -108,7 +117,7 @@ public class SignInService extends MyService {
 
     public void signIn(HashMap<String, String> userParams) {
         userParams.put("grant_type", "password");
-        userParams.put("scope", "offline_access");
+        userParams.put("scope", "read");
 
         Call call = _api.signIn(userParams);
         call.enqueue(new Callback<TokenEntity>() {
@@ -124,6 +133,36 @@ public class SignInService extends MyService {
                 }
             }
         });
+    }
+
+    public void signInExternalApi(HashMap<String, String> params, String api) {
+        params.put("scope", "read");
+
+        Call call = null;
+        switch (api) {
+            case "facebook" :
+                call = _api.signInFacebook(params);
+                break;
+            case "google" :
+                call = _api.signInGoogle(params);
+                break;
+        }
+
+        if (call != null) {
+            call.enqueue(new Callback<TokenEntity>() {
+                @Override
+                public void onResponse(Call<TokenEntity> call, Response<TokenEntity> response) {
+                    signInOnResponse(response);
+                }
+
+                @Override
+                public void onFailure(Call<TokenEntity> call, Throwable t) {
+    //                if (t instanceof UnknownHostException){
+    //                    signInWithoutConnexion();
+    //                }
+                }
+            });
+        }
     }
 
     public void refreshToken() {
@@ -164,7 +203,7 @@ public class SignInService extends MyService {
     }
 
     public String refreshTokenSync(TokenEntity tokenEntity) {
-        if (tokenEntity== null || tokenEntity.get_refresh_token() == null) {
+        if (tokenEntity == null || tokenEntity.get_refresh_token() == null) {
             return null;
         }
 

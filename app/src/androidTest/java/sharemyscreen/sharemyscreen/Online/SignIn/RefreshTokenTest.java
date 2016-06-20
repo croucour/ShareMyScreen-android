@@ -97,7 +97,7 @@ public class RefreshTokenTest{
 //    @Test
 //    public void bstep2RefreshToken()
 //    {
-//        ProfileEntity profileEntity = _profileManager.selectByUsername(username);
+//        ProfileEntity profileEntity = _profileManager.selectByEmail(username);
 //
 //        GlobalManager globalManager = new GlobalManager(_pContext);
 //

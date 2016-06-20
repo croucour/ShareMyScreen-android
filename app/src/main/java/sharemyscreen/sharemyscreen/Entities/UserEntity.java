@@ -72,9 +72,9 @@ public class UserEntity {
         this._manager._profileManager.modifyProfil(_profileEntity);
     }
 
-    public void refresh(String username) {
+    public void refresh(String email) {
 
-        ProfileEntity profileEntity = _manager._profileManager.selectByUsername(username);
+        ProfileEntity profileEntity = _manager._profileManager.selectByEmail(email);
 
         if (profileEntity != null) {
             _profileEntity = profileEntity;

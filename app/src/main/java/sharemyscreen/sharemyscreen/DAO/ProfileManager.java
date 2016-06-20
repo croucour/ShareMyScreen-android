@@ -15,7 +15,7 @@ public class ProfileManager extends ProfileDAO{
 
     public long add(ProfileEntity profileEntity) {
         if (profileEntity !=  null && profileEntity.get_username() != null) {
-            ProfileEntity newProfile = this.selectByUsername(profileEntity.get_username());
+            ProfileEntity newProfile = this.selectByEmail(profileEntity.get_username());
             if (newProfile != null) {
                 profileEntity.set_id(newProfile.get_id());
                 super.modify(profileEntity);
@@ -34,7 +34,7 @@ public class ProfileManager extends ProfileDAO{
 
 //    public ProfileEntity modifyProfil(String username, String password) {
 //
-//        ProfileEntity profile = this.selectByUsername(username);
+//        ProfileEntity profile = this.selectByEmail(username);
 //
 //        if (profile == null) {
 //            long id = this.add(new ProfileEntity(username, password));
@@ -50,7 +50,7 @@ public class ProfileManager extends ProfileDAO{
 //    public void modifyProfil(HashMap<String, String> mapProfile) {
 //        String username = mapProfile.get("username");
 //        if (username != null) {
-//            ProfileEntity profile = this.selectByUsername(username);
+//            ProfileEntity profile = this.selectByEmail(username);
 //            if (profile != null) {
 //                profile.update(mapProfile);
 //                this.modify(profile);

@@ -31,6 +31,7 @@ android {
     }
 }
 repositories {
+    mavenCentral()
     maven {
         url "https://jitpack.io"
     }
@@ -71,4 +72,7 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.13.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
 }
+apply plugin: 'com.google.gms.google-services'

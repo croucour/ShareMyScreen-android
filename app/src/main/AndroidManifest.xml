@@ -3,6 +3,7 @@
     package="sharemyscreen.sharemyscreen" >
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -10,6 +11,8 @@
         android:icon="@mipmap/sharemyscreen"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar" >
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <activity
             android:name=".SignIn.SignInActivity" android:label="@string/app_name" android:launchMode= "singleInstance" >
             <intent-filter>
@@ -22,6 +25,12 @@
         <activity android:name=".Room.RoomActivity" android:label="@string/navigation_room" android:launchMode= "singleInstance" />
         <activity android:name=".Profile.ProfileActivity" android:label="@string/navigation_profile" android:launchMode= "singleInstance" />
         <activity android:name=".LogOfflineActivity" android:label="@string/navigation_log" android:launchMode= "singleInstance" />
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
 
         <service android:name="sharemyscreen.sharemyscreen.Services.MyService" />
     </application>

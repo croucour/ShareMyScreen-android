@@ -21,24 +21,19 @@ public class SignUpPresenter {
 
     public void onSignUpClicked() {
         boolean submit = true;
-        String username = this._view.getUsername();
+        String firstName = this._view.getFirstName();
+        String lastName = this._view.getLastName();
         String email = this._view.getEmail();
         MyString myStringEmail = new MyString(email);
         String password = this._view.getPassword();
         String confirmPassword = this._view.getConfirmPassword();
 
-//        TextInputLayout signup_username_inputLayout = (TextInputLayout) findViewById(R.id.signup_username_inputLayout);
-//        TextInputLayout signup_email_inputLayout = (TextInputLayout) findViewById(R.id.signup_email_inputLayout);
-//        TextInputLayout signup_password_inputLayout = (TextInputLayout) findViewById(R.id.signup_password_inputLayout);
-//        TextInputLayout signup_confirmPassword_inputLayout = (TextInputLayout) findViewById(R.id.signup_confirmPassword_inputLayout);
-
-//        signup_username_inputLayout.setError(null);
-//        signup_email_inputLayout.setError(null);
-//        signup_password_inputLayout.setError(null);
-//        signup_confirmPassword_inputLayout.setError(null);
-
-        if (username.isEmpty()) {
-            this._view.setErrorUsername(R.string.signup_usernameEmpty);
+        if (firstName.isEmpty()) {
+            this._view.setErrorFirstName(R.string.signup_firstnameEmpty);
+            submit = false;
+        }
+        if (lastName.isEmpty()) {
+            this._view.setErrorLastName(R.string.signup_lastnameEmpty);
             submit = false;
         }
         if (email.isEmpty()) {
@@ -67,9 +62,12 @@ public class SignUpPresenter {
 
             HashMap<String, String> userParams = new HashMap<>();
 
-            userParams.put("username", username);
+            userParams.put("first_name", firstName);
+            userParams.put("last_name", lastName);
             userParams.put("password", password);
             userParams.put("email", email);
+            userParams.put("username", email); // TODO à supprimer
+            userParams.put("phone", "0685744111"); // TODO à supprimer
 
             this._signUpService.createUser(userParams);
         }

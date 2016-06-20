@@ -1,5 +1,7 @@
 package sharemyscreen.sharemyscreen.Interceptor;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
@@ -44,6 +46,7 @@ public class AuthInterceptor implements Interceptor {
 
     private static void setAuthorization(Request.Builder requestBuilder, TokenEntity tokenEntity) {
         if (tokenEntity == null || Objects.equals(tokenEntity.get_token_type(), "Basic")) {
+            Log.d("basic", Credentials.basic(ServiceGeneratorApi.CLIENT, ServiceGeneratorApi.SECRET));
             requestBuilder.header("Authorization", Credentials.basic(ServiceGeneratorApi.CLIENT, ServiceGeneratorApi.SECRET));
         } else if (tokenEntity.get_access_token() != null && Objects.equals(tokenEntity.get_token_type(), "Bearer")){
             requestBuilder.header("Authorization", "Bearer " + tokenEntity.get_access_token());
