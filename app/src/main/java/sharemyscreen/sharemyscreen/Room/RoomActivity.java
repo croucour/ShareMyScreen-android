@@ -139,9 +139,7 @@ public class RoomActivity extends MyActivityDrawer implements View.OnClickListen
 
         _createRoom_by_user_name_editText = (EditText) _viewDialogByUser.findViewById(R.id.createRoom_by_user_name_editText);
         ViewHolder viewHolder = new ViewHolder(_viewDialogByUser);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, USERS);
-
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, USERS);
 
         _createRoom_by_user_choose_user = (MaterialBetterSpinner) _viewDialogByUser.findViewById(R.id.createRoom_by_user_choose_user);
         _createRoom_by_user_choose_user.setAdapter(adapter);

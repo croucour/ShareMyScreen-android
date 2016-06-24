@@ -14,6 +14,7 @@ public class Manager extends DAOBase{
     final public TokenManager _tokenManager;
     final public SettingsManager _settingsManager;
     private final Context _pContext;
+    public OrganizationManager _organizationManager;
 
 
     public Manager(Context pContext) {
@@ -27,6 +28,7 @@ public class Manager extends DAOBase{
         this._roomsManager = new RoomsManager(this._mDb);
         this._globalManager = new GlobalManager(this._mDb);
         this._settingsManager = new SettingsManager(this._mDb);
+        this._organizationManager = new OrganizationManager(this._mDb, _profileManager);
     }
 
     public Context get_pContext() {

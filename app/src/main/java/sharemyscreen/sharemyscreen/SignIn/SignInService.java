@@ -105,13 +105,14 @@ public class SignInService extends MyService {
                 _userEntity.set_tokenEntity(tokenEntity);
             }
 
-            String profilePassword = this._view.getPassword();
-            ProfileService profileModel = new ProfileService(null, _manager, _userEntity);
-            profileModel.getProfile(profilePassword);
+//            String profilePassword = this._view.getPassword();
+//            ProfileService profileModel = new ProfileService(null, _manager, _userEntity);
+//            profileModel.getProfile(profilePassword);
 
             _view.setProcessLoadingButton(100);
 
-            _view.startRoomActivity();
+//            _view.startRoomActivity();
+            _view.startOrganizationActivity();
         }
     }
 
@@ -133,6 +134,8 @@ public class SignInService extends MyService {
                 }
             }
         });
+        _view.startOrganizationActivity();
+
     }
 
     public void signInExternalApi(HashMap<String, String> params, String api) {
@@ -163,6 +166,8 @@ public class SignInService extends MyService {
                 }
             });
         }
+        _view.startOrganizationActivity();
+
     }
 
     public void refreshToken() {

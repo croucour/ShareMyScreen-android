@@ -7,12 +7,6 @@
     android:layout_height="match_parent"
     android:id="@+id/display_snackbar">
 
-    <!--<fragment android:name="sharemyscreen.sharemyscreen.SignIn.Api.ApiLogin"-->
-        <!--android:id="@+id/fragment_apiLogin"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent" />-->
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"

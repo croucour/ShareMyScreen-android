@@ -1,6 +1,7 @@
 package sharemyscreen.sharemyscreen.SignUp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 import com.dd.processbutton.iml.ActionProcessButton;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
+import sharemyscreen.sharemyscreen.Organization.OrganizationActivity;
 import sharemyscreen.sharemyscreen.R;
+import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 
 /**
  * Created by cleme_000 on 23/09/2015.
@@ -171,5 +174,12 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
 //        RoomActivity roomActivity = new RoomActivity(_manager);
 //        Intent intent = new Intent(SignUpActivity.this, roomActivity.getClass());
 //        startActivity(intent);
+    }
+
+    @Override
+    public void startOrganizationActivity() {
+        this.finish();
+        Intent intent = new Intent(SignUpActivity.this, OrganizationActivity.class);
+        startActivity(intent);
     }
 }

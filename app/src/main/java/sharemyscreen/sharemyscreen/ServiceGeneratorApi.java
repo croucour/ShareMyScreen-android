@@ -17,20 +17,20 @@ import sharemyscreen.sharemyscreen.Services.RequestOfflineService;
  */
 public class ServiceGeneratorApi {
 
-    /**
-     * Heroku
-     */
-    public static final String API_BASE_URL = "http://sharemyscreen-api.herokuapp.com";
-    public final static String CLIENT = "sqE1rRxhjPbmwgWc";
-    public final static String SECRET = "TvfCZag4DRfqLsa8anETSxRNWstscQQK";
+//    /**
+//     * Heroku
+//     */
+//    public static final String API_BASE_URL = "http://sharemyscreen-api.herokuapp.com";
+//    public final static String CLIENT = "sqE1rRxhjPbmwgWc";
+//    public final static String SECRET = "TvfCZag4DRfqLsa8anETSxRNWstscQQK";
 
     /**
-     * Justin
+     * DEDIEE
      */
-//    public static final String API_BASE_URL = "http://192.168.0.18:4000";
-//    public final static String CLIENT = "2JHaiQuF2ehBqgxg";
-//    public final static String SECRET = "EkG8hDlDUZMh4AY3DLonCPNTdPFgFBxQ";
-//
+    public static final String API_BASE_URL = "http://sharemyscreen-api.herokuapp.com";
+    public final static String CLIENT = "YuY1k7XRaZojXAK1";
+    public final static String SECRET = "vX2a2uBMMWhDcfXHwmKEwVeHw0VzjixR";
+
     public static  <S> S createService(Class<S> serviceClass, Manager manager) {
         return createService(serviceClass, null, manager);
     }

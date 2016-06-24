@@ -57,4 +57,15 @@
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
+
+    <style name="MyButtonActionOrganizationDialog" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="pb_colorComplete">#70d62c</item>
+        <item name="pb_colorNormal">#303F9F</item>
+        <item name="pb_colorPressed">#303F9F</item>
+        <item name="pb_colorProgress">#303F9F</item>
+        <item name="pb_colorError">#ff0004</item>
+    </style>
 </resources>

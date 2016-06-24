@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUp.SignUpActivity" android:label="@string/app_name" android:launchMode= "singleInstance" />
+        <activity android:name=".Organization.OrganizationActivity" android:label="@string/app_name" android:launchMode= "singleInstance" />
         <activity android:name=".Settings.SettingsActivity" android:label="@string/settings" android:launchMode= "singleInstance" />
         <activity android:name=".Room.RoomActivity" android:label="@string/navigation_room" android:launchMode= "singleInstance" />
         <activity android:name=".Profile.ProfileActivity" android:label="@string/navigation_profile" android:launchMode= "singleInstance" />

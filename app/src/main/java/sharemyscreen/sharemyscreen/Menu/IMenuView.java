@@ -6,6 +6,8 @@ package sharemyscreen.sharemyscreen.Menu;
 public interface IMenuView {
     void startRoomActivity();
 
+    void startOrganizationActivity();
+
     void startProfileActivity();
 
     void startSettingsActivity();

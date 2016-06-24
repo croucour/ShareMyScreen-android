@@ -19,6 +19,7 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
+import sharemyscreen.sharemyscreen.Organization.OrganizationActivity;
 import sharemyscreen.sharemyscreen.R;
 import sharemyscreen.sharemyscreen.Room.RoomActivity;
 import sharemyscreen.sharemyscreen.Services.MyService;
@@ -51,7 +52,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         this._signInPresenter = new SignInPresenter(this, _manager);
 
         _apiLogin = new ApiLogin(this);
-
 
         setContentView(R.layout.signin);
 
@@ -163,6 +163,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void startRoomActivity() {
         this.finish();
         Intent intent = new Intent(SignInActivity.this, RoomActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void startOrganizationActivity() {
+        this.finish();
+        Intent intent = new Intent(SignInActivity.this, OrganizationActivity.class);
         startActivity(intent);
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/organization_submenu_invit"
+        android:title="@string/organization_submenu_invit"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/organization_submenu_members"
+        android:title="@string/organization_submenu_members"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/organization_submenu_quit"
+        android:title="@string/organization_submenu_quit"
+        app:showAsAction="always" />
+</menu>
