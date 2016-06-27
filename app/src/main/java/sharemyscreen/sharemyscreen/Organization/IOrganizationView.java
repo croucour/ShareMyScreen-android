@@ -12,8 +12,6 @@ interface IOrganizationView {
 
     void setErrorName(int resId);
 
-    void showInvitation();
-
     String  getSearch();
 
     void setErrorSearch(int resId);
@@ -27,4 +25,6 @@ interface IOrganizationView {
     void buttonDialogClicked(String action, String profile_public_id);
 
     void closeDialog(String target);
+
+    void updateOrganizationEntityList();
 }

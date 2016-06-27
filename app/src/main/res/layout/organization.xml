@@ -20,4 +20,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <include layout="@layout/organization_fab"/>
+
 </android.support.design.widget.CoordinatorLayout>

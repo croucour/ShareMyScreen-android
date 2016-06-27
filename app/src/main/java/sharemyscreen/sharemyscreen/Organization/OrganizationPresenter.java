@@ -63,6 +63,19 @@ public class OrganizationPresenter {
         }
     }
 
+    public void onKickMemberClicked(String organization_public_id, String profile_public_id) {
+        if (organization_public_id != null && profile_public_id != null) {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("user_id", profile_public_id);
+
+            _organizationService.deleteMembersOrganization(params, organization_public_id);
+        }
+    }
+
+    public void getOrganizations() {
+        this._organizationService.getOrganizations();
+    }
+
     public void onSwipedForRefreshOrganizations() {
         this._organizationService.getOrganizations();
     }

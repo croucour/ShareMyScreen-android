@@ -12,8 +12,11 @@ import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
  */
 public class OrganizationByProfileManager extends OrganizationByProfileDAO {
 
-    public OrganizationByProfileManager(SQLiteDatabase mDb) {
+    ProfileManager _profileManager;
+
+    public OrganizationByProfileManager(SQLiteDatabase mDb, ProfileManager profileManager) {
         super(mDb);
+        _profileManager = profileManager;
     }
 
     public void add(OrganizationEntity organizationEntity) {
@@ -24,6 +27,7 @@ public class OrganizationByProfileManager extends OrganizationByProfileDAO {
             super.deleteByOrganization(organizationEntity.get_public_id());
 
             for (ProfileEntity profileEntity : profileEntities) {
+                _profileManager.add(profileEntity);
                 super.add(organizationEntity, profileEntity);
             }
         }

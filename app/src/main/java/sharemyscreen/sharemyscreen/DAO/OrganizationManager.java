@@ -3,6 +3,7 @@ package sharemyscreen.sharemyscreen.DAO;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
+import java.util.Objects;
 
 import sharemyscreen.sharemyscreen.Entities.OrganizationEntity;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
@@ -18,7 +19,7 @@ public class OrganizationManager extends OrganizationDAO {
     public OrganizationManager(SQLiteDatabase mDb, ProfileManager profileManager) {
         super(mDb);
         _profileManager = profileManager;
-        _organizationByProfileManager = new OrganizationByProfileManager(mDb);
+        _organizationByProfileManager = new OrganizationByProfileManager(mDb, profileManager);
     }
 
 
@@ -64,5 +65,13 @@ public class OrganizationManager extends OrganizationDAO {
 
     public List<OrganizationEntity> selectAllByProfile_id(String profile_public_id) {
         return _organizationByProfileManager.selectAllByProfile_id(profile_public_id);
+    }
+
+    public boolean isOwner(String organization_public_id, String profile_public_id) {
+        OrganizationEntity organizationEntity = this.selectByPublic_id(organization_public_id);
+        if (organizationEntity != null && Objects.equals(organizationEntity.get_owner_public_id(), profile_public_id)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -129,5 +129,10 @@
     <string name="organization_dialog_invit_cancel">Annuler</string>
     <string name="navigation_organisation">Organisation</string>
     <string name="invitOrganization_title">Inviter des membres dans l\'organisation :</string>
+    <string name="membersOrganization_title">Les membres de l\'organisation :</string>
+    <string name="organization_dialog_create_submit">Creer</string>
+    <string name="organization_dialog_create_cancel">Annuler</string>
+    <string name="organization_dialog_create_title">Créer une nouvelle organization</string>
+    <string name="organization_dialog_create_name_editText_hint">Nom de la nouvelle organization</string>
 
 </resources>

@@ -57,8 +57,8 @@ public class OrganizationDAO {
         ContentValues contentValues = new ContentValues();
         contentValues.put(PUBLIC_ID, organizationEntity.get_public_id());
         contentValues.put(NAME, organizationEntity.get_name());
-        contentValues.put(CREATOR_PUBLIC_ID, organizationEntity.get_creator().get_id());
-        contentValues.put(OWNER_PUBLIC_ID, organizationEntity.get_owner().get_id());
+        contentValues.put(CREATOR_PUBLIC_ID, organizationEntity.get_creator_public_id());
+        contentValues.put(OWNER_PUBLIC_ID, organizationEntity.get_owner_public_id());
         contentValues.put(CREATED_AT, organizationEntity.get_created_at());
 
         return _mDb.insert(TABLE_NAME, null, contentValues);

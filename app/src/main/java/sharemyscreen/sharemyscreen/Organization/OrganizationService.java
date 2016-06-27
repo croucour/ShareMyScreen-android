@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -39,6 +40,10 @@ public class OrganizationService extends MyService{
         @Headers("Content-Type: application/json")
         @POST("organization/{organization_public_id}")
         Call<String> postInvitationOrganization(@Path("organization_public_id") String organization_public_id, @Body Map<String, String> params);
+
+        @Headers("Content-Type: application/json")
+        @DELETE("organization/{organization_public_id}")
+        Call<String> deleteMemberOrganization(@Path("organization_public_id") String organization_public_id, @Body Map<String, String> params);
 
         @Headers("Content-Type: application/json")
         @GET("organization")
@@ -75,7 +80,7 @@ public class OrganizationService extends MyService{
 //                }
 //            }
 //        });
-        _view.showInvitation();
+        _view.closeDialog("create");
 
     }
 
@@ -96,6 +101,7 @@ public class OrganizationService extends MyService{
 //        call.enqueue(new Callback<ProfileEntity>() {
 //            @Override
 //            public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
+        //TODO enlever les profile qui sont deva dans l'organisation
 //
 //            }
 //
@@ -107,11 +113,11 @@ public class OrganizationService extends MyService{
 //        });
 
         ProfileEntity profileEntity = new ProfileEntity(0, "test2", "clement.roucour@gmail.com", "");
-        profileEntity.set__id("008");
         profileEntity.set_firstName("Clément");
         profileEntity.set_lastName("Roucour");
 
         List<ProfileEntity> profileEntityList = new ArrayList<>();
+        profileEntity.set__id("008");
         profileEntityList.add(profileEntity);
         profileEntityList.add(profileEntity);
         profileEntityList.add(profileEntity);
@@ -128,7 +134,7 @@ public class OrganizationService extends MyService{
     public void getOrganizations() {
 //        _userEntity.refresh();
 //
-//        this._view.setRefreshing(false);
+        this._view.setRefreshing(false);
 //
 //        Call call = _api.getOrganizations();
 //        call.enqueue(new Callback<List<OrganizationEntity>>() {
@@ -139,7 +145,7 @@ public class OrganizationService extends MyService{
 //                if (organizationEntityList != null) {
 //                    _manager._organizationManager.add(organizationEntityList);
 //                    _userEntity.refreshOrganizationEntityList();
-//                    _view.setOrganizationEntityList(organizationEntityList);
+                    _view.updateOrganizationEntityList();
 //                }
 //            }
 //
@@ -170,5 +176,9 @@ public class OrganizationService extends MyService{
 //            }
 //        });
         _view.closeDialog("invitation");
+    }
+
+    public void deleteMembersOrganization(HashMap<String, String> params, String organization_public_id) {
+        _view.closeDialog("members");
     }
 }

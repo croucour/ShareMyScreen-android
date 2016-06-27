@@ -45,17 +45,9 @@ public class AdapterOrganization extends RecyclerView.Adapter<AdapterOrganizatio
 
     }
 
-    private boolean updateOrganizationEntityList() {
+    public boolean updateOrganizationEntityList() {
         _organizationEntityList = this._organizationManager.selectAllByProfile_id(_profile_public_id);
         return _organizationEntityList != null;
-    }
-
-    public void set_organizationEntityList(List<OrganizationEntity> organizationEntityList) {
-        if (organizationEntityList == null) {
-            this.updateOrganizationEntityList();
-        }
-        this._organizationEntityList = organizationEntityList;
-        this.notifyDataSetChanged();
     }
 
     @Override
@@ -109,9 +101,10 @@ public class AdapterOrganization extends RecyclerView.Adapter<AdapterOrganizatio
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.organization_submenu_invit:
-                    _IOrganizationView.showDialog("invit", organization_public_id);
+                    _IOrganizationView.showDialog("invitation", organization_public_id);
                     break;
                 case R.id.organization_submenu_members:
+                    _IOrganizationView.showDialog("members", organization_public_id);
                     break;
                 case R.id.organization_submenu_quit:
                     break;

@@ -258,7 +258,6 @@ public class RoomActivity extends MyActivityDrawer implements View.OnClickListen
         switch (v.getId())
         {
             case R.id.fab_sheet_item_add_by_group:
-                Log.d("onclick", "fab_sheet_item_add_by_group");
                 break;
             case R.id.fab_sheet_item_add_by_user:
                 initializeEditTextCreateRoomByUser();
