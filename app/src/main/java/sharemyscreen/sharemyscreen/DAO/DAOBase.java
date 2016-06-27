@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
  */
 
 public abstract class DAOBase {
-    protected final static int VERSION = 30;
+    protected final static int VERSION = 55;
     protected final static String NOM = "database.db";
 
     protected SQLiteDatabase _mDb = null;

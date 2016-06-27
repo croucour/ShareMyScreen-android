@@ -24,4 +24,6 @@ public interface ISignInSignUpView {
     ActionProcessButton getActionProcessButton();
 
     void startRoomActivity();
+
+    void startOrganizationActivity();
 }

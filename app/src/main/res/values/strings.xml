@@ -115,5 +115,24 @@
     <string name="server_client_id">220029720276-a8okmd49jv5ft5638smpvn58781gjc50.apps.googleusercontent.com</string>
     <string name="signup_firstname__editText_hint">Prénom</string>
     <string name="signup_lastname_editText_hint">Nom</string>
+    <string name="createOrganization_name_editText_hint">Nom de la nouvelle organsization</string>
+    <string name="createOrganization_submit">Créer</string>
+    <string name="createOrganization_skip">passer</string>
+    <string name="createOrganization_nameEmpty">Veuillez saisir un nom pour votre organization</string>
+    <string name="invitOrganization_search_editText_hint">Inviter quelqu\'un à votre organisation</string>
+    <string name="invitOrganization_back">retour</string>
+    <string name="invitOrganization_submit">Inviter</string>
+    <string name="invitOrganization_searchEmpty">Veuillez saisir votre recherche</string>
+    <string name="organization_submenu_invit">Inviter</string>
+    <string name="organization_submenu_members">Voir les membres</string>
+    <string name="organization_submenu_quit">quitter</string>
+    <string name="organization_dialog_invit_cancel">Annuler</string>
+    <string name="navigation_organisation">Organisation</string>
+    <string name="invitOrganization_title">Inviter des membres dans l\'organisation :</string>
+    <string name="membersOrganization_title">Les membres de l\'organisation :</string>
+    <string name="organization_dialog_create_submit">Creer</string>
+    <string name="organization_dialog_create_cancel">Annuler</string>
+    <string name="organization_dialog_create_title">Créer une nouvelle organization</string>
+    <string name="organization_dialog_create_name_editText_hint">Nom de la nouvelle organization</string>
 
 </resources>

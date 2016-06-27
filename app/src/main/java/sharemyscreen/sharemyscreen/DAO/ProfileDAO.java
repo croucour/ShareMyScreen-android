@@ -128,4 +128,17 @@ public class ProfileDAO{
         c.close();
         return profile;
     }
+
+    public ProfileEntity selectByPublic_id(String public_id) {
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + _ID + " = ?" , new String[] {public_id});
+
+        ProfileEntity profile = null;
+
+        if (c.moveToFirst()) {
+            profile = new ProfileEntity(c);
+        }
+
+        c.close();
+        return profile;
+    }
 }

@@ -17,8 +17,10 @@ import android.view.MenuItem;
 import android.view.ViewStub;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
+import sharemyscreen.sharemyscreen.Entities.OrganizationEntity;
 import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.Logout.LogoutPresenter;
+import sharemyscreen.sharemyscreen.Organization.OrganizationActivity;
 import sharemyscreen.sharemyscreen.Profile.ProfileActivity;
 import sharemyscreen.sharemyscreen.Room.RoomActivity;
 import sharemyscreen.sharemyscreen.Settings.SettingsActivity;
@@ -122,8 +124,14 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
 
     @Override
     public void startRoomActivity() {
-
         Intent intent = new Intent(this, RoomActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void startOrganizationActivity() {
+        Intent intent = new Intent(this, OrganizationActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
@@ -175,6 +183,9 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
         switch (id) {
             case R.id.navigation_room:
                 this.startRoomActivity();
+                break;
+            case R.id.navigation_organization:
+                this.startOrganizationActivity();
                 break;
             case R.id.navigation_log:
                 this.startLogOfflineActivity();
