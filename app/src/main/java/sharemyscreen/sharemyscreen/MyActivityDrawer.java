@@ -99,7 +99,7 @@ public class MyActivityDrawer extends AppCompatActivity implements IView, Naviga
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this._manager = new Manager(getApplicationContext());
+        this._manager = Manager.getInstance(getApplicationContext());
 
         this._userEntity = new UserEntity(_manager);
 

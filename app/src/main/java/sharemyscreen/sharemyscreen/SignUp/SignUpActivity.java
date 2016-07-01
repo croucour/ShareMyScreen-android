@@ -40,7 +40,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
 
         setContentView(R.layout.signup);
 
-        this._manager = new Manager(getApplicationContext());
+        this._manager = Manager.getInstance(getApplicationContext());
 
         this.EditFirstName = (EditText) findViewById(R.id.signup_firstname__editText);
         this.EditLastName = (EditText) findViewById(R.id.signup_lastname_editText);

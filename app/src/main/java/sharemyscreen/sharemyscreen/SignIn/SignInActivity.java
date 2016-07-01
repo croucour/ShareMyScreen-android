@@ -47,7 +47,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _manager = new Manager(getApplicationContext());
+        _manager = Manager.getInstance(getApplicationContext());
 
         this._signInPresenter = new SignInPresenter(this, _manager);
 

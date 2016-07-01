@@ -5,7 +5,10 @@ import android.content.Context;
 /**
  * Created by cleme_000 on 04/03/2016.
  */
-public class Manager extends DAOBase{
+public final class Manager extends DAOBase{
+
+    private static volatile Manager instance = null;
+
     final public ProfileManager _profileManager;
     final public RequestOfflineManager _requestOfflineManager;
     final public RoomByProfileManager _roomByProfileManager;
@@ -17,7 +20,7 @@ public class Manager extends DAOBase{
     public OrganizationManager _organizationManager;
 
 
-    public Manager(Context pContext) {
+    private Manager(Context pContext) {
         super(pContext);
         this._pContext = pContext;
 
@@ -33,5 +36,22 @@ public class Manager extends DAOBase{
 
     public Context get_pContext() {
         return _pContext;
+    }
+
+    public final static Manager getInstance(Context pContext) {
+        //Le "Double-Checked Singleton"/"Singleton doublement vérifié" permet
+        //d'éviter un appel coûteux à synchronized,
+        //une fois que l'instanciation est faite.
+        if (Manager.instance == null) {
+            // Le mot-clé synchronized sur ce bloc empêche toute instanciation
+            // multiple même par différents "threads".
+            // Il est TRES important.
+            synchronized(Manager.class) {
+                if (Manager.instance == null) {
+                    Manager.instance = new Manager(pContext);
+                }
+            }
+        }
+        return Manager.instance;
     }
 }

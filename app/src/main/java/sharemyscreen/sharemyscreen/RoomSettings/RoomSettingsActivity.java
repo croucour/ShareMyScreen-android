@@ -27,7 +27,7 @@ public class RoomSettingsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this._manager = new Manager(getApplicationContext());
+        this._manager = Manager.getInstance(getApplicationContext());
 
         this._userEntity = new UserEntity(_manager);
 

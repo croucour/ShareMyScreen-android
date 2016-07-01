@@ -56,7 +56,7 @@ public class MyService  extends Service{
         private RequestOfflineService _requestOfflineService = null;
 
         public SurveillanceRunnable(Context pContext) {
-            this._manager = new Manager(pContext);
+            this._manager = Manager.getInstance(pContext);
             _requestOfflineService = new RequestOfflineService(_manager);
         }
 

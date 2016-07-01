@@ -40,7 +40,7 @@ public class MembersActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this._manager = new Manager(getApplicationContext());
+        this._manager = Manager.getInstance(getApplicationContext());
 
         this._userEntity = new UserEntity(_manager);
 
