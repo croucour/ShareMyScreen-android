@@ -24,7 +24,17 @@ public class OrganizationManager extends OrganizationDAO {
 
 
     public long add(OrganizationEntity organizationEntityNew) {
+        
+        if (organizationEntityNew.get_creator() != null && organizationEntityNew.get_creator_public_id() == null) {
+            organizationEntityNew.set_creator_public_id(organizationEntityNew.get_creator().get_public_id());
+        }
+
+        if (organizationEntityNew.get_owner() != null && organizationEntityNew.get_owner_public_id() == null) {
+            organizationEntityNew.set_owner_public_id(organizationEntityNew.get_owner().get_public_id());
+        }
+
         if (organizationEntityNew !=  null && organizationEntityNew.get_public_id() != null) {
+            
             OrganizationEntity organizationEntity = this.selectByPublic_id(organizationEntityNew.get_public_id());
 
             _organizationByProfileManager.add(organizationEntityNew);
@@ -73,5 +83,10 @@ public class OrganizationManager extends OrganizationDAO {
             return true;
         }
         return false;
+    }
+
+    public void delete(String organization_public_id) {
+        _organizationByProfileManager.deleteByOrganization(organization_public_id);
+        super.delete(organization_public_id);
     }
 }

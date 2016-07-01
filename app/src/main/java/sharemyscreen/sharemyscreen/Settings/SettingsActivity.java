@@ -34,7 +34,7 @@ public class SettingsActivity extends MyActivityDrawer implements ISettingsView,
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        navigation.setCheckedItem(R.id.navigation_settings);
+//        navigation.setCheckedItem(R.id.navigation_settings);
     }
 
     @Override

@@ -27,17 +27,19 @@ public class ServiceGeneratorApi {
     /**
      * DEDIEE
      */
-    public static final String API_BASE_URL = "http://sharemyscreen-api.herokuapp.com";
+    public static final String API_BASE_URL = "sharemyscreen.fr";
     public final static String CLIENT = "YuY1k7XRaZojXAK1";
     public final static String SECRET = "vX2a2uBMMWhDcfXHwmKEwVeHw0VzjixR";
+    public final static String PORT = ":3000";
 
-    public static  <S> S createService(Class<S> serviceClass, Manager manager) {
-        return createService(serviceClass, null, manager);
+
+    public static  <S> S createService(Class<S> serviceClass, String subDomain, Manager manager) {
+        return createService(serviceClass, subDomain, null, manager);
     }
 
     private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    public static <S> S createService(Class<S> serviceClass, TokenEntity tokenEntity, final Manager manager) {
+    public static <S> S createService(Class<S> serviceClass, String subDomain, TokenEntity tokenEntity, final Manager manager) {
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
 
@@ -46,8 +48,11 @@ public class ServiceGeneratorApi {
         client.addNetworkInterceptor(new AuthInterceptor(tokenEntity, manager));
         client.addInterceptor(logging);
 
+        String url = subDomain == null ? API_BASE_URL+"/v1/" : subDomain + "." + API_BASE_URL+PORT+"/v1/";
+        url = "http://"+url;
+
         Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(API_BASE_URL+"/v1/")
+                        .baseUrl(url)
                         .addConverterFactory(GsonConverterFactory.create())
                         .client(client.build()).build();
 

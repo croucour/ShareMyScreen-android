@@ -134,5 +134,15 @@
     <string name="organization_dialog_create_cancel">Annuler</string>
     <string name="organization_dialog_create_title">Créer une nouvelle organization</string>
     <string name="organization_dialog_create_name_editText_hint">Nom de la nouvelle organization</string>
+    <string name="room_title">Conversations</string>
+    <string name="organization_delete">Supprimer l\'organisation</string>
+    <string name="room_dialog_create_submit">Ajouter</string>
+    <string name="room_dialog_create_cancel">Annuler</string>
+    <string name="room_dialog_create_name_editText">Nom de la conversation</string>
+    <string name="createRoom_nameEmpty">Veuillez remplir ce champs</string>
+    <string name="menu_settings">Paramètres</string>
+    <string name="menu_invitation_member">Inviter des membres</string>
+    <string name="menu_logout">Déconnexion</string>
+    <string name="menu_list_member">Liste des membres</string>
 
 </resources>

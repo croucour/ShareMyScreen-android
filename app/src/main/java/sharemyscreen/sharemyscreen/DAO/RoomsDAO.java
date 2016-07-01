@@ -1,7 +1,6 @@
 package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -18,20 +17,22 @@ public class RoomsDAO{
     private final SQLiteDatabase _mDb;
 
     public static final String KEY = "id";
-    public static final String _ID = "__id";
+    public static final String PUBLIC_ID = "public_id";
     public static final String NAME = "name";
-    public static final String CREATEDAT = "createdAt";
-    public static final String UPDATEDAT = "updatedAt";
+    public static final String CREATED_AT = "created_at";
     public static final String OWNER = "owner";
+    public static final String PRIVATE = "private";
+    private static final String ORGANIZATION_PUBLIC_ID = "organization_public_id";
 
 
     public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
             + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + _ID + " TEXT, "
+            + PUBLIC_ID + " TEXT, "
             + NAME + " TEXT, "
-            + CREATEDAT + " TEXT, "
-            + UPDATEDAT + " TEXT, "
-            + OWNER + " TEXT);";
+            + CREATED_AT + " TEXT, "
+            + OWNER + " TEXT, "
+            + PRIVATE + " TEXT, "
+            + ORGANIZATION_PUBLIC_ID + " TEXT);";
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -39,13 +40,14 @@ public class RoomsDAO{
         this._mDb = mDb;
     }
 
-    public long add(RoomEntity room) {
+    public long add(RoomEntity room, String organization_public_id) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(_ID, room.get__id());
+        contentValues.put(PUBLIC_ID, room.get_public_id());
         contentValues.put(NAME, room.get_name());
-        contentValues.put(CREATEDAT, room.get_createdAt());
-        contentValues.put(UPDATEDAT, room.get_updatedAt());
+        contentValues.put(CREATED_AT, room.get_created_at());
         contentValues.put(OWNER, room.get_owner());
+        contentValues.put(PRIVATE, room.is_private());
+        contentValues.put(ORGANIZATION_PUBLIC_ID, organization_public_id);
 
         return _mDb.insert(TABLE_NAME, null, contentValues);
     }
@@ -61,11 +63,12 @@ public class RoomsDAO{
     public void modify(RoomEntity room) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(_ID, room.get__id());
+        contentValues.put(PUBLIC_ID, room.get_public_id());
         contentValues.put(NAME, room.get_name());
-        contentValues.put(CREATEDAT, room.get_createdAt());
-        contentValues.put(UPDATEDAT, room.get_updatedAt());
+        contentValues.put(CREATED_AT, room.get_created_at());
         contentValues.put(OWNER, room.get_owner());
+        contentValues.put(PRIVATE, room.is_private());
+//        contentValues.put(ORGANIZATION_PUBLIC_ID, organization_public_id);
 
         _mDb.update(TABLE_NAME, contentValues, KEY + " = ?", new String[]{String.valueOf(room.getId())});
     }
@@ -110,8 +113,8 @@ public class RoomsDAO{
         List<RoomEntity> roomEntityList = new ArrayList<>();
 
         Cursor c = _mDb.rawQuery("select "+ TABLE_NAME+".* from " + TABLE_NAME
-                + " INNER JOIN " + RoomByProfileDAO.TABLE_NAME + " on " + TABLE_NAME+"."+_ID+"="+RoomByProfileDAO.TABLE_NAME+"."+RoomByProfileDAO.ROOM_ID
-                + " WHERE "+RoomByProfileDAO.PROFILE_ID+ " = ? ORDER BY "+UPDATEDAT+" DESC", new String[] {profile__id});
+                + " INNER JOIN " + RoomByProfileDAO.TABLE_NAME + " on " + TABLE_NAME+"."+ PUBLIC_ID +"="+RoomByProfileDAO.TABLE_NAME+"."+RoomByProfileDAO.ROOM_PUBLIC_ID
+                + " WHERE "+RoomByProfileDAO.PROFILE_PUBLIC_ID + " = ?", new String[] {profile__id});
 
         while (c.moveToNext()) {
             roomEntityList.add(new RoomEntity(c));
@@ -122,12 +125,12 @@ public class RoomsDAO{
     }
 
     public void delete(String room__id) {
-        _mDb.delete(TABLE_NAME, _ID + " = ?", new String[]{room__id});
+        _mDb.delete(TABLE_NAME, PUBLIC_ID + " = ?", new String[]{room__id});
     }
 
-    public RoomEntity selectBy_id(String _id) {
+    public RoomEntity selectByPublic_id(String _id) {
 
-        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE "+_ID+" = ?" , new String[] {String.valueOf(_id)});
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE "+ PUBLIC_ID +" = ?" , new String[] {String.valueOf(_id)});
 
         RoomEntity roomEntity = null;
 
@@ -137,5 +140,21 @@ public class RoomsDAO{
 
         c.close();
         return roomEntity;
+    }
+
+    public List<RoomEntity> selectAllByProfile_idAndOrganization_id(String profile_public_id, String organization_public_id) {
+        List<RoomEntity> roomEntityList = new ArrayList<>();
+
+        Cursor c = _mDb.rawQuery("select "+ TABLE_NAME +".* from " + TABLE_NAME
+                /*+ " INNER JOIN " + RoomByProfileDAO.TABLE_NAME + " on " + TABLE_NAME + "." + PUBLIC_ID + "="+RoomByProfileDAO.TABLE_NAME+"."+RoomByProfileDAO.ROOM_PUBLIC_ID*/
+                /*+ " WHERE "+RoomByProfileDAO.PROFILE_PUBLIC_ID + " = ? AND "+ */ + " WHERE "+ TABLE_NAME + "." + ORGANIZATION_PUBLIC_ID + " = ?", new String[] {/*profile_public_id, */organization_public_id});
+
+        while (c.moveToNext()) {
+            roomEntityList.add(new RoomEntity(c));
+        }
+
+        c.close();
+        return roomEntityList.isEmpty() ? null : roomEntityList;
+
     }
 }

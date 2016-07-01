@@ -1,6 +1,5 @@
 package sharemyscreen.sharemyscreen.DAO;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
@@ -19,9 +18,9 @@ public class RoomsManager extends RoomsDAO{
         _roomByProfileManager = new RoomByProfileManager(mDb);
     }
 
-    public void addRoom(String name) {
+    public void addRoom(String name, String organization_public_id) {
         RoomEntity room = new RoomEntity(0, name);
-        super.add(room);
+        super.add(room, organization_public_id);
     }
 
     @Override
@@ -29,21 +28,20 @@ public class RoomsManager extends RoomsDAO{
         return super.selectAll(orderBy);
     }
 
-    @Override
-    public long add(RoomEntity room) {
-        if (this.selectBy_id(room.get__id()) == null) {
+    public long add(RoomEntity room, String organization_public_id) {
+        if (this.selectByPublic_id(room.get_public_id()) == null) {
             if (room.get_members() != null) {
-                _roomByProfileManager.add(room.get_members(), room.get__id());
+                _roomByProfileManager.add(room.get_members(), room.get_public_id());
             }
-            return super.add(room);
+            return super.add(room, organization_public_id);
         }
         return 0;
     }
 
-    public void add(List<RoomEntity> roomEntityList) {
+    public void add(List<RoomEntity> roomEntityList, String organization_public_id) {
         if (roomEntityList != null) {
             for (RoomEntity roomEntity : roomEntityList) {
-                long room_id = this.add(roomEntity);
+                long room_id = this.add(roomEntity, organization_public_id);
             }
         }
     }
@@ -53,5 +51,9 @@ public class RoomsManager extends RoomsDAO{
             this._roomByProfileManager.deleteByRoom_id(room__id);
             super.delete(room__id);
         }
+    }
+
+    public List<RoomEntity> selectAllByProfile_idAndOrganization_id(String profile_public_id, String organization_public_id) {
+        return super.selectAllByProfile_idAndOrganization_id(profile_public_id, organization_public_id);
     }
 }

@@ -12,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import sharemyscreen.sharemyscreen.DAO.Manager;
@@ -47,13 +48,16 @@ public class SignInService extends MyService {
         @POST("oauth2/token")
         Call<TokenEntity> refreshToken(@Body Map<String, String> params);
 
+        @GET("users/me")
+        Call<ProfileEntity> getProfile();
+
     }
     private final ISignInSignUpView _view;
 
     public SignInService(ISignInSignUpView view, Manager manager) {
         super(manager);
         this._view = view;
-        this._api = ServiceGeneratorApi.createService(ISignInService.class, manager);
+        this._api = ServiceGeneratorApi.createService(ISignInService.class, "login", manager);
     }
 
 
@@ -76,7 +80,7 @@ public class SignInService extends MyService {
 //            return;
 //        }
 
-        TokenEntity tokenEntity = _manager._tokenManager.selectByProfileId(profileEntity.get_id());
+        TokenEntity tokenEntity = _manager._tokenManager.selectByProfileId(profileEntity.get_public_id());
 
         if (tokenEntity == null) {
             this._view.setErrorPassword(R.id.connexionOfflline_error);
@@ -84,35 +88,47 @@ public class SignInService extends MyService {
             return;
         }
 //        this._tokenEntity = tokenEntity;
-        _manager._globalManager.addGlobal("current_token_id", String.valueOf(tokenEntity.get_id()));
+        _manager._globalManager.addGlobal("profile_public_id_connected", String.valueOf(tokenEntity.get_id()));
         _userEntity.refresh();
 
         this._view.startRoomActivity();
     }
 
+    public void getProfileAfterSignIn(final String profilePassword, final TokenEntity tokenEntity) {
+        _api = ServiceGeneratorApi.createService(ISignInService.class, "api", tokenEntity, _manager);
+
+        Call call = _api.getProfile();
+        call.enqueue(new Callback<ProfileEntity>() {
+            @Override
+            public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
+                ProfileEntity profileEntity = response.body();
+
+                _userEntity.addProfile(profileEntity);
+                _userEntity._profileEntity.set_password(profilePassword);
+                _userEntity.update_profileEntity();
+
+                _manager._globalManager.addGlobal("profile_public_id_connected", profileEntity.get_public_id());
+
+                tokenEntity.set_profile_public_id(profileEntity.get_public_id());
+                _userEntity.addTokenEntity(tokenEntity);
+
+                _view.setProcessLoadingButton(100);
+
+                _view.startMainActivity();
+            }
+
+            @Override
+            public void onFailure(Call<ProfileEntity> call, Throwable t) {
+            }
+        });
+    }
     protected void signInOnResponse(Response<TokenEntity> response){
         TokenEntity tokenEntity = response.body();
 
         if (tokenEntity != null) {
 
-            if (_userEntity._tokenEntity == null) {
-                this._userEntity.addTokenEntity(tokenEntity);
-            }
-            else {
-                tokenEntity.set_profile_id(_userEntity._tokenEntity.get_profile_id());
-                tokenEntity.set_id(_userEntity._tokenEntity.get_id());
-
-                _userEntity.set_tokenEntity(tokenEntity);
-            }
-
-//            String profilePassword = this._view.getPassword();
-//            ProfileService profileModel = new ProfileService(null, _manager, _userEntity);
-//            profileModel.getProfile(profilePassword);
-
-            _view.setProcessLoadingButton(100);
-
-//            _view.startRoomActivity();
-            _view.startOrganizationActivity();
+            String profilePassword = this._view.getPassword();
+            getProfileAfterSignIn(profilePassword, tokenEntity);
         }
     }
 
@@ -134,13 +150,9 @@ public class SignInService extends MyService {
                 }
             }
         });
-        _view.startOrganizationActivity();
-
     }
 
     public void signInExternalApi(HashMap<String, String> params, String api) {
-        params.put("scope", "read");
-
         Call call = null;
         switch (api) {
             case "facebook" :
@@ -166,8 +178,6 @@ public class SignInService extends MyService {
                 }
             });
         }
-        _view.startOrganizationActivity();
-
     }
 
     public void refreshToken() {
@@ -181,7 +191,7 @@ public class SignInService extends MyService {
         params.put("grant_type", "refresh_token");
         params.put("refresh_token", _userEntity._tokenEntity.get_refresh_token());
 
-        this._api = ServiceGeneratorApi.createService(ISignInService.class, _manager);
+        this._api = ServiceGeneratorApi.createService(ISignInService.class, "login", _manager);
 
         Call call = _api.refreshToken(params);
         call.enqueue(new Callback<TokenEntity>() {
@@ -196,12 +206,13 @@ public class SignInService extends MyService {
                     profileModel.getProfile(null);
 
                     _view.setProcessLoadingButton(100);
-                    _view.startRoomActivity();
+                    _view.startMainActivity();
                 }
             }
 
             @Override
             public void onFailure(Call<TokenEntity> call, Throwable t) {
+                _userEntity.logout();
                 Log.d("erreur", "erreur lors du refresh token");
             }
         });
@@ -217,7 +228,7 @@ public class SignInService extends MyService {
         params.put("grant_type", "refresh_token");
         params.put("refresh_token", tokenEntity.get_refresh_token());
 
-        this._api = ServiceGeneratorApi.createService(ISignInService.class, _manager);
+        this._api = ServiceGeneratorApi.createService(ISignInService.class, "login",_manager);
 
         Call<TokenEntity> call = _api.refreshToken(params);
 
@@ -240,10 +251,15 @@ public class SignInService extends MyService {
 
 
     public void signInWithAccessTokenValid() {
-        this._view.startRoomActivity();
+        this._view.startMainActivity();
     }
 
     public void signInAfterSignUp(HashMap<String, String> userParams) {
+        String username = userParams.get("email");
+        userParams.remove("email");
+        userParams.remove("first_name");
+        userParams.remove("last_name");
+        userParams.put("username", username);
         this.signIn(userParams);
     }
 }

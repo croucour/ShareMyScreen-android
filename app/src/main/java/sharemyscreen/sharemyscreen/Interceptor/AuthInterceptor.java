@@ -50,6 +50,7 @@ public class AuthInterceptor implements Interceptor {
             requestBuilder.header("Authorization", Credentials.basic(ServiceGeneratorApi.CLIENT, ServiceGeneratorApi.SECRET));
         } else if (tokenEntity.get_access_token() != null && Objects.equals(tokenEntity.get_token_type(), "Bearer")){
             requestBuilder.header("Authorization", "Bearer " + tokenEntity.get_access_token());
+            Log.d("token acces", tokenEntity.get_access_token());
         }
     }
 

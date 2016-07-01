@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MyActivityDrawer" >
+
+    <item
+        android:id="@+id/menu_invitation_member"
+        android:title="@string/menu_invitation_member"
+        />
+
+    <item
+        android:id="@+id/menu_list_member"
+        android:title="@string/menu_list_member"
+        />
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"/>
+
+    <item
+        android:id="@+id/menu_logout"
+        android:title="@string/menu_logout"/>
+
+</menu>

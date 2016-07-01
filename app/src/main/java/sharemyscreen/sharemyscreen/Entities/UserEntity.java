@@ -1,5 +1,7 @@
 package sharemyscreen.sharemyscreen.Entities;
 
+import android.util.Log;
+
 import java.util.List;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
@@ -13,6 +15,8 @@ public class UserEntity {
     public SettingsEntity _settingsEntity = null;
     public List<RoomEntity> _roomEntityList = null;
     private Manager _manager;
+    public OrganizationEntity _organizationEntity = null;
+    public RoomEntity _roomEntity = null;
 
     public UserEntity(Manager _manager) {
         this._manager = _manager;
@@ -22,22 +26,36 @@ public class UserEntity {
     public void refresh(){
         if (refreshToken()) {
             if (_tokenEntity != null) {
-                long profile_id = _tokenEntity.get_profile_id();
-                if (profile_id != 0) {
-                    _profileEntity = _manager._profileManager.selectById(profile_id);
-                    _settingsEntity = _manager._settingsManager.selectByProfileId(profile_id);
-                    _roomEntityList = _manager._roomsManager.selectAllByProfile_id(_profileEntity.get__id());
+                String profile_public_id = _tokenEntity.get_profile_public_id();
+                if (profile_public_id != null) {
+                    _profileEntity = _manager._profileManager.selectByPublic_id(profile_public_id);
+                    _settingsEntity = _manager._settingsManager.selectByProfilePublicId(profile_public_id);
+                    _roomEntityList = _manager._roomsManager.selectAllByProfile_id(_profileEntity.get_public_id());
+                    String organization_public_id_selected = _manager._globalManager.select("organization_public_id_selected");
+
+                    if (organization_public_id_selected != null) {
+                        _organizationEntity = _manager._organizationManager.selectByPublic_id(organization_public_id_selected);
+                    }
+                    else {
+                        _organizationEntity = null;
+                    }
+
+                    String room_public_id_selected = _manager._globalManager.select("room_public_id_selected");
+                    if (room_public_id_selected != null) {
+                        _roomEntity = _manager._roomsManager.selectByPublic_id(room_public_id_selected);
+                    }
+                    else {
+                        _roomEntity = null;
+                    }
                 }
             }
         }
     }
 
     public void addProfile(ProfileEntity profileEntity) {
-        long profile_id = _profileEntity == null ? _manager._profileManager.add(profileEntity) : _profileEntity.get_id();
-        this._tokenEntity.set_profile_id(profile_id);
+        _manager._profileManager.add(profileEntity);
 
-
-        this.update_tokenEntity();
+        this._profileEntity = profileEntity;
 
         this.refresh();
 
@@ -48,7 +66,7 @@ public class UserEntity {
     private void initAddProfile() {
         if (_settingsEntity == null) {
             SettingsEntity settingsEntity = new SettingsEntity();
-            settingsEntity.set_profile_id(_profileEntity.get_id());
+            settingsEntity.set_profile_public_id(_profileEntity.get_public_id());
             _manager._settingsManager.add(settingsEntity);
             _settingsEntity = settingsEntity;
         }
@@ -72,25 +90,14 @@ public class UserEntity {
         this._manager._profileManager.modifyProfil(_profileEntity);
     }
 
-    public void refresh(String email) {
-
-        ProfileEntity profileEntity = _manager._profileManager.selectByEmail(email);
-
-        if (profileEntity != null) {
-            _profileEntity = profileEntity;
-            TokenEntity tokenEntity = _manager._tokenManager.selectByProfileId(profileEntity.get_id());
-            if (tokenEntity != null) {
-                this._tokenEntity = tokenEntity;
-                _manager._globalManager.addGlobal("current_token_id", String.valueOf(tokenEntity.get_id()));
-            }
-        }
-    }
-
     public boolean refreshToken() {
-        String current_token_id = _manager._globalManager.select("current_token_id");
+        String profile_public_id_connected = _manager._globalManager.select("profile_public_id_connected");
 
-        if (current_token_id != null) {
-            _tokenEntity = _manager._tokenManager.selectById(current_token_id);
+        if (profile_public_id_connected != null) {
+            Log.d("public_id_connected", profile_public_id_connected);
+        }
+        if (profile_public_id_connected != null) {
+            _tokenEntity = _manager._tokenManager.selectByProfilePublicId(profile_public_id_connected);
             if (_tokenEntity != null) {
                 return true;
             }
@@ -100,20 +107,17 @@ public class UserEntity {
 
     public void logout() {
         if (_tokenEntity != null) {
-            _tokenEntity.set_access_token(null);
-            _tokenEntity.set_expire_access_token(null);
-            _tokenEntity.set_refresh_token(null);
-            this.update_tokenEntity();
+            _manager._tokenManager.deleteByProfile_id(_tokenEntity.get_profile_public_id());
         }
-
-        _manager._globalManager.deleteGlobal("current_token_id");
+        _manager._globalManager.deleteGlobal("profile_public_id_connected");
+        _manager._globalManager.deleteGlobal("organization_public_id_selected");
+        _manager._globalManager.deleteGlobal("room_public_id_connected");
     }
 
     public void addTokenEntity(TokenEntity tokenEntity) {
         if (tokenEntity != null) {
-            long newToken_id = _manager._tokenManager.add(tokenEntity);
-            _manager._globalManager.addGlobal("current_token_id", String.valueOf(newToken_id));
-            tokenEntity.set_id(newToken_id);
+            _manager._tokenManager.add(tokenEntity);
+            _manager._globalManager.addGlobal("profile_public_id_connected", tokenEntity.get_profile_public_id());
             this._tokenEntity = tokenEntity;
         }
     }
@@ -124,7 +128,7 @@ public class UserEntity {
 
     public void refreshRoomEntityList() {
         if (_profileEntity != null) {
-            _roomEntityList = _manager._roomsManager.selectAllByProfile_id(_profileEntity.get__id());
+            _roomEntityList = _manager._roomsManager.selectAllByProfile_id(_profileEntity.get_public_id());
         }
     }
 }

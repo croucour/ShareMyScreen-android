@@ -1,7 +1,6 @@
 package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -22,7 +21,7 @@ public class SettingsDAO{
      * Attribut locale
      */
     public static final String KEY = "id";
-    public static final String PROFILE_ID = "profile_id";
+    public static final String PROFILE_PUBLIC_ID = "profile_public_id";
     public static final String OFFLINE = "offline";
     public static final String DISPLAY_OFFLINE = "display_offline";
 
@@ -30,7 +29,7 @@ public class SettingsDAO{
 
     public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
             + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + PROFILE_ID + " TEXT,"
+            + PROFILE_PUBLIC_ID + " TEXT,"
             + OFFLINE + " TEXT,"
             + DISPLAY_OFFLINE + " TEXT);";
 
@@ -38,7 +37,7 @@ public class SettingsDAO{
 
     public long add(SettingsEntity settingsEntity) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PROFILE_ID, settingsEntity.get_profile_id());
+        contentValues.put(PROFILE_PUBLIC_ID, settingsEntity.get_profile_public_id());
         contentValues.put(OFFLINE, settingsEntity.is_offline());
         contentValues.put(DISPLAY_OFFLINE, settingsEntity.is_displayOffline());
 
@@ -48,15 +47,15 @@ public class SettingsDAO{
     public void modify(SettingsEntity settingsEntity) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(PROFILE_ID, settingsEntity.get_profile_id());
+        contentValues.put(PROFILE_PUBLIC_ID, settingsEntity.get_profile_public_id());
         contentValues.put(OFFLINE, settingsEntity.is_offline());
         contentValues.put(DISPLAY_OFFLINE, settingsEntity.is_displayOffline());
 
         _mDb.update(TABLE_NAME, contentValues, KEY + " = ?", new String[]{String.valueOf(settingsEntity.get_id())});
     }
 
-    public SettingsEntity selectByProfileId(long profile_id) {
-        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + PROFILE_ID + " = ? " , new String[] {String.valueOf(profile_id)});
+    public SettingsEntity selectByProfilePublicId(String profile_public_id) {
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + PROFILE_PUBLIC_ID + " = ? " , new String[] {profile_public_id});
 
         SettingsEntity settingsEntity = null;
 

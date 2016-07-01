@@ -1,7 +1,6 @@
 package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -26,7 +25,7 @@ public class TokenDAO{
      * Attribut locale
      */
     public static final String KEY = "id";
-    public static final String PROFILE_ID = "profile_id";
+    public static final String PROFILE_PUBLIC_ID = "profile_public_id";
     public static final String EXPIRE_ACCESS_TOKEN = "expire_access_token";
     public static final String EXPIRE_REFRESH_TOKEN = "expire_refresh_token";
 
@@ -38,7 +37,7 @@ public class TokenDAO{
             + REFRESH_TOKEN + " INT,"
             + EXPIRES_IN + " TEXT,"
             + TOKEN_TYPE + " TEXT,"
-            + PROFILE_ID + " TEXT,"
+            + PROFILE_PUBLIC_ID + " TEXT,"
             + EXPIRE_ACCESS_TOKEN + " TEXT,"
             + EXPIRE_REFRESH_TOKEN + " TEXT);";
 
@@ -54,7 +53,7 @@ public class TokenDAO{
         contentValues.put(REFRESH_TOKEN, tokenEntity.get_refresh_token());
         contentValues.put(EXPIRES_IN, tokenEntity.get_expire_in());
         contentValues.put(TOKEN_TYPE, tokenEntity.get_token_type());
-        contentValues.put(PROFILE_ID, tokenEntity.get_profile_id());
+        contentValues.put(PROFILE_PUBLIC_ID, tokenEntity.get_profile_public_id());
         contentValues.put(EXPIRE_ACCESS_TOKEN, tokenEntity.get_expire_access_token());
         contentValues.put(EXPIRE_REFRESH_TOKEN, tokenEntity.get_expire_refresh_token());
 
@@ -68,7 +67,7 @@ public class TokenDAO{
         contentValues.put(REFRESH_TOKEN, tokenEntity.get_refresh_token());
         contentValues.put(EXPIRES_IN, tokenEntity.get_expire_in());
         contentValues.put(TOKEN_TYPE, tokenEntity.get_token_type());
-        contentValues.put(PROFILE_ID, tokenEntity.get_profile_id());
+        contentValues.put(PROFILE_PUBLIC_ID, tokenEntity.get_profile_public_id());
         contentValues.put(EXPIRE_ACCESS_TOKEN, tokenEntity.get_expire_access_token());
         contentValues.put(EXPIRE_REFRESH_TOKEN, tokenEntity.get_expire_refresh_token());
 
@@ -89,8 +88,8 @@ public class TokenDAO{
         return tokenEntity;
     }
 
-    public TokenEntity selectByProfileId(long profile_id) {
-        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + PROFILE_ID + " = ? " , new String[] {String.valueOf(profile_id)});
+    public TokenEntity selectByProfileId(String profile_public_idid) {
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + PROFILE_PUBLIC_ID + " = ? " , new String[] {profile_public_idid});
 
         TokenEntity tokenEntity = null;
 
@@ -100,5 +99,10 @@ public class TokenDAO{
 
         c.close();
         return tokenEntity;
+    }
+
+    public void deleteByProfile_id(String profile_public_id) {
+        _mDb.delete(TABLE_NAME, PROFILE_PUBLIC_ID + " = ?", new String[]{String.valueOf(profile_public_id)});
+
     }
 }

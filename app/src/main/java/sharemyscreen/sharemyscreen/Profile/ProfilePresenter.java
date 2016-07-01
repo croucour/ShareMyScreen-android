@@ -29,8 +29,6 @@ public class ProfilePresenter {
         String firstName = this._view.getFirstName();
         String lastName = this._view.getLastName();
         String email = this._view.getEmail();
-        String phone = this._view.getPhone();
-
 
         this._view.initializeInputLayout();
 
@@ -48,11 +46,6 @@ public class ProfilePresenter {
             this._view.setErrorEmail(R.string.notEmail);
             error = true;
         }
-//        if (phone.isEmpty()) {
-//            this._view.setErrorPhone(R.string.profile_PhoneEmpty);
-//            error = true;
-//        }
-
 
         if (!error) {
             this._view.setProcessLoadingButton(1);
@@ -61,10 +54,9 @@ public class ProfilePresenter {
 
             userParams.put("firstName", firstName);
             userParams.put("lastName", lastName);
-            userParams.put("phone", phone);
             userParams.put("email", email);
 
-            this._profileService.saveProfile(userParams);
+            this._profileService.patchProfile(userParams);
         }
     }
 }

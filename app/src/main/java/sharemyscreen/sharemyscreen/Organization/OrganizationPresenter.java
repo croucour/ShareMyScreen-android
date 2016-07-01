@@ -4,28 +4,30 @@ import java.util.HashMap;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.UserEntity;
+import sharemyscreen.sharemyscreen.IView;
+import sharemyscreen.sharemyscreen.Menu.IMenuView;
 import sharemyscreen.sharemyscreen.R;
 
 /**
  * Created by roucou_c on 20/06/2016.
  */
 public class OrganizationPresenter {
-    private final IOrganizationView _view;
+    private final IView _view;
     private final OrganizationService _organizationService;
     private final Manager _manager;
 
-    public OrganizationPresenter(IOrganizationView _view, Manager manager, UserEntity userEntity) {
+    public OrganizationPresenter(IView view, Manager manager, UserEntity userEntity) {
         this._manager = manager;
-        this._view = _view;
-        this._organizationService = new OrganizationService(_view, manager, userEntity);
+        this._view = view;
+        this._organizationService = new OrganizationService(view, manager, userEntity);
     }
 
     public void onCreateClicked() {
         boolean error = false;
-        String name = _view.getName();
+        String name = _view.getNameOrganization();
 
         if (name.isEmpty()) {
-            _view.setErrorName(R.string.createOrganization_nameEmpty);
+            _view.setErrorNameOrganization(R.string.createOrganization_nameEmpty);
             error = true;
         }
 
@@ -33,43 +35,27 @@ public class OrganizationPresenter {
             HashMap<String, String> params = new HashMap<>();
             params.put("name", name);
 
-            _organizationService.postCreateOrganization(params);
+            _organizationService.postOrganization(params);
         }
-    }
-
-    public void searchUser() {
-        String search = _view.getSearch();
-
-        if (search.isEmpty()) {
-            _view.setErrorSearch(R.string.invitOrganization_searchEmpty);
-            _view.setMembersOrganization(null);
-        }
-        else {
-            HashMap<String, String> params = new HashMap<>();
-            params.put("email", search);
-
-            _organizationService.getSearchUsers(params);
-        }
-
     }
 
     public void onInvitationClicked(String organization_public_id, String profile_public_id) {
 
-        if (organization_public_id != null && profile_public_id != null) {
-            HashMap<String, String> params = new HashMap<>();
-            params.put("user_id", profile_public_id);
-
-            _organizationService.postInvitationOrganization(params, organization_public_id);
-        }
+//        if (organization_public_id != null && profile_public_id != null) {
+//            HashMap<String, String> params = new HashMap<>();
+//            params.put("user_id", profile_public_id);
+//
+//            _organizationService.postInvitationOrganization(params, organization_public_id);
+//        }
     }
 
     public void onKickMemberClicked(String organization_public_id, String profile_public_id) {
-        if (organization_public_id != null && profile_public_id != null) {
-            HashMap<String, String> params = new HashMap<>();
-            params.put("user_id", profile_public_id);
-
-            _organizationService.deleteMembersOrganization(params, organization_public_id);
-        }
+//        if (organization_public_id != null && profile_public_id != null) {
+//            HashMap<String, String> params = new HashMap<>();
+//            params.put("user_id", profile_public_id);
+//
+//            _organizationService.deleteMembersOrganization(params, organization_public_id);
+//        }
     }
 
     public void getOrganizations() {
@@ -78,5 +64,9 @@ public class OrganizationPresenter {
 
     public void onSwipedForRefreshOrganizations() {
         this._organizationService.getOrganizations();
+    }
+
+    public void deleteOrganization(String organization_public_id) {
+        _organizationService.deleteOrganization(organization_public_id);
     }
 }

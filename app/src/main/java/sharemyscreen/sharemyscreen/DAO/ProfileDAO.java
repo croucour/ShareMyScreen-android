@@ -1,7 +1,6 @@
 package sharemyscreen.sharemyscreen.DAO;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -17,16 +16,11 @@ public class ProfileDAO{
     /**
      * Attribut de l'API
      */
-    public static final String _ID = "_id";
+    public static final String PUBLIC_ID = "_id";
     public static final String CREATEDAT = "createdat";
-    public static final String UPDATEDAT = "updatedAt";
-    public static final String USERNAME = "username";
     public static final String EMAIL = "email";
     public static final String FIRSTNAME = "firstName";
     public static final String LASTNAME = "lastName";
-    public static final String PHONE = "phone";
-    public static final String ROOMS = "rooms";
-    public static final String ROLE = "role";
 
 
     /**
@@ -37,17 +31,12 @@ public class ProfileDAO{
 
     public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
             + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + _ID + " TEXT,"
+            + PUBLIC_ID + " TEXT,"
             + CREATEDAT + " TEXT,"
-            + UPDATEDAT + " TEXT,"
-            + USERNAME + " TEXT,"
             + EMAIL + " TEXT,"
             + FIRSTNAME + " TEXT,"
             + LASTNAME + " TEXT,"
-            + PHONE + " TEXT,"
-            + ROOMS + " TEXT,"
-            + PASSWORD + " TEXT,"
-            + ROLE + " TEXT);";
+            + PASSWORD + " TEXT);";
 
     public static final String TABLE_DROP =  "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -71,17 +60,12 @@ public class ProfileDAO{
 
     public long add(ProfileEntity profile) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(_ID, profile.get__id());
+        contentValues.put(PUBLIC_ID, profile.get_public_id());
         contentValues.put(CREATEDAT, profile.get_createdAt());
-        contentValues.put(UPDATEDAT, profile.get_updatedAt());
-        contentValues.put(USERNAME, profile.get_username());
         contentValues.put(EMAIL, profile.get_email());
         contentValues.put(FIRSTNAME, profile.get_firstName());
         contentValues.put(LASTNAME, profile.get_lastName());
-        contentValues.put(PHONE, profile.get_phone());
-        contentValues.put(ROOMS, profile.get_rooms());
         contentValues.put(PASSWORD, profile.get_password());
-        contentValues.put(ROLE, profile.get_role());
 
         return _mDb.insert(TABLE_NAME, null, contentValues);
     }
@@ -97,22 +81,17 @@ public class ProfileDAO{
     public void modify(ProfileEntity profile) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(_ID, profile.get__id());
+        contentValues.put(PUBLIC_ID, profile.get_public_id());
         contentValues.put(CREATEDAT, profile.get_createdAt());
-        contentValues.put(UPDATEDAT, profile.get_updatedAt());
-        contentValues.put(USERNAME, profile.get_username());
         contentValues.put(EMAIL, profile.get_email());
         contentValues.put(FIRSTNAME, profile.get_firstName());
         contentValues.put(LASTNAME, profile.get_lastName());
-        contentValues.put(PHONE, profile.get_phone());
-        contentValues.put(ROOMS, profile.get_rooms());
-        contentValues.put(ROLE, profile.get_role());
 
         if (profile.get_password() != null) {
             contentValues.put(PASSWORD, profile.get_password());
         }
 
-        _mDb.update(TABLE_NAME, contentValues, USERNAME + " = ?", new String[]{String.valueOf(profile.get_username())});
+        _mDb.update(TABLE_NAME, contentValues, PUBLIC_ID + " = ?", new String[]{String.valueOf(profile.get_public_id())});
     }
 
 
@@ -130,7 +109,7 @@ public class ProfileDAO{
     }
 
     public ProfileEntity selectByPublic_id(String public_id) {
-        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + _ID + " = ?" , new String[] {public_id});
+        Cursor c = _mDb.rawQuery("select * from " + TABLE_NAME + " WHERE " + PUBLIC_ID + " = ?" , new String[] {public_id});
 
         ProfileEntity profile = null;
 

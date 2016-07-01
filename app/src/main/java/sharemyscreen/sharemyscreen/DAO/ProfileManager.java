@@ -14,8 +14,8 @@ public class ProfileManager extends ProfileDAO{
     }
 
     public long add(ProfileEntity profileEntity) {
-        if (profileEntity !=  null && profileEntity.get_username() != null) {
-            ProfileEntity newProfile = this.selectByEmail(profileEntity.get_username());
+        if (profileEntity !=  null && profileEntity.get_public_id() != null) {
+            ProfileEntity newProfile = this.selectByPublic_id(profileEntity.get_public_id());
             if (newProfile != null) {
                 profileEntity.set_id(newProfile.get_id());
                 super.modify(profileEntity);
@@ -38,7 +38,7 @@ public class ProfileManager extends ProfileDAO{
 //
 //        if (profile == null) {
 //            long id = this.add(new ProfileEntity(username, password));
-//            return this.selectById(id);
+//            return this.selectByProfilePublicId(id);
 //        }
 //        else {
 //            profile.set_password(password);

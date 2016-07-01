@@ -10,21 +10,21 @@ import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 interface IOrganizationView {
     String getName();
 
-    void setErrorName(int resId);
+//    void setErrorNameOrganization(int resId);
+//
+//    String  getSearch();
 
-    String  getSearch();
-
-    void setErrorSearch(int resId);
-
-    void setRefreshing(boolean b);
+//    void setErrorSearch(int resId);
+//
+//    void setRefreshing(boolean b);
 
     void showDialog(String action, String organization_public_id);
 
-    void setMembersOrganization(List<ProfileEntity> profileEntityList);
+//    void setMembersOrganization(List<ProfileEntity> profileEntityList);
 
     void buttonDialogClicked(String action, String profile_public_id);
 
     void closeDialog(String target);
 
-    void updateOrganizationEntityList();
+//    void updateOrganizationEntityList();
 }

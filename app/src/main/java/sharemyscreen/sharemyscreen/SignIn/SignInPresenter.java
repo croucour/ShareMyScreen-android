@@ -53,13 +53,12 @@ public class SignInPresenter{
 //            if (profileEntity != null) {
 //                this._signInService._userEntity.refresh(profileEntity);
 ////                this._signInService.set_profileLogged(profileEntity);
-//                TokenEntity tokenEntity = _manager._tokenManager.selectByProfileId(profileEntity.get_id());
+//                TokenEntity tokenEntity = _manager._tokenManager.selectByProfilePublicId(profileEntity.get_id());
 //                if (tokenEntity != null) {
 //                    this._signInService.set_tokenEntity(tokenEntity);
 //                    _manager._globalManager.addGlobal("current_token_id", String.valueOf(tokenEntity.get_id()));
 //                }
 //            }
-            this._signInService._userEntity.refresh(email);
 
             this._signInService.signIn(params);
         }

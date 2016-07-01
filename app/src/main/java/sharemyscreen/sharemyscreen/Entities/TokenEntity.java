@@ -13,15 +13,15 @@ public class TokenEntity {
     private String _access_token = null;
     @SerializedName("refresh_token")
     private String _refresh_token = null;
-    @SerializedName(value="expires_in", alternate={"expire_in"})
+    @SerializedName("expires_in")
     private String _expire_in = null;
     @SerializedName("token_type")
     private String _token_type = null;
-
-    public boolean refreshed = false;
+    @SerializedName("creation")
+    private boolean _creation = false;
 
     private transient long _id = 0;
-    private transient long _profile_id = 0;
+    private transient String _profile_public_id = null;
     private transient String _expire_access_token = null;
     private transient String _expire_refresh_token = null;
 
@@ -31,7 +31,7 @@ public class TokenEntity {
         this._refresh_token = c.getString(2);
         this._expire_in = c.getString(3);
         this._token_type = c.getString(4);
-        this._profile_id = c.getLong(5);
+        this._profile_public_id = c.getString(5);
         this._expire_access_token = c.getString(6);
         this._expire_refresh_token = c.getString(7);
     }
@@ -76,12 +76,12 @@ public class TokenEntity {
         this._token_type = _token_type;
     }
 
-    public long get_profile_id() {
-        return _profile_id;
+    public String get_profile_public_id() {
+        return _profile_public_id;
     }
 
-    public void set_profile_id(long _profile_id) {
-        this._profile_id = _profile_id;
+    public void set_profile_public_id(String _profile_public_id) {
+        this._profile_public_id = _profile_public_id;
     }
 
     public String get_expire_access_token() {
@@ -100,12 +100,21 @@ public class TokenEntity {
         this._expire_refresh_token = _expire_refresh_token;
     }
 
+    public boolean is_creation() {
+        return _creation;
+    }
+
+    public void set_creation(boolean _creation) {
+        this._creation = _creation;
+    }
+
     @Override
     public String toString() {
         String string = "access_token = " + this.get_access_token();
         string += " refresh_token = " + this.get_refresh_token();
         string += " expire_in = " + this.get_expire_in();
         string += " token_type = " + this.get_token_type();
+        string += " profile_public_id = " + this.get_profile_public_id();
         return string;
     }
 }

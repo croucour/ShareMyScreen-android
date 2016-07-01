@@ -66,8 +66,6 @@ public class SignUpPresenter {
             userParams.put("last_name", lastName);
             userParams.put("password", password);
             userParams.put("email", email);
-            userParams.put("username", email); // TODO à supprimer
-            userParams.put("phone", "0685744111"); // TODO à supprimer
 
             this._signUpService.createUser(userParams);
         }

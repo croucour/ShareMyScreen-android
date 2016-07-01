@@ -77,6 +77,6 @@ public class LogOfflineActivity extends MyActivityDrawer {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        navigation.setCheckedItem(R.id.navigation_log);
+//        navigation.setCheckedItem(R.id.navigation_log);
     }
 }

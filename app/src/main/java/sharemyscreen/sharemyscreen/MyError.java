@@ -30,7 +30,7 @@ public class MyError {
             snackbar.setAction("en savoir plus", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    view.startSettingsActivity();
+//                    view.startSettingsActivity();
                 }
             });
             view.setCallbackSnackbar(snackbar);

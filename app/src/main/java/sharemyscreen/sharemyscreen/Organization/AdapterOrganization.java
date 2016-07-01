@@ -1,25 +1,13 @@
 package sharemyscreen.sharemyscreen.Organization;
 
-import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.dd.processbutton.iml.ActionProcessButton;
-import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.OnClickListener;
-import com.orhanobut.dialogplus.ViewHolder;
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.List;
 
@@ -47,6 +35,7 @@ public class AdapterOrganization extends RecyclerView.Adapter<AdapterOrganizatio
 
     public boolean updateOrganizationEntityList() {
         _organizationEntityList = this._organizationManager.selectAllByProfile_id(_profile_public_id);
+        this.notifyDataSetChanged();
         return _organizationEntityList != null;
     }
 

@@ -17,19 +17,19 @@ public class MySnacbarCallBack extends Snackbar.Callback {
     @Override
     public void onDismissed(Snackbar snackbar, int event) {
         super.onDismissed(snackbar, event);
-        Fab fab = this._view.getFab();
+//        Fab fab = this._view.getFab();
 
-        if (fab != null) {
-            fab.animate().translationYBy((snackbar.getView().getHeight()));
-        }
+//        if (fab != null) {
+//            fab.animate().translationYBy((snackbar.getView().getHeight()));
+//        }
     }
 
     @Override
     public void onShown(Snackbar snackbar) {
         super.onShown(snackbar);
-        Fab fab = this._view.getFab();
-        if (fab != null) {
-            fab.animate().translationYBy(-(snackbar.getView().getHeight()));
-        }
+//        Fab fab = this._view.getFab();
+//        if (fab != null) {
+//            fab.animate().translationYBy(-(snackbar.getView().getHeight()));
+//        }
     }
 }

@@ -4,18 +4,27 @@ package sharemyscreen.sharemyscreen.Menu;
  * Created by cleme_000 on 25/02/2016.
  */
 public interface IMenuView {
-    void startRoomActivity();
+//    void startRoomActivity();
 
     void startOrganizationActivity();
 
-    void startProfileActivity();
+//    void startProfileActivity();
+//
+//    void startSettingsActivity();
+//
+//    void startLogOfflineActivity();
+//
+//    void logout();
+//
+//    void startSignInActivity();
 
-    void startSettingsActivity();
+    void updateOrganizationEntityList();
 
-    void startLogOfflineActivity();
+    String getNameOrganization();
 
-    void logout();
+    void setErrorNameOrganization(int resId);
 
-    void startSignInActivity();
+    void closeDialog(String target);
 
+    void selectOrganization();
 }

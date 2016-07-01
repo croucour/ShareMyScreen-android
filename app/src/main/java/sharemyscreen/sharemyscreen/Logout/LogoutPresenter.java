@@ -9,15 +9,18 @@ import sharemyscreen.sharemyscreen.Menu.IMenuView;
  */
 public class LogoutPresenter {
 
-    protected LogoutService _LogoutService;
     private final IMenuView _view;
+    private final UserEntity _userEntity;
+
 
     public LogoutPresenter(IMenuView view, Manager manager, UserEntity userEntity) {
         this._view = view;
-        this._LogoutService = new LogoutService(view, manager, userEntity);
+        _userEntity = userEntity;
     }
 
     public void onLogoutClicked(){
-        this._LogoutService.logout();
+        _userEntity.logout();
+
+//        _view.startSignInActivity();
     }
 }

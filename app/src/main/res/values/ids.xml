@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="connexionOfflline_error" type="id">Une erreur inconnue est survenue</item>
+    <item name="add_organization" type="id" />
+    <item name="add_room_private" type="id" />
+    <item name="add_room_public" type="id" />
 </resources>

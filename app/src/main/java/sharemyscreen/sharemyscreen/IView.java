@@ -14,5 +14,13 @@ public interface IView extends IMenuView {
 
     void setCallbackSnackbar(Snackbar snackbar);
 
-    Fab getFab();
+    void updateRoomEntityList();
+
+    String getNameRoom();
+
+    void setErrorNameRoom(int resId);
+
+    void changeOrganization(String organization_public_id);
+
+    void changeRoom(String room_public_id);
 }

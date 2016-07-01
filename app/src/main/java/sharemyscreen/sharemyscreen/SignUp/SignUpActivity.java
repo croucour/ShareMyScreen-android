@@ -14,9 +14,8 @@ import android.widget.TextView;
 import com.dd.processbutton.iml.ActionProcessButton;
 
 import sharemyscreen.sharemyscreen.DAO.Manager;
-import sharemyscreen.sharemyscreen.Organization.OrganizationActivity;
+import sharemyscreen.sharemyscreen.MyActivityDrawer;
 import sharemyscreen.sharemyscreen.R;
-import sharemyscreen.sharemyscreen.SignIn.SignInActivity;
 
 /**
  * Created by cleme_000 on 23/09/2015.
@@ -171,15 +170,15 @@ public class SignUpActivity extends Activity implements View.OnClickListener, Te
     @Override
     public void startRoomActivity() {
         this.finish();
-//        RoomActivity roomActivity = new RoomActivity(_manager);
+//        RoomSettingsActivity roomActivity = new RoomSettingsActivity(_manager);
 //        Intent intent = new Intent(SignUpActivity.this, roomActivity.getClass());
 //        startActivity(intent);
     }
 
     @Override
-    public void startOrganizationActivity() {
+    public void startMainActivity() {
         this.finish();
-        Intent intent = new Intent(SignUpActivity.this, OrganizationActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, MyActivityDrawer.class);
         startActivity(intent);
     }
 }

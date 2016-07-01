@@ -9,12 +9,8 @@ import android.widget.TextView;
 
 import com.dd.processbutton.iml.ActionProcessButton;
 
-import sharemyscreen.sharemyscreen.DAO.GlobalManager;
-import sharemyscreen.sharemyscreen.DAO.ProfileManager;
-import sharemyscreen.sharemyscreen.DAO.TokenManager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
 import sharemyscreen.sharemyscreen.Entities.TokenEntity;
-import sharemyscreen.sharemyscreen.Logout.LogoutService;
 import sharemyscreen.sharemyscreen.MyActivityDrawer;
 import sharemyscreen.sharemyscreen.R;
 
@@ -23,13 +19,10 @@ import sharemyscreen.sharemyscreen.R;
  */
 public class ProfileActivity extends MyActivityDrawer implements View.OnClickListener, TextView.OnEditorActionListener, IProfileView {
 
-    private LogoutService _logoutService;
     private ProfilePresenter _profilePresenter;
-    private EditText EditUsername;
-    private EditText EditPhone;
-    private EditText EditFirstname;
-    private EditText EditLastname;
-    private EditText EditEmail;
+    private EditText _editFirstName;
+    private EditText _editLastName;
+    private EditText _editEmail;
     private ActionProcessButton profile_submit;
 
     @Override
@@ -42,24 +35,22 @@ public class ProfileActivity extends MyActivityDrawer implements View.OnClickLis
         _profilePresenter = new ProfilePresenter(this, _manager, _userEntity);
 
 
-        this.EditUsername = (EditText) findViewById(R.id.profile_username_editText); // TODO : supprimer le username
-        this.EditEmail = (EditText) findViewById(R.id.profile_email_editText);
-        this.EditPhone = (EditText) findViewById(R.id.profile_phone_editText);
-        this.EditFirstname = (EditText) findViewById(R.id.profile_firstname_editText);
-        this.EditLastname = (EditText) findViewById(R.id.profile_lastname_editText);
+        this._editEmail = (EditText) findViewById(R.id.profile_email_editText);
+        this._editFirstName = (EditText) findViewById(R.id.profile_firstname_editText);
+        this._editLastName = (EditText) findViewById(R.id.profile_lastname_editText);
 
         this.profile_submit = (ActionProcessButton) findViewById(R.id.profile_submit);
         this.profile_submit.setMode(ActionProcessButton.Mode.ENDLESS);
 
         this.profile_submit.setOnClickListener(this);
 
-        this.EditEmail.setOnEditorActionListener(this);
+        this._editEmail.setOnEditorActionListener(this);
 
         String token_id = _manager._globalManager.select("current_token_id");
         if (token_id != null) {
             TokenEntity tokenEntity = _manager._tokenManager.selectById(Long.parseLong(token_id));
 
-            ProfileEntity profileEntity = _manager._profileManager.selectById(tokenEntity.get_profile_id());
+            ProfileEntity profileEntity = _manager._profileManager.selectByPublic_id(tokenEntity.get_profile_public_id());
 
             if (profileEntity != null) {
                 populateProfile(profileEntity);
@@ -72,16 +63,14 @@ public class ProfileActivity extends MyActivityDrawer implements View.OnClickLis
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        navigation.setCheckedItem(R.id.navigation_profile);
+//        navigation.setCheckedItem(R.id.navigation_profile);
     }
 
     @Override
     public void populateProfile(ProfileEntity profile) {
-        this.EditUsername.setText(profile.get_username());
-        this.EditEmail.setText(profile.get_email());
-        this.EditFirstname.setText(profile.get_firstName());
-        this.EditLastname.setText(profile.get_lastName());
-        this.EditPhone.setText(profile.get_phone());
+        this._editEmail.setText(profile.get_email());
+        this._editFirstName.setText(profile.get_firstName());
+        this._editLastName.setText(profile.get_lastName());
     }
 
     @Override
@@ -108,22 +97,17 @@ public class ProfileActivity extends MyActivityDrawer implements View.OnClickLis
 
     @Override
     public String getFirstName() {
-        return this.EditFirstname.getText().toString();
+        return this._editFirstName.getText().toString();
     }
 
     @Override
     public String getLastName() {
-        return this.EditLastname.getText().toString();
+        return this._editLastName.getText().toString();
     }
 
     @Override
     public String getEmail() {
-        return this.EditEmail.getText().toString();
-    }
-
-    @Override
-    public String getPhone() {
-        return this.EditPhone.getText().toString();
+        return this._editEmail.getText().toString();
     }
 
     @Override
@@ -135,7 +119,6 @@ public class ProfileActivity extends MyActivityDrawer implements View.OnClickLis
         this.setErrorFirstName(0);
         this.setErrorLastName(0);
         this.setErrorEmail(0);
-        this.setErrorPhone(0);
     }
 
 
@@ -156,13 +139,6 @@ public class ProfileActivity extends MyActivityDrawer implements View.OnClickLis
     public void setErrorEmail(int resId) {
         TextInputLayout profile_email_inputLayout = (TextInputLayout) findViewById(R.id.profile_email_inputLayout);
         profile_email_inputLayout.setError((resId == 0 ? null : getString(resId)));
-
-    }
-
-    @Override
-    public void setErrorPhone(int resId) {
-        TextInputLayout profile_phone_inputLayout = (TextInputLayout) findViewById(R.id.profile_phone_inputLayout);
-        profile_phone_inputLayout.setError((resId == 0 ? null : getString(resId)));
 
     }
 

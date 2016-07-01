@@ -8,13 +8,13 @@ import android.database.Cursor;
 public class SettingsEntity {
 
     private long _id;
-    private long _profile_id;
+    private String _profile_public_id;
     private boolean _offline;
     private boolean _displayOffline;
 
     public SettingsEntity(Cursor c) {
         this._id = c.getLong(0);
-        this._profile_id = c.getLong(1);
+        this._profile_public_id = c.getString(1);
         this._offline = c.getInt(2) == 1;
         this._displayOffline = c.getLong(3) == 1;
     }
@@ -32,12 +32,12 @@ public class SettingsEntity {
         this._id = _id;
     }
 
-    public long get_profile_id() {
-        return _profile_id;
+    public String get_profile_public_id() {
+        return _profile_public_id;
     }
 
-    public void set_profile_id(long _profile_id) {
-        this._profile_id = _profile_id;
+    public void set_profile_public_id(String _profile_public_id) {
+        this._profile_public_id = _profile_public_id;
     }
 
     public boolean is_offline() {

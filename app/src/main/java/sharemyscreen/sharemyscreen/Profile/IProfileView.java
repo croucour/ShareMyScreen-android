@@ -20,8 +20,6 @@ public interface IProfileView {
 
     String getEmail();
 
-    String getPhone();
-
     void setProcessLoadingButton(int process);
 
     void setErrorFirstName(int resId);
@@ -29,8 +27,6 @@ public interface IProfileView {
     void setErrorLastName(int resId);
 
     void setErrorEmail(int resId);
-
-    void setErrorPhone(int resId);
 
     void initializeInputLayout();
 

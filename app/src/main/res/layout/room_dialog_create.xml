@@ -12,31 +12,24 @@
         android:layout_marginRight="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
-        android:orientation="vertical"
-        android:id="@+id/LinearLayout_createRoom_by_user">
+        android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/createRoom_by_user_name_inputLayout"
+            android:id="@+id/room_dialog_create_name_inputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/createRoom_by_user_name_editText"
+                android:id="@+id/room_dialog_create_name_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/createRoom_by_user_name_editText_hint"
+                android:hint="@string/room_dialog_create_name_editText"
                 android:singleLine="true"
                 android:lines="1" />
             <!--<requestFocus></requestFocus>-->
 
         </android.support.design.widget.TextInputLayout>
 
-        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-            android:id="@+id/createRoom_by_user_choose_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/createRoom_by_user_choose_user_hint"
-            app:met_floatingLabel="normal" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -44,14 +37,13 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/LinearLayout_createRoom_by_user">
+            android:layout_height="wrap_content">
 
             <com.dd.processbutton.iml.ActionProcessButton
                 android:layout_width="0.0dip"
                 android:layout_height="match_parent"
-                android:id="@+id/createRoom_by_user_submit"
-                android:text="@string/createRoom_by_user_submit"
+                android:id="@+id/room_dialog_create_submit"
+                android:text="@string/room_dialog_create_submit"
                 android:theme="@style/MyButtonLoading"
                 android:layout_weight="1.0"
                 custom:pb_textError="Error"
@@ -63,8 +55,8 @@
             <com.dd.processbutton.iml.ActionProcessButton
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"
-                android:text="@string/createRoom_by_user_cancel"
-                android:id="@+id/createRoom_by_user_cancel"
+                android:text="@string/room_dialog_create_cancel"
+                android:id="@+id/room_dialog_create_cancel"
                 android:layout_weight="1.0"
                 android:theme="@style/MyButtonCancel"
                 android:layout_marginLeft="5dp"

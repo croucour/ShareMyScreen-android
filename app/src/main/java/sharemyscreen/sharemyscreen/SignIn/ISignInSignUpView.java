@@ -25,5 +25,5 @@ public interface ISignInSignUpView {
 
     void startRoomActivity();
 
-    void startOrganizationActivity();
+    void startMainActivity();
 }

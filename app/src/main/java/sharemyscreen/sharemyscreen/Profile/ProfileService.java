@@ -7,11 +7,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import retrofit2.http.PUT;
+import retrofit2.http.PATCH;
+import retrofit2.http.Path;
 import sharemyscreen.sharemyscreen.DAO.Manager;
 import sharemyscreen.sharemyscreen.Entities.ProfileEntity;
+import sharemyscreen.sharemyscreen.Entities.TokenEntity;
 import sharemyscreen.sharemyscreen.Entities.UserEntity;
 import sharemyscreen.sharemyscreen.MyService;
 import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
@@ -21,15 +24,21 @@ import sharemyscreen.sharemyscreen.ServiceGeneratorApi;
  */
 public class ProfileService extends MyService {
 
-    private final IProfileService _api;
+    private IProfileService _api;
 
     public interface IProfileService {
         @Headers("Content-Type: application/json")
-        @GET("profile")
+        @GET("users/me")
         Call<ProfileEntity> getProfile();
 
-        @PUT("profile")
-        Call<ProfileEntity> putProfile(@Body Map<String, String> params);
+        @PATCH("users/me")
+        Call<ProfileEntity> patchProfile(@Body Map<String, String> params);
+
+        @DELETE("users/me")
+        Call<ProfileEntity> deleteProfile();
+
+        @GET("users/search/{partial_email}")
+        Call<ProfileEntity> searchProfile(@Path("partial_email") String partial_email);
     }
 
     private final IProfileView _view;
@@ -37,11 +46,10 @@ public class ProfileService extends MyService {
     public ProfileService(IProfileView view, Manager manager, UserEntity userEntity) {
         super(manager, userEntity);
         this._view = view;
-        this._api = ServiceGeneratorApi.createService(IProfileService.class, _userEntity._tokenEntity, manager);
+        this._api = ServiceGeneratorApi.createService(IProfileService.class, "api", _userEntity._tokenEntity, manager);
     }
 
-    public void getProfileOnResponse(Response<ProfileEntity> response) {
-        ProfileEntity profileEntity = response.body();
+    public void getProfileOnResponse(ProfileEntity profileEntity) {
         if (profileEntity != null) {
 
             if (_view != null) {
@@ -58,11 +66,15 @@ public class ProfileService extends MyService {
         call.enqueue(new Callback<ProfileEntity>() {
             @Override
             public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
-                getProfileOnResponse(response);
-                if (profilePassword != null) {
-                    _userEntity._profileEntity.set_password(profilePassword);
-                    _userEntity.update_profileEntity();
-                }
+                ProfileEntity profileEntity = response.body();
+
+                getProfileOnResponse(profileEntity);
+//                if (profilePassword != null) {
+//                    _userEntity._tokenEntity.set_profile_public_id(profileEntity.get_public_id());
+//                    _userEntity.update_tokenEntity();
+//                    _userEntity._profileEntity.set_password(profilePassword);
+//                    _userEntity.update_profileEntity();
+//                }
             }
 
             @Override
@@ -71,7 +83,7 @@ public class ProfileService extends MyService {
         });
     }
 
-    public void putProfileOnResponse(Response<ProfileEntity> response, ProfileEntity profileEntityFail) {
+    public void patchProfileOnResponse(Response<ProfileEntity> response, ProfileEntity profileEntityFail) {
         ProfileEntity profileEntity = response != null ? response.body() : null;
 
         if (profileEntity != null) {
@@ -84,22 +96,50 @@ public class ProfileService extends MyService {
         _view.finish();
     }
 
-    public void saveProfile(HashMap<String, String> userParams) {
-        userParams.put("username", _userEntity._profileEntity.get_username());
+    public void patchProfile(HashMap<String, String> userParams) {
 
         final ProfileEntity profileEntityFail = new ProfileEntity(userParams);
-        Call call = _api.putProfile(userParams);
+        Call call = _api.patchProfile(userParams);
         call.enqueue(new Callback<ProfileEntity>() {
 
             @Override
             public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
-                putProfileOnResponse(response, profileEntityFail);
+                patchProfileOnResponse(response, profileEntityFail);
             }
 
             @Override
             public void onFailure(Call<ProfileEntity> call, Throwable t) {
-                putProfileOnResponse(null, profileEntityFail);
+                patchProfileOnResponse(null, profileEntityFail);
+            }
+        });
+    }
+
+    public void deleteProfile() {
+        Call call = _api.deleteProfile();
+        call.enqueue(new Callback<ProfileEntity>() {
+
+            @Override
+            public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ProfileEntity> call, Throwable t) {
+            }
+        });
+    }
+
+    public void searchProfile(String partial_email) {
+        Call call = _api.searchProfile(partial_email);
+        call.enqueue(new Callback<ProfileEntity>() {
+
+            @Override
+            public void onResponse(Call<ProfileEntity> call, Response<ProfileEntity> response) {
+            }
+
+            @Override
+            public void onFailure(Call<ProfileEntity> call, Throwable t) {
             }
         });
     }
 }
+

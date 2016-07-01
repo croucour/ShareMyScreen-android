@@ -35,7 +35,7 @@ public class SignUpService extends MyService{
         super(manager);
         this._view = view;
         this._signInService = new SignInService(view, manager);
-        this._api = ServiceGeneratorApi.createService(ISignUpService.class, manager);
+        this._api = ServiceGeneratorApi.createService(ISignUpService.class, "login", manager);
     }
 
     public void createUser(final HashMap<String, String> userParams) {
